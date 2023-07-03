@@ -1,3 +1,5 @@
+# roll back to previous
+
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
@@ -12,42 +14,23 @@ class polytrend:
 
 	# finding the best fit polynomial (between orders 0 and 4) of some data
 	def polyfind(self, known_data) -> np.poly1d:
-		# extracting data points into useful data structures
-		# lists MUST be the same size
+		# extracting data points into useful data structures (lists MUST be the same size) 
 		x = np.array([point[0] for point in known_data]).reshape(-1, 1)
 		y = np.array([point[1] for point in known_data])
 
 		# declaring measures of performance
-		best_mse = float('inf') # could also use Bayesian Information Criterion
+		best_error = float('inf') # could also use Bayesian Information Criterion
 		unfiltered_coeffs = np.array([])
 
 		# Creating polynomial features
 		# determining performance of models 0 through 4 inclusive via MSE
 		for order in range(5):
-		# 	# coeffs = np.polyfit(x, y, order)
-		# 	# y_pred = np.polyval(coeffs, x)
-		# 	error = mean_squared_error(y, y_pred)
+			coeffs = np.polyfit(x, y, order)
+			y_pred = np.polyval(coeffs, x)
 
-		# 	if error < best_error:
-		# 		best_error = error
-		# 		unfiltered_coeffs = coeffs
-			polynomial_features = PolynomialFeatures(degree=order)
-			x_poly = polynomial_features.fit_transform(x)
-
-			# Fitting the polynomial regression model
-			model = LinearRegression()
-			model.fit(x_poly, y)
-
-			# Predicting y-values using the model
-			y_pred = model.predict(x_poly)
-
-			# Calculating mean squared error
-			mse = mean_squared_error(y, y_pred)
-
-			# Updating the best degree if current degree performs better
-			if mse < best_mse:
-				best_degree = order
-				best_mse = mse
+			if error < best_error:
+				best_error = error
+				unfiltered_coeffs = coeffs
 
 		# coefficient comparator
 		def coeff_comp(coeffs):

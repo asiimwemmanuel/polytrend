@@ -1,4 +1,4 @@
-# DISCLAIMER: THIS IS A CHATGPT INSTRUCTION MEANT TO GUIDE THE A.I. ON SOME OF THE ALGORITHM'S FUNCTIONS.
+# Disclaimer: This is a ChatGPT instruction meant to guide the AI on alg_v3's functions
 
 Make a Python script that implements a polynomial regression model on a given list of tuples as data for degrees 0 through 4 inclusive and selects the most accurate model via MSE.
 
