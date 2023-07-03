@@ -1,5 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.metrics import mean_squared_error
+# from sklearn.linear_model import LineaRegression
+# from sklearn.preprocessing import PolynomialFeatures
 
 class polytrend:
 	def __init__(self) -> None:
@@ -8,22 +13,41 @@ class polytrend:
 	# finding the best fit polynomial (between orders 0 and 4) of some data
 	def polyfind(self, known_data) -> np.poly1d:
 		# extracting data points into useful data structures
-		x = np.array([point[0] for point in known_data])
+		# lists MUST be the same size
+		x = np.array([point[0] for point in known_data]).reshape(-1, 1)
 		y = np.array([point[1] for point in known_data])
 
 		# declaring measures of performance
-		best_error = float('inf')
+		best_mse = float('inf') # could also use Bayesian Information Criterion
 		unfiltered_coeffs = np.array([])
 
+		# Creating polynomial features
 		# determining performance of models 0 through 4 inclusive via MSE
-		for order in range(0, 5):
-			coeffs = np.polyfit(x, y, order)
-			y_pred = np.polyval(coeffs, x)
-			error = np.mean((y_pred - y) ** 2)
+		for order in range(5):
+		# 	# coeffs = np.polyfit(x, y, order)
+		# 	# y_pred = np.polyval(coeffs, x)
+		# 	error = mean_squared_error(y, y_pred)
 
-			if error < best_error:
-				best_error = error
-				unfiltered_coeffs = coeffs
+		# 	if error < best_error:
+		# 		best_error = error
+		# 		unfiltered_coeffs = coeffs
+			polynomial_features = PolynomialFeatures(degree=order)
+			x_poly = polynomial_features.fit_transform(x)
+
+			# Fitting the polynomial regression model
+			model = LinearRegression()
+			model.fit(x_poly, y)
+
+			# Predicting y-values using the model
+			y_pred = model.predict(x_poly)
+
+			# Calculating mean squared error
+			mse = mean_squared_error(y, y_pred)
+
+			# Updating the best degree if current degree performs better
+			if mse < best_mse:
+				best_degree = order
+				best_mse = mse
 
 		# coefficient comparator
 		def coeff_comp(coeffs):
@@ -60,6 +84,7 @@ class polytrend:
 
 		return polynomial
 
+	# plots a function and data, with no further processing. visualisation purposes only
 	def graph(self, func, known_data=[], extrap_data=[]) -> None:
 		# Extracting known data into useful structures
 		x = np.array([point[0] for point in known_data])
@@ -100,9 +125,16 @@ class polytrend:
 
 
 	# combining the two
-	def polyplot(self, data, extrap=[]) -> None:
-		polynomial = self.polyfind(data)
-		self.graph(polynomial, data, extrap)
+	def polyplot(self, data, extrap=[], order=-1) -> None:
+		if order != -1:
+			x = np.array([point[0] for point in known_data])
+			y = np.array([point[1] for point in known_data])
+			coeffs = np.polyfit(x, y, order)
+			polynomial = np.poly1d(coeffs, extrap)
+			self.graph(polynomial, data, extrap)
+		else:
+			polynomial = self.polyfind(data)
+			self.graph(polynomial, data, extrap)
 
 # Example usage
 test = polytrend()
