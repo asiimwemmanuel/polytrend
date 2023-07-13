@@ -1,6 +1,8 @@
+<!-- chatgpt, update the section labelled "Code Explanation: PolyTrend Class for Polynomial Trend Analysis" to include return types of the methods. -->
+
 # Introduction
 
-📈 **PolyTrend** is a regression algorithm that approximates a polynomial function onto given data. It provides insights and conclusions in the fields of combinatorics, interpolation, and polynomial regression, specifically in the subfield of approximation theory. 💡
+📈 **PolyTrend** is a regression algorithm that approximates and plots a polynomial function onto given data. It provides insights and conclusions in the fields of interpolation, and polynomial regression, specifically in the subfield of approximation theory. 💡
 
 For more detailed information and comprehensive exploration, refer to the documentation available in the `./docs/` folder. 📚🔬
 
@@ -29,7 +31,8 @@ To install PolyTrend, follow these steps:
 	```
 5. Run main (optional):
 	```shell
-	py main.py```
+	py main.py
+	```
 
 # Code Explanation: `PolyTrend` Class for Polynomial Trend Analysis
 
@@ -63,7 +66,6 @@ The code includes error handling to raise a `ValueError` if required parameters 
 ## File Saving
 The code saves the generated plot as a PNG file in a directory based on the current timestamp.
 
-
 # Theory
 
 ## Quadratic Sequences
@@ -74,17 +76,17 @@ If $α = b - c, β = c - b$ and $x = β - α$
 
 It can be observed that $α$ and $β$ form a linear sequence, represented as:
 
-$xn + (\alpha - x)$
+$$xn + (\alpha - x)$$
 
 This can also be written as:
 
-![Rearrangement of the linear formula](https://latex.codecogs.com/svg.image?\alpha&plus;\sum_{i=1}^{n-1}x)
+$$\alpha + \sum_{i=1}^{n-1}x$$
 
 Since the third layer (x) can be seen as a 'constant' sequence (in relation to degree), the linear sequence can be seen as a summation of the constant sequence with the first term. After all, finding the nth term at any degree involves computation of the underlying layers.
 
 With this same logic, quadratic sequences (and any other sequences) can be computed as their first term a summed with the summation of the general form of the closest underlying sequence:
 
-![Asiimwe's quadratic formula](https://latex.codecogs.com/svg.image?a&plus;\sum_{i=1}^{n-1}(xi&plus;\alpha-x))
+$$a + \sum_{i=1}^{n-1}(x_i + \alpha-x)$$
 
 For quadratic sequences, the number of summations/computations increases linearly with the degree of the sequence (e.g., 1 for quadratic, 2 for cubic, and so on). However, the above formula is limited to linear and quadratic sequences, requiring a different method for higher degrees.
 
@@ -96,7 +98,7 @@ Lagrange interpolation is a method primarily used for in-bound approximation. Ho
 
 The Lagrange interpolation formula is given by:
 
-![Lagrange Interpolation Formula](https://latex.codecogs.com/svg.image?P(x)=\sum_{i=0}^{n}\left(y_i\prod_{j=0,j\neq&space;i}^{n}\frac{x-x_j}{x_i-x_j}\right))
+$$P(x)=\sum_{i=0}^{n}\left(y_i\prod_{j=0,j\neq i}^{n}\frac{x-x_j}{x_i-x_j}\right)$$
 
 Where:
 - $P(x)$ represents the polynomial of degree n (where n is the number of data points minus 1).
@@ -113,21 +115,20 @@ Polynomial regression is used to shift from discrete to continuous data, making 
 
 Given a set of data points $(x, f(x))$, the polynomial function is approximated as:
 
-$f(x) \approx \beta_0 + \beta_1x + \beta_2x^2 + ...+ \beta_qx^q + \varepsilon$
+$$f(x) \approx \beta_0 + \beta_1x + \beta_2x^2 + ...+ \beta_qx^q + \varepsilon$$
 
 Each $\beta$ represents a coefficient in the function, and $\varepsilon$ represents random error.
 
 The approximation is determined by solving the equation:
 
-$\begin{bmatrix}\beta_0 \\ \beta_1 \\ ... \\ \beta_n \\ \end{bmatrix} \cdot \begin{bmatrix}1 & x_0 & x_0^2 & ... & x_0^q \\ 1 & x_1 & x_1^2 & ... & x_1^q \\ ... & ... & ... & ... & ...\\ 1 & x_n & x_n^2 & ... & x_n^q\\ \end{bmatrix} \approx \begin{bmatrix}y_0 \\ y_1 \\ ... \\ y_n \\ \end{bmatrix}$
+$$\begin{bmatrix}\beta_0 \\ \beta_1 \\ ... \\ \beta_n \\ \end{bmatrix} \cdot \begin{bmatrix}1 & x_0 & x_0^2 & ... & x_0^q \\ 1 & x_1 & x_1^2 & ... & x_1^q \\ ... & ... & ... & ... & ...\\ 1 & x_n & x_n^2 & ... & x_n^q\\ \end{bmatrix} \approx \begin{bmatrix}y_0 \\ y_1 \\ ... \\ y_n \\ \end{bmatrix}$$
 
 The matrix equation $BX \approx Y$ is solved using the equation $B \approx YX^T(XX^T)^{-1}$, where $B$ represents the matrix of coefficients.
-
-PolyTrend utilizes K-fold cross-validation to evaluate the models.
 
 For further information on polynomial regression, refer to the [polynomial regression wiki](https://en.wikipedia.org/wiki/Polynomial_regression). 📈🔢
 
 ## Future Improvements
+PolyTrend will utilize K-fold cross-validation to evaluate the models.
 
 The PolyTrend class can benefit from the following future improvements:
 
@@ -151,8 +152,6 @@ Choosing the appropriate model selection method depends on specific requirements
 
 Future enhancements should consider factors such as computational resources, the need for faster model selection, and the trade-off between model complexity and generalization performance. Exploring advanced optimization and selection methods will further refine the PolyTrend model selection process. ⚙️📊
 
-These improvements will enhance the code's usability, performance, and maintainability, providing a better experience for engineering
-
- and data science students using the PolyTrend class.
+These improvements will enhance the code's usability, performance, and maintainability, providing a better experience for engineering and data science students using the PolyTrend class.
 
 Feel free to add to this repo with your own specialized tools according to your preference and expertise 😉
