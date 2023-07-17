@@ -1,5 +1,5 @@
 class lagrange:
-	def lagrange_polynomial(x, y):
+	def lagrange_polynomial(self, x, y):
 		"""
 		Generate and return the Lagrange's polynomial function.
 	
