@@ -8,7 +8,9 @@ For more detailed information and comprehensive exploration, refer to the docume
 
 ## Installation ⚙️
 
-To install PolyTrend, follow these steps:
+Note that the following steps are for technical users; see [Releases](https://github.com/asiimwemmanuel/polytrend/releases) for a more user-friendly approach.
+
+To install PolyTrend **from source**, follow these steps:
 
 - Install [pip](https://pip.pypa.io/en/stable/installation/) if it is not already installed on your system. 💻
 
@@ -35,6 +37,8 @@ pip install -r requirements.txt
 ```shell
 py main.py
 ```
+
+**Note:** If you are using WSL or a GUI incapable OS, insatll an X11 server like vcxsrv and link your forwarding instance with your terminal session.
 
 ## Code Explanation: `PolyTrend` Class for Polynomial Trend Analysis 🧮
 
@@ -157,7 +161,7 @@ $$\begin{bmatrix}\beta_0 \\ \beta_1 \\ ... \\ \beta_q \\ \end{bmatrix} \cdot \be
 
 The matrix equation $BX \approx Y$ is solved using the equation $B \approx YX^T(XX^T)^{-1}$, where $B$ represents the matrix of coefficients.
 
-For further information on polynomial regression, refer to the [polynomial regression wiki](https://en.wikipedia.org/wiki/Polynomial_regression). 📈🔢
+For further information on polynomial regression, refer to the [Polynomial regression Wiki](https://en.wikipedia.org/wiki/Polynomial_regression). 📈🔢
 
 ## Future Improvements 🔮🔧
 

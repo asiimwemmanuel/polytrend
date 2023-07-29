@@ -5,7 +5,7 @@ from typing import List, Tuple
 import unittest
 import numpy as np
 # relative import is buggy.
-from ..src.polytrend import PolyTrend
+from src.polytrend import PolyTrend
 
 class PolyTrendTest(unittest.TestCase):
 	def setUp(self):
