@@ -1,3 +1,5 @@
+# TODO: chatgpt, make improvements to modularity, readability and performance. Also validate the info in the docstrings and comments.
+
 import os
 import random
 from datetime import datetime
@@ -10,6 +12,11 @@ from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
 
 class PolyTrend:
+	'''
+	polyplot() -> finds and plots the fit
+	polyfind() -> finds a fit
+	polygraph() -> plots a fit
+	'''
 	def _validate_data(self,
 			degrees: List[int],
 			known_data: Union[List[Tuple[float, float]], str]
@@ -43,6 +50,7 @@ class PolyTrend:
 			degrees (List[int], optional): List of polynomial degrees to consider. Defaults to None.
 			known_data (List[Tuple[float, float]]): List of tuples representing the known data points.
 			extrap_data (List[float], optional): List of x coordinates for extrapolation. Defaults to None.
+			savefigure (bool): Whether or not the model should be saved to a PNG
 
 		Raises:
 			ValueError: If degrees and/or known data is not specified or empty.
@@ -149,9 +157,9 @@ class PolyTrend:
 		and d is the number of data points in extrap_data.
 		Space Complexity: O(n + k + d), where n is the number of known data points, k is the number of extrapolation data points,
 		and d is the number of data points in extrap_data.
-
-		Had to remove the validation check (doesn't have access to the degrees)
 		'''
+
+		# * Had to remove the validation check (doesn't have access to the degrees)
 
 		# initializing graph prerequisites
 		plt.figure()

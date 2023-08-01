@@ -33,47 +33,6 @@ correspond to the same point.</string>
     </item>
     <item>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>x values</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QPlainTextEdit" name="x_box">
-        <property name="minimumSize">
-         <size>
-          <width>61</width>
-          <height>121</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>f(x) values</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="3">
-       <widget class="QPlainTextEdit" name="y_box">
-        <property name="minimumSize">
-         <size>
-          <width>61</width>
-          <height>121</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="4">
-       <widget class="QLabel" name="label_5">
-        <property name="text">
-         <string>degrees</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="5">
        <widget class="QTextEdit" name="degree_box">
         <property name="minimumSize">
@@ -95,6 +54,47 @@ correspond to the same point.</string>
         </property>
        </widget>
       </item>
+      <item row="0" column="4">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>degrees</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>f(x) values</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPlainTextEdit" name="x_box">
+        <property name="minimumSize">
+         <size>
+          <width>61</width>
+          <height>121</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>x values</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QPlainTextEdit" name="y_box">
+        <property name="minimumSize">
+         <size>
+          <width>61</width>
+          <height>121</height>
+         </size>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
     <item>
@@ -110,7 +110,7 @@ correspond to the same point.</string>
        <bool>false</bool>
       </property>
       <property name="text">
-       <string>Find</string>
+       <string>Fit polynomial</string>
       </property>
      </widget>
     </item>
