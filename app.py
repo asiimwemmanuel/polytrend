@@ -1,12 +1,13 @@
 import sys
 from PySide6.QtWidgets import QApplication, QMainWindow
 from src.polytrend import PolyTrend
-from gui.gui import PolyTrendUi
+from gui.gui import PolyTrendUI
 
+# TODO: make an installation wizard (for Windows and macOS)
 class PolyTrendApp(QMainWindow):
 	def __init__(self):
 		super().__init__()
-		self.ui = PolyTrendUi()
+		self.ui = PolyTrendUI()
 		self.ui.setupUi(self)
 		# TODO - set the title of the window to 'PolyTrend' - it's just MainWindow right now
 
