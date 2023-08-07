@@ -1,23 +1,30 @@
 import sys
-from PySide6.QtWidgets import QApplication, QMainWindow
-from src.polytrend import PolyTrend
-from gui.gui import PolyTrendUI
+import pandas as pd
+from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog
+from src.polytrend import PolyTrend  # Import PolyTrend from polytrend.py
+from gui.gui import PolyTrendUI  # Import the generated UI class
 
-# TODO: make an installation wizard (for Windows and macOS)
 class PolyTrendApp(QMainWindow):
 	def __init__(self):
 		super().__init__()
-		self.ui = PolyTrendUI()
+		self.ui = PolyTrendUI()  # Use the generated UI class
 		self.ui.setupUi(self)
-		# TODO - set the title of the window to 'PolyTrend' - it's just MainWindow right now
+		self.setWindowTitle("PolyTrend")  # Set the title of the window
 
 		# Connect the 'Find' button click event to the plot_graph function
 		self.ui.plot.clicked.connect(self.plot_graph)
+
+		# Connect the 'Import CSV' button click event to the import_csv function
+		self.ui.csv_button.clicked.connect(self.enable_csv_path_box)  # Connect to the function to enable CSV path box
 
 		# Enable/disable the 'Find' button based on the data in the text boxes
 		self.ui.x_box.textChanged.connect(self.manage_find_button)
 		self.ui.y_box.textChanged.connect(self.manage_find_button)
 		self.ui.degree_box.textChanged.connect(self.manage_find_button)
+
+	def enable_csv_path_box(self):
+		# Enable the CSV path text box when the 'Import CSV' button is clicked
+		self.ui.csv_path_box.setEnabled(True)
 
 	def manage_find_button(self):
 		x_values = self.ui.x_box.toPlainText().split()
@@ -29,6 +36,20 @@ class PolyTrendApp(QMainWindow):
 			self.ui.plot.setEnabled(True)
 		else:
 			self.ui.plot.setEnabled(False)
+
+	def import_csv(self):
+		csv_path = self.ui.csv_path_box.toPlainText()  # Get the CSV path from the text box
+
+		if csv_path:
+			# Load CSV file using the provided path
+			df = pd.read_csv(csv_path)
+			x_values = df[df.columns[0]].tolist()
+			y_values = df[df.columns[1]].tolist()
+			self.ui.x_box.setPlainText(" ".join(map(str, x_values)))
+			self.ui.y_box.setPlainText(" ".join(map(str, y_values)))
+
+			# Trigger the find button management
+			self.manage_find_button()
 
 	def plot_graph(self):
 		# Get the values from the text boxes and convert to floats
