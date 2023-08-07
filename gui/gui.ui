@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>PolyTrend</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -26,8 +26,8 @@
      <widget class="QLabel" name="intro">
       <property name="text">
        <string>For csv data, your data MUST be in the form x,f(x).
-It is assumed that values on the same row
-correspond to the same point.</string>
+It is assumed that values on the same row correspond to the same point.
+Make sure your CSV data starts with the axis lables</string>
       </property>
      </widget>
     </item>
