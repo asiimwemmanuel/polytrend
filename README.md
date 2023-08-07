@@ -4,41 +4,57 @@
 
 PolyTrend is a regression algorithm that approximates and plots a polynomial function onto given data. It provides insights and conclusions in the fields of interpolation and polynomial regression, specifically in the subfield of approximation theory.
 
-For more detailed information and comprehensive exploration, refer to the documentation available in the `./docs/` folder. 📚🔬
+> **Note**:
+> For more detailed information and comprehensive exploration, refer to the documentation available in the `./docs/` folder. 📚🔬
 
 ## Installation ⚙️
 
-Note that the following steps are for technical users; see [Releases](https://github.com/asiimwemmanuel/polytrend/releases) for a more user-friendly approach.
+<!-- methods to include: source (suitable for modification/customization), pip package (suitable for usage in projects), docker image (suitable for running in a VM), installation wizard (suitable for standalone releases) -->
+
+### From the python package manager *
+
+<!-- * python package registration platform -->
+
+To install polytrend **as a package**, follow these instructions:
+
+- Install [pip](https://pip.pypa.io/en/stable/installation/) if it is not already installed on your system. 💻
+
+- Install the package:
+
+```shell
+pip install polytrend
+```
+
+### From source
 
 To install PolyTrend **from source**, follow these steps:
 
 - Install [pip](https://pip.pypa.io/en/stable/installation/) if it is not already installed on your system. 💻
 
-- Clone the PolyTrend repository:
+- Set up the environment (clone repo, install reqs, sample the runs)
 
 ```shell
-git clone https://github.com/asiimwemmanuel/polytrend.git
-```
-
-- Navigate to the root directory of the cloned repository:
-
-```shell
+git clone https://github.com/asiimwemmanuel/polytrend.git ~/polytrend
 cd polytrend
-```
-
-- Install the necessary dependencies:
-
-```shell
 pip install -r requirements.txt
+py sample.py
 ```
 
-- Run the main module (optional):
+- Run the app
 
 ```shell
-py main.py
+py app.py
 ```
 
-**Note:** If you are using WSL or a GUI incapable OS, insatll an X11 server like vcxsrv and link your forwarding instance with your terminal session.
+### From a docker image
+
+This will soon be available...
+
+### From a standalone release
+
+To install polytrend via a wizard, see [Releases](https://github.com/asiimwemmanuel/polytrend/releases)
+
+<!-- Note: If you are using WSL or a GUI incapable OS, insatll an X11 server like vcxsrv and link your forwarding instance with your terminal session. -->
 
 ## Code Explanation: `PolyTrend` Class for Polynomial Trend Analysis 🧮
 
@@ -132,8 +148,8 @@ $$P(x)=\sum_{i=0}^{n}\left(y_i\prod_{j=0,j\neq i}^{n}\frac{x-x_j}{x_i-x_j}\right
 Where:
 
 - $P(x)$ represents the polynomial of degree $n$ (where $n$ is the number of data points). <!-- ! check for error... -->
-- $y_i$ denotes the y-coordinate of the $i$th data point.
-- $x_i$ represents the x-coordinate of the $i$th data point.
+- $y_i$ denotes the y-coordinate of the $i^{th}$ data point.
+- $x_i$ represents the x-coordinate of the $i^{th}$ data point.
 
 This formula calculates the lowest order polynomial $P(x)$ that passes through the given data points $x_i, y_i$. It uses a weighted sum of Lagrange basis polynomials to interpolate the function or estimate the
 
@@ -151,17 +167,24 @@ Polynomial regression is used to shift from discrete to continuous data, making 
 
 Given a set of $n$ data points $(x, f(x))$, the polynomial function is approximated as:
 
-$$f(x) \approx \beta_0 + \beta_1x + \beta_2x^2 + ...+ \beta_qx^q + \varepsilon$$
+$$f(x) \approx \beta_0 + \beta_1x + \beta_2x^2 + ...+ \beta_px^p + \varepsilon$$
 
-Each $\beta_i$ represents a coefficient in the function, and $\varepsilon$ represents random error.
+Where $p$ is the decided maximum power. Each $\beta_i$ represents a coefficient in the function, and $\varepsilon$ represents random error.
 
 The approximation is determined by solving the equation:
 
-$$\begin{bmatrix}\beta_0 \\ \beta_1 \\ ... \\ \beta_q \\ \end{bmatrix} \cdot \begin{bmatrix}1 & x_0 & x_0^2 & ... & x_0^q \\ 1 & x_1 & x_1^2 & ... & x_1^q \\ ... & ... & ... & ... & ...\\ 1 & x_n & x_n^2 & ... & x_n^q\\ \end{bmatrix} \approx \begin{bmatrix}y_0 \\ y_1 \\ ... \\ y_n \\ \end{bmatrix}$$
+$$\begin{bmatrix}1 & x_0 & x_0^2 & ... & x_0^p \\ 1 & x_1 & x_1^2 & ... & x_1^p \\ \vdots & \vdots & \vdots & \vdots & \vdots\\ 1 & x_n & x_n^2 & ... & x_n^p\\ \end{bmatrix} \cdot \begin{bmatrix}\beta_0 \\ \beta_1 \\ \vdots \\ \beta_p \\ \end{bmatrix} \approx \begin{bmatrix}y_0 \\ y_1 \\ \vdots \\ y_n \\ \end{bmatrix}$$
 
-The matrix equation $BX \approx Y$ is solved using the equation $B \approx YX^T(XX^T)^{-1}$, where $B$ represents the matrix of coefficients.
+The matrix equation $XB \approx Y$ is solved using the equation $B \approx (X^{T}X)^{-1}X^{T}Y$, where $B$ represents the matrix of coefficients.
 
-For further information on polynomial regression, refer to the [Polynomial regression Wiki](https://en.wikipedia.org/wiki/Polynomial_regression). 📈🔢
+Dimensions of the matrices:
+
+- $X$ is $(n+1)$ by $(p+1)$,
+- $B$ is $(p+1)$ by $1$,
+- $Y$ is $(n+1)$ by $1$.
+
+> **Note**:
+> For further information on polynomial regression, refer to the [Polynomial regression Wiki](https://en.wikipedia.org/wiki/Polynomial_regression). 📈🔢
 
 ## Future Improvements 🔮🔧
 
