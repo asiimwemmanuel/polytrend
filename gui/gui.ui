@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>398</width>
-    <height>356</height>
+    <width>545</width>
+    <height>473</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,7 +27,7 @@
       <property name="text">
        <string>For csv data, your data MUST be in the form x,f(x).
 It is assumed that values on the same row correspond to the same point.
-Make sure your CSV data starts with the axis lables</string>
+Make sure your CSV data starts with the axis lables in the first row</string>
       </property>
      </widget>
     </item>
