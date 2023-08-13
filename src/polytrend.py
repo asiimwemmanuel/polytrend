@@ -157,21 +157,21 @@ class PolyTrend:
 			print(f'Best R-squared score for given degree range: {BEST_R_SQUARED}')
 
 			# Printing the best-fit polynomial function
-			coefficients = REGRESSOR.coef_
-			intercept = np.array(REGRESSOR.intercept_)
-			# Nested helper function to construct the polynomial expression
-			def construct_polynomial_expression(coefficients):
-				expression = f'f(x) = '
-				for i, coef in enumerate(coefficients):
-					if i > 0:
-						expression += ' + '  # Add "+" before coefficients other than the first one
-					if abs(coef) >= 1e-8:
-						expression += f'({coef:.4f})x^{i}'
-				return expression
+coefficients = REGRESSOR.coef_
+intercept = np.array(REGRESSOR.intercept_)
 
-			# Print the constructed polynomial expression
-			coefficients = REGRESSOR.coef_
-			print(construct_polynomial_expression(coefficients))
+# Nested helper function to construct the polynomial expression
+def construct_polynomial_expression(coefficients):
+    expression = f'f(x) = '
+    for i, coef in enumerate(coefficients):
+        if i > 0:
+            expression += ' + '  # Add "+" before coefficients other than the first one
+        if abs(coef) >= 1e-8:
+            expression += f'({coef:.4f})x^{i}'
+    return expression
+
+# Print the constructed polynomial expression
+print(construct_polynomial_expression(coefficients))
 
 			return lambda x_vals: REGRESSOR.predict(POLY_FEATURES.transform(np.array(x_vals).reshape(-1, 1))).flatten()
 
