@@ -1,4 +1,6 @@
-# PolyTrend 📈
+<!-- chatgpt should modify this and all other documentation to suit the software -->
+
+# PolyTrend
 
 ## Introduction 💡
 
