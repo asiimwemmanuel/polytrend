@@ -99,7 +99,7 @@ class PolyTrend:
 		processed_data = self._read_main_data(main_data=main_data)
 		x_main, y_main = zip(*processed_data[3])
 		x_main = np.asarray(x_main).reshape(-1, 1)
-		y_main = np.asarray(y_main).reshape(-1, 1)
+		y_main = np.asarray(y_main)
 
 		# preallocate memory for best polynomial features and regression model
 		POLY_FEATURES = None
@@ -127,27 +127,24 @@ class PolyTrend:
 				POLY_FEATURES = poly_features
 				REGRESSOR = reg
 
-		if REGRESSOR == None or POLY_FEATURES == None:
+		if REGRESSOR is None or POLY_FEATURES is None:
 			raise ValueError('All models had a score below negative infinity...Dayum, boi!')
 		else:
 			print(f'Best R-squared score for given degree range: {BEST_R_SQUARED}')
 
-			# Printing the best-fit polynomial function
+			# Get coefficients and intercept
 			coefficients = REGRESSOR.coef_
-			intercept = np.array(REGRESSOR.intercept_)
+			intercept = REGRESSOR.intercept_
 
-			# # Helper function to construct the polynomial expression
-			# def construct_polynomial_expression(coefficients):
-			# 	expression = f'f(x) = '
-			# 	for i, coef in enumerate(coefficients):
-			# 		if i > 0:
-			# 			expression += ' + '  # Add "+" before coefficients other than the first one
-			# 		if abs(coef) >= 1e-8:
-			# 			expression += f'({coef:.4f})x^{i}'
-			# 	return expression
+			# Helper function to construct the polynomial expression
+			def construct_polynomial_expression(coefficients, intercept):
+				expression = f'f(x) = {intercept:.4f} '
+				for i, coef in enumerate(coefficients):
+					expression += f'+ ({coef})x^{i+1} '
+				return expression
 
-			# # Print the constructed polynomial expression
-			# print(construct_polynomial_expression(coefficients))
+			# Print the constructed polynomial expression
+			print(construct_polynomial_expression(coefficients, intercept))
 
 			return lambda x_vals: REGRESSOR.predict(POLY_FEATURES.transform(np.array(x_vals).reshape(-1, 1))).flatten()
 
@@ -170,7 +167,7 @@ class PolyTrend:
 			ValueError: If known data is empty.
 			ValueError: If extrapolation data is provided but no function is given.
 		'''
-		if extrapolate_data != [] and function == None:
+		if extrapolate_data and function is None:
 			raise ValueError("If extrapolation data is provided, a function to generate predicted values must also be given.")
 
 		# Making the graph figure
@@ -195,7 +192,6 @@ class PolyTrend:
 
 			if extrapolate_data:
 				# Extract and plot extrapolated data
-				# extrapolate_data = np.array(extrapolate_data)
 				y_extrap = function(list(extrapolate_data))
 
 				# extending the function line
