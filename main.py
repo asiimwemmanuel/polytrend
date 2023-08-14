@@ -1,8 +1,8 @@
 import sys
 import pandas as pd
 from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog
-from src.polytrend import PolyTrend  # Import PolyTrend from polytrend.py
-from gui.gui import PolyTrendUI  # Import the generated UI class
+from src.polytrend import PolyTrend
+from gui.gui import PolyTrendUI
 
 class PolyTrendApp(QMainWindow):
 	def __init__(self):
@@ -15,7 +15,7 @@ class PolyTrendApp(QMainWindow):
 		self.ui.plot.clicked.connect(self.plot_graph)
 
 		# Connect the 'Import CSV' button click event to the import_csv function
-		self.ui.csv_button.clicked.connect(self.enable_csv_path_box)  # Connect to the function to enable CSV path box
+		self.ui.csv_button.clicked.connect(self.import_csv)
 
 		# Enable/disable the 'Find' button based on the data in the text boxes
 		self.ui.x_box.textChanged.connect(self.manage_find_button)
@@ -24,7 +24,7 @@ class PolyTrendApp(QMainWindow):
 
 	def enable_csv_path_box(self):
 		# Enable the CSV path text box when the 'Import CSV' button is clicked
-		self.ui.csv_path_box.setEnabled(True)
+		self.ui.save_checkbox.setEnabled(True)
 
 	def manage_find_button(self):
 		x_values = self.ui.x_box.toPlainText().split()
@@ -38,7 +38,7 @@ class PolyTrendApp(QMainWindow):
 			self.ui.plot.setEnabled(False)
 
 	def import_csv(self):
-		csv_path = self.ui.csv_path_box.toPlainText()  # Get the CSV path from the text box
+		csv_path, _ = QFileDialog.getOpenFileName(self, "Open CSV File", "", "CSV Files (*.csv)")
 
 		if csv_path:
 			# Load CSV file using the provided path

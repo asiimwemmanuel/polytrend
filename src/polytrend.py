@@ -22,26 +22,6 @@ class PolyTrend:
 		- polygraph(): Plots the function, known data, and extrapolated data.
 	'''
 
-	def _validate_data(self,
-			degrees: List[int],
-			main_data: Union[List[Tuple[float, float]], str]
-		) -> None:
-		'''
-		Validate degrees and main_data to ensure they are not empty.
-
-		Args:
-			degrees (List[int]): List of polynomial degrees to consider.
-			main_data (Union[List[Tuple[float, float]], str]): List of tuples representing the known data points or CSV file path.
-
-		Raises:
-			ValueError: If degrees or main_data is empty.
-		'''
-		if not main_data:
-			raise ValueError('Main data must be specified as a non-empty list or CSV file path.')
-
-		if not degrees:
-			raise ValueError('Degrees must be specified as a non-empty list.')
-
 	def _read_main_data(self,
 			main_data: Union[List[Tuple[float, float]], str]
 		) -> List:
@@ -80,7 +60,6 @@ class PolyTrend:
 
 		return [graph_title, x_axis_label, y_axis_label, data_points]
 
-
 	def polyplot(self,
 		degrees: List[int],
 		main_data: Union[List[Tuple[float, float]], str],
@@ -99,7 +78,6 @@ class PolyTrend:
 		Raises:
 			ValueError: If degrees and/or known data is not specified or empty.
 		'''
-		self._validate_data(degrees, main_data)
 		fitted_model = self.polyfind(degrees, main_data)
 		self.polygraph(main_data, extrapolate_data, function=fitted_model, save_figure=save_figure)
 
@@ -117,8 +95,6 @@ class PolyTrend:
 		Returns:
 			Callable[[List[float]], List[float]]: A function that predicts values based on the polynomial.
 		'''
-		self._validate_data(degrees=degrees, main_data=main_data)
-
 		# shaping the data into usable structures
 		processed_data = self._read_main_data(main_data=main_data)
 		x_main, y_main = zip(*processed_data[3])
@@ -151,7 +127,7 @@ class PolyTrend:
 				POLY_FEATURES = poly_features
 				REGRESSOR = reg
 
-		if REGRESSOR is None or POLY_FEATURES is None:
+		if REGRESSOR == None or POLY_FEATURES == None:
 			raise ValueError('All models had a score below negative infinity...Dayum, boi!')
 		else:
 			print(f'Best R-squared score for given degree range: {BEST_R_SQUARED}')
@@ -159,19 +135,19 @@ class PolyTrend:
 			# Printing the best-fit polynomial function
 			coefficients = REGRESSOR.coef_
 			intercept = np.array(REGRESSOR.intercept_)
-			# Nested helper function to construct the polynomial expression
-			def construct_polynomial_expression(coefficients):
-				expression = f'f(x) = '
-				for i, coef in enumerate(coefficients):
-					if i > 0:
-						expression += ' + '  # Add "+" before coefficients other than the first one
-					if abs(coef) >= 1e-8:
-						expression += f'({coef:.4f})x^{i}'
-				return expression
 
-			# Print the constructed polynomial expression
-			coefficients = REGRESSOR.coef_
-			print(construct_polynomial_expression(coefficients))
+			# # Helper function to construct the polynomial expression
+			# def construct_polynomial_expression(coefficients):
+			# 	expression = f'f(x) = '
+			# 	for i, coef in enumerate(coefficients):
+			# 		if i > 0:
+			# 			expression += ' + '  # Add "+" before coefficients other than the first one
+			# 		if abs(coef) >= 1e-8:
+			# 			expression += f'({coef:.4f})x^{i}'
+			# 	return expression
+
+			# # Print the constructed polynomial expression
+			# print(construct_polynomial_expression(coefficients))
 
 			return lambda x_vals: REGRESSOR.predict(POLY_FEATURES.transform(np.array(x_vals).reshape(-1, 1))).flatten()
 
@@ -194,10 +170,7 @@ class PolyTrend:
 			ValueError: If known data is empty.
 			ValueError: If extrapolation data is provided but no function is given.
 		'''
-		if not main_data:
-			raise ValueError('Known data must be specified as a non-empty list or CSV file path.')
-
-		if extrapolate_data and not function:
+		if extrapolate_data != [] and function == None:
 			raise ValueError("If extrapolation data is provided, a function to generate predicted values must also be given.")
 
 		# Making the graph figure
@@ -254,12 +227,12 @@ class PolyTrend:
 				print(f'Error saving figure: {str(e)}')
 
 if __name__ == '__main__':
-	degrees = [1, 2, 3, 4]
-	data = [(float(x), float(x**2)) for x in range(-10, 11)]
+	degrees = [1, 2, 3]
+	data = [(float(x), float(0.5*x**2 - 2*x + 1 + random.uniform(-1000, 1000))) for x in range(0, 100)]
 	polytrend_instance = PolyTrend()
 
 	try:
-		polytrend_instance.polyplot(degrees, data, extrapolate_data=[4, 5], save_figure=False)
+		polytrend_instance.polyplot(degrees, data, extrapolate_data=[15, 20], save_figure=False)
 	except ValueError as ve:
 		print(f"Error: {ve}")
 
