@@ -1,6 +1,6 @@
 <!-- chatgpt should modify this and all other documentation to suit the software -->
 
-# PolyTrend
+# PolyTrend 📈
 
 ## Introduction 💡
 
@@ -36,21 +36,20 @@ To install PolyTrend **from source**, follow these steps:
 - Set up the environment (clone repo, install reqs, sample the runs)
 
 ```shell
-git clone https://github.com/asiimwemmanuel/polytrend.git ~/polytrend
+git clone https://github.com/asiimwemmanuel/polytrend.git
 cd polytrend
 pip install -r requirements.txt
-py sample.py
 ```
 
 - Run the app
 
 ```shell
-py app.py
+py main.py
 ```
 
-### From a docker image
+<!-- ### From a docker image
 
-This will soon be available...
+This will soon be available... -->
 
 ### From a standalone release
 

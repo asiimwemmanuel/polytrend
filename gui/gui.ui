@@ -27,7 +27,8 @@
       <property name="text">
        <string>For csv data, your data MUST be in the form x,f(x).
 It is assumed that values on the same row correspond to the same point.
-Make sure your CSV data starts with the axis lables in the first row</string>
+Make sure your CSV data starts with the axis lables in the first row
+Accepted delimiters are whitespace and linebreaks in the text boxes below</string>
       </property>
      </widget>
     </item>
