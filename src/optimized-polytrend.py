@@ -1,3 +1,5 @@
+# strictly for research purposes
+
 import os
 import random
 from typing import List, Tuple, Callable, Optional
