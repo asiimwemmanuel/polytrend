@@ -3,3 +3,4 @@ scikit-learn
 matplotlib
 pandas
 PyQt6
+PySide6
