@@ -177,7 +177,15 @@ The approximation is determined by solving the equation:
 
 $$\begin{bmatrix}1 & x_0 & x_0^2 & ... & x_0^p \\ 1 & x_1 & x_1^2 & ... & x_1^p \\ \vdots & \vdots & \vdots & \vdots & \vdots\\ 1 & x_n & x_n^2 & ... & x_n^p\\ \end{bmatrix} \cdot \begin{bmatrix}\beta_0 \\ \beta_1 \\ \vdots \\ \beta_p \\ \end{bmatrix} \approx \begin{bmatrix}y_0 \\ y_1 \\ \vdots \\ y_n \\ \end{bmatrix}$$
 
-The matrix equation $XB \approx Y$ is solved using the equation $B \approx (X^{T}X)^{-1}X^{T}Y$, where $B$ represents the matrix of coefficients.
+The matrix equation $XB \approx Y$ is solved using the *Normal Equation*: $$B \approx (X^{T}X)^{-1}X^{T}Y$$
+
+Where:
+
+- $B$ is the coefficient vector.
+- $X$ is the matrix of input features.
+- $Y$ is the vector of target values.
+- $X^{T}$ denotes the transpose of the input feature matrix.
+- $(X^{T}X)^{-1}$ represents the inverse of the covariance matrix of the input features.
 
 Dimensions of the matrices:
 
