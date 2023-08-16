@@ -124,6 +124,8 @@ class PolyTrend:
 		BEST_R_SQUARED = float('-inf')
 
 		# find the best-fit polynomial function; Brute Force approach
+		# TODO employ a method that evaluates whether the increase in complexity adds any crucial info
+		# ! The highest degree procided is always what is taken
 		for degree in degrees:
 			# generate polynomial features
 			poly_features = PolynomialFeatures(degree=degree, include_bias=False)
