@@ -155,7 +155,7 @@ class PolyTrend:
 			def construct_polynomial_expression(coefficients, intercept):
 				expression = f'f(x) = {intercept:.4f} '
 				for i, coef in enumerate(coefficients):
-					expression += f'+ ({coef})x^{i+1} '
+					expression += f'+ ({coef:.4f})x^{i+1} '
 				return expression
 
 			# Print the constructed polynomial expression
