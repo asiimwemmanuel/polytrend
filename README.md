@@ -13,11 +13,11 @@ PolyTrend is a regression algorithm that approximates and plots a polynomial fun
 
 <!-- methods to include: source (suitable for modification/customization), pip package (suitable for usage in projects), docker image (suitable for running in a VM), installation wizard (suitable for standalone releases) -->
 
-### From the python package manager *
+<!-- ### From the python packaging index * -->
 
 <!-- * python package registration platform -->
 
-To install polytrend **as a package**, follow these instructions:
+<!-- To install polytrend **as a package**, follow these instructions:
 
 - Install [pip](https://pip.pypa.io/en/stable/installation/) if it is not already installed on your system. 💻
 
@@ -26,6 +26,7 @@ To install polytrend **as a package**, follow these instructions:
 ```shell
 pip install polytrend
 ```
+-->
 
 ### From source
 
@@ -51,9 +52,9 @@ py main.py
 
 This will soon be available... -->
 
-### From a standalone release
+<!-- ### From a standalone release
 
-To install polytrend via a wizard, see [Releases](https://github.com/asiimwemmanuel/polytrend/releases)
+To install polytrend via a wizard, see [Releases](https://github.com/asiimwemmanuel/polytrend/releases)-->
 
 <!-- Note: If you are using WSL or a GUI incapable OS, insatll an X11 server like vcxsrv and link your forwarding instance with your terminal session. -->
 
