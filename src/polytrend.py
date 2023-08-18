@@ -125,17 +125,17 @@ class PolyTrend:
 
 		# find the best-fit polynomial function; Brute Force approach
 		# TODO employ a method that evaluates whether the increase in complexity adds any crucial info
-		# ! The highest degree procided is always what is taken
+		# ! The highest degree provided is always what is used. Fix that with ridge regression, or another method that punishes needless complexity
 		for degree in degrees:
-			# generate polynomial features
+			# generate polynomial features (the X matrix)
 			poly_features = PolynomialFeatures(degree=degree, include_bias=False)
 			x_poly = poly_features.fit_transform(x_main)
 
-			# fit linear regression model
+			# fit linear regression model (find the coefficients vector via the X matrix and y vector, via the Normal Equation)
 			reg = LinearRegression()
 			reg.fit(x_poly, y_main)
 
-			# calculate score for model evaluation
+			# calculate R-squared score for model evaluation
 			score = reg.score(x_poly, y_main)
 
 			# update the best score and models if a higher score is obtained
@@ -155,9 +155,9 @@ class PolyTrend:
 
 			# Helper function to construct the polynomial expression
 			def construct_polynomial_expression(coefficients, intercept):
-				expression = f'f(x) = {intercept:.4f} '
+				expression = f'f(x) = {intercept} '
 				for i, coef in enumerate(coefficients):
-					expression += f'+ ({coef:.4f})x^{i+1} '
+					expression += f'+ ({coef})x^{i+1} '
 				return expression
 
 			# Print the constructed polynomial expression
