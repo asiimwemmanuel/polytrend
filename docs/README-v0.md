@@ -1,4 +1,5 @@
 # 9:56 PM 21/11/22
+
 This project is to modularize my math functions and formulae, specifically *resistance in parallel* and the *general formula for quadratic sequences*.
 
 **Go to ./theory/theory_v1 for documentation**
@@ -6,11 +7,12 @@ This project is to modularize my math functions and formulae, specifically *resi
 <p style="font-family: consolas; font-size: 20px;">Languages used: C++23, Python3</p>
 
 ## Resources
-	- Abbott: Understanding Analysis
-	- John K. Hunter: An Introduction to Real Analysis
-	- Robert G. Bartle | Donald R. Sherbert: Introduction to Real Analysis
-	- William F. Trench: Introduction to Real Analysis
-	- Attached documentation
+
+- Abbott: Understanding Analysis
+- John K. Hunter: An Introduction to Real Analysis
+- Robert G. Bartle | Donald R. Sherbert: Introduction to Real Analysis
+- William F. Trench: Introduction to Real Analysis
+- Attached documentation
 
 <br/>
 
@@ -29,8 +31,10 @@ This generalisation should not have compounding complexity ie. it should not hav
 > To be soon succeeded by a program analysing series of varying orders, not just quadratic under polynomial complexity
 >
 > *For **unique** & **non-repeating** terms a, b, c in quadratic series;*
+> >
 > > - *α = b - a* </br>
 > > - *x = c - b - α* </br> <!-- x = c + a - 2b*-->
+> >
 > <p style="font-family: Gabriola; font-size: 35px; text-align: center;">nth term = α + ∑ (xi + α - x) from i = 1 to n-1</p>
 > <p style="font-size: 15px; text-align: right;">(proof in the attached documentation)</p>
 
