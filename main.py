@@ -22,7 +22,7 @@ from gui.gui import PolyTrendUI
 class PolyTrendApp(QMainWindow):
 	def __init__(self):
 		super().__init__()
-		self.ui = PolyTrendUI()  # Use the generated UI class
+		self.ui = PolyTrendUI()
 		self.ui.setupUi(self)
 		self.setWindowTitle("PolyTrend")  # Set the title of the window
 

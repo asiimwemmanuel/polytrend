@@ -147,7 +147,6 @@ class PolyTrend:
 		if REGRESSOR is None or POLY_FEATURES is None:
 			raise ValueError('All models had a score below negative infinity...Dayum, boi!')
 		else:
-			print(f'Best R-squared score for given degree range: {BEST_R_SQUARED}')
 
 			# Get coefficients and intercept
 			coefficients = REGRESSOR.coef_
@@ -160,8 +159,17 @@ class PolyTrend:
 					expression += f'+ ({coef})x^{i+1} '
 				return expression
 
-			# Print the constructed polynomial expression
-			print(construct_polynomial_expression(coefficients, intercept))
+			# Save the function to text output
+			timestamp = datetime.now().strftime('%Y.%m-%d-%H:%M')
+			filename = f'function_{timestamp}.txt'
+			log_dir = os.path.join(os.path.dirname(__file__), '..', 'log')
+			os.makedirs(log_dir, exist_ok=True)
+			filepath = os.path.join(log_dir, filename)
+
+			with open(filepath, 'w') as file:
+				file.write(datetime.now().strftime('%Y.%m-%d-%H:%M'))
+				file.write(f'\nGenerated function: {construct_polynomial_expression(coefficients, intercept)}\n')
+				file.write(f'Best R-squared score for given degree range: {BEST_R_SQUARED}')
 
 			return lambda x_vals: REGRESSOR.predict(POLY_FEATURES.transform(np.array(x_vals).reshape(-1, 1))).flatten()
 

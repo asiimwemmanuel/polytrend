@@ -1,4 +1,4 @@
-these contain different areas to improve functionality of PolyTrend
+# These contain different areas to improve functionality of PolyTrend
 
 Support for Additional Function Types: Expand the script to include more predefined function types or allow users to define their own custom functions. This would provide greater flexibility in fitting a wider range of mathematical relationships.
 
