@@ -4,7 +4,7 @@
 # Time: O(n^2)
 # Space: O(k(k+1)/2)
 class NP_alg:
-	def np_alg(prog: list, n: int) -> float:
+	def np_alg(self, prog: list, n: int) -> float | None:
 
 		# k = order + 1. Assumes prog[] contains the NECESSARY terms only
 		k = len(prog)

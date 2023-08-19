@@ -1,4 +1,4 @@
-<!-- chatgpt should modify this and all other documentation to suit the software -->
+<!-- chatgpt should update this and all other documentation to suit the software -->
 
 # PolyTrend 📈
 
@@ -11,28 +11,13 @@ PolyTrend is a regression algorithm that approximates and plots a polynomial fun
 
 ## Installation ⚙️
 
-<!-- methods to include: source (suitable for modification/customization), pip package (suitable for usage in projects), docker image (suitable for running in a VM), installation wizard (suitable for standalone releases) -->
-
-<!-- ### From the python packaging index * -->
-
-<!-- * python package registration platform -->
-
-<!-- To install polytrend **as a package**, follow these instructions:
-
-- Install [pip](https://pip.pypa.io/en/stable/installation/) if it is not already installed on your system. 💻
-
-- Install the package:
-
-```shell
-pip install polytrend
-```
--->
+<!-- methods to include: source (suitable for modification/customization), python package index (suitable for usage in projects), docker image (suitable for running in a VM), installation wizard with binary(suitable for standalone releases) -->
 
 ### From source
 
 To install PolyTrend **from source**, follow these steps:
 
-- Install [pip](https://pip.pypa.io/en/stable/installation/) if it is not already installed on your system. 💻
+- Install [Python](https://www.python.org/downloads/) and [Git](https://git-scm.com/downloads) if not already installed on your system. 💻
 
 - Set up the environment (clone repo, install reqs, sample the runs)
 
@@ -48,15 +33,29 @@ pip install -r requirements.txt
 py main.py
 ```
 
+<!-- ### From the python packaging index * -->
+
+<!-- To install polytrend **as a package**, follow these instructions:
+
+- Install [Python](https://www.python.org/downloads/) if it is not already installed on your system. 💻
+
+- Install the package:
+
+```shell
+pip install polytrend
+```
+-->
+
 <!-- ### From a docker image
 
 This will soon be available... -->
 
-<!-- ### From a standalone release
+<!-- ### From a standalone release/binary
 
 To install polytrend via a wizard, see [Releases](https://github.com/asiimwemmanuel/polytrend/releases)-->
 
-<!-- Note: If you are using WSL or a GUI incapable OS, insatll an X11 server like vcxsrv and link your forwarding instance with your terminal session. -->
+<!-- Note: If you are using WSL or a GUI incapable OS, install an X11 server like vcxsrv and link your forwarding instance with your terminal session.
+Do so only if the app fails to run in case you installed it from source -->
 
 ## Code Explanation: `PolyTrend` Class for Polynomial Trend Analysis 🧮
 
