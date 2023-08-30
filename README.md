@@ -1,4 +1,5 @@
 <!-- chatgpt should update this and all other documentation to suit the software -->
+<!-- next part of development: register on PyPI, make docker image, generate binaries -->
 
 # PolyTrend 📈
 
