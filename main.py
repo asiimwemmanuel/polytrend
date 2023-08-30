@@ -17,7 +17,7 @@ import sys
 import pandas as pd
 from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog
 from src.polytrend import PolyTrend
-from gui.gui import PolyTrendUI
+from view.gui import PolyTrendUI
 
 class PolyTrendApp(QMainWindow):
 	def __init__(self):
