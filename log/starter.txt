@@ -1,4 +1,0 @@
-This file demonstrates the general format for the log output
-
-Generated function at 2023.08-18-16:21
-f(x) = 21583.100002122694 + (-134.8940819811849)x^1 + (0.6356440730808257)x^2 
