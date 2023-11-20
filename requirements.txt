@@ -3,4 +3,6 @@ scikit-learn
 matplotlib
 pandas
 PyQt6
+# PyQt5
+# libxcb-xinerama0
 PySide6

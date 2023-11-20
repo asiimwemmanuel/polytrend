@@ -17,12 +17,12 @@ import sys
 import pandas as pd
 from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog
 from src.polytrend import PolyTrend
-from view.gui import PolyTrendUI
+from view.gui_ui import Ui_PolyTrend
 
 class PolyTrendApp(QMainWindow):
 	def __init__(self):
 		super().__init__()
-		self.ui = PolyTrendUI()
+		self.ui = Ui_PolyTrend()
 		self.ui.setupUi(self)
 		self.setWindowTitle("PolyTrend")  # Set the title of the window
 
