@@ -175,9 +175,9 @@ Where $p$ is the decided maximum power. Each $\beta_i$ represents a coefficient 
 
 The approximation is determined by solving the equation:
 
-$$\begin{bmatrix}1 & x_0 & x_0^2 & ... & x_0^p \\ 1 & x_1 & x_1^2 & ... & x_1^p \\ \vdots & \vdots & \vdots & \vdots & \vdots\\ 1 & x_n & x_n^2 & ... & x_n^p\\ \end{bmatrix} \cdot \begin{bmatrix}\beta_0 \\ \beta_1 \\ \vdots \\ \beta_p \\ \end{bmatrix} \approx \begin{bmatrix}y_0 \\ y_1 \\ \vdots \\ y_n \\ \end{bmatrix}$$
+$$\begin{bmatrix}1 & x_0 & x_0^2 & ... & x_0^p \\ 1 & x_1 & x_1^2 & ... & x_1^p \\ \vdots & \vdots & \vdots & \ddots & \vdots\\ 1 & x_n & x_n^2 & ... & x_n^p\\ \end{bmatrix} \cdot \begin{bmatrix}\beta_0 \\ \beta_1 \\ \vdots \\ \beta_p \\ \end{bmatrix} \approx \begin{bmatrix}y_0 \\ y_1 \\ \vdots \\ y_n \\ \end{bmatrix}$$
 
-The matrix equation $XB \approx Y$ is solved using the *Normal Equation*: $$B \approx (X^{T}X)^{-1}X^{T}Y$$
+The matrix equation $XB \approx Y$ is solved using the [*Normal Equation*](https://www.geeksforgeeks.org/ml-normal-equation-in-linear-regression/): $$B \approx (X^{T}X)^{-1}(X^{T}Y)$$
 
 Where:
 
