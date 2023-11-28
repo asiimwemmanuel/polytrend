@@ -34,6 +34,8 @@ pip install -r requirements.txt
 py main.py
 ```
 
+> Note for linux: If issues persist, visit [this website](https://web.stanford.edu/dept/cs_edu/resources/qt/install-linux) and follow the instructions to configure Qt on your system
+
 <!-- ### From the python packaging index * -->
 
 <!-- To install polytrend **as a package**, follow these instructions:
@@ -126,6 +128,8 @@ With this same logic, quadratic sequences (and any other, for that matter) can b
 Asiimwe's general form of quadratic nth term problems:
 
 $$a + \sum_{i=1}^{n-1}\alpha + x(i-1)$$
+
+<!-- also comment about how this ties into Sequences and series, and general formulae for calculating summations -->
 
 The above formula is limited to linear and quadratic sequences, requiring a different method for higher degrees. Notice the general form of linear sequences as the subject of summation. It can be inferred that that expression itself is the subject of summation for cubic problems and THAT expression is the subject of quartic problems. A recursive pattern is observed in this approach when generalizing for problems with variable degrees.
 
