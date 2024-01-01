@@ -23,6 +23,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
+from sklearn.metrics import mean_squared_error
 
 class PolyTrend:
 	'''
@@ -96,7 +97,8 @@ class PolyTrend:
 		fitted_model = self.polyfind(degrees, main_data)
 		self.polygraph(main_data, extrapolate_data, function=fitted_model, save_figure=save_figure)
 
-	def polyfind(self,
+	def polyfind(
+		self,
 		degrees: List[int],
 		main_data: Union[List[Tuple[float, float]], str]
 	) -> Callable[[List[float]], np.ndarray]:
@@ -110,68 +112,68 @@ class PolyTrend:
 		Returns:
 			Callable[[List[float]], List[float]]: A function that predicts values based on the polynomial.
 		'''
-		# shaping the data into usable structures
+		def _model_selector(
+				x_main: np.ndarray,
+				y_main: np.ndarray
+		) -> Tuple[LinearRegression, PolynomialFeatures, float]:
+
+			buffer_bic = float('inf')
+			buffer_model = None
+			buffer_poly_features = None
+
+			for degree in degrees:
+				# the X matrix
+				poly_features = PolynomialFeatures(degree=degree, include_bias=False)
+				x_poly = poly_features.fit_transform(x_main)
+
+				# the Normal Equation in action
+				reg = LinearRegression()
+				reg.fit(x_poly, y_main)
+
+				# Bayesian Information Criterion metric
+				n = len(y_main)
+				k = degree + 1
+				mse = mean_squared_error(y_main, reg.predict(x_poly))
+				bic_score = n * np.log(mse) + k * np.log(n)
+
+				if bic_score < buffer_bic:
+					buffer_bic = bic_score
+					buffer_model = reg
+					buffer_poly_features = poly_features
+
+			if buffer_model is None or buffer_poly_features is None:
+				raise ValueError('All models had a BIC score of infinity...')
+
+			return buffer_model, buffer_poly_features, buffer_bic
+
 		processed_data = self._read_main_data(main_data=main_data)
 		x_main, y_main = zip(*processed_data[3])
 		x_main = np.asarray(x_main).reshape(-1, 1)
 		y_main = np.asarray(y_main)
 
-		# preallocate memory for best polynomial features and regression model
-		POLY_FEATURES = None
-		REGRESSOR = None
+		best_fit_model, best_poly_features, best_bic = _model_selector(x_main, y_main)
 
-		# performance tracker (R-squared measure)
-		BEST_R_SQUARED = float('-inf')
+		coefficients = best_fit_model.coef_
+		intercept = best_fit_model.intercept_
 
-		# find the best-fit polynomial function; Brute Force approach
-		# TODO employ a method that evaluates whether the increase in complexity adds any crucial info
-		# ! The highest degree provided is always what is used. Fix that with ridge regression, or another method that punishes needless complexity
-		for degree in degrees:
-			# generate polynomial features (the X matrix)
-			poly_features = PolynomialFeatures(degree=degree, include_bias=False)
-			x_poly = poly_features.fit_transform(x_main)
+		def construct_polynomial_expression(coefficients, intercept):
+			expression = f'f(x) = {intercept} '
+			for i, coef in enumerate(coefficients):
+				expression += f'+ ({coef})x^{i + 1} '
+			return expression
 
-			# fit linear regression model (find the coefficients vector via the X matrix and y vector, via the Normal Equation)
-			reg = LinearRegression()
-			reg.fit(x_poly, y_main)
+		current_timestamp = datetime.now().strftime('%Y.%m-%d-%H:%M')
+		output_filename = f'function_{current_timestamp}.txt'
+		log_directory = os.path.join(os.path.dirname(__file__), '..', 'log')
+		os.makedirs(log_directory, exist_ok=True)
+		output_filepath = os.path.join(log_directory, output_filename)
 
-			# calculate R-squared score for model evaluation
-			score = reg.score(x_poly, y_main)
+		with open(output_filepath, 'w') as file:
+			file.write(datetime.now().strftime('%Y.%m-%d-%H:%M'))
+			file.write(f'\nGenerated function: {construct_polynomial_expression(coefficients, intercept)}\n')
+			file.write(f'Best BIC score for given degree range: {best_bic}')
 
-			# update the best score and models if a higher score is obtained
-			if score > BEST_R_SQUARED:
-				BEST_R_SQUARED = score
-				POLY_FEATURES = poly_features
-				REGRESSOR = reg
-
-		if REGRESSOR is None or POLY_FEATURES is None:
-			raise ValueError('All models had a score below negative infinity...Dayum, boi!')
-		else:
-
-			# Get coefficients and intercept
-			coefficients = REGRESSOR.coef_
-			intercept = REGRESSOR.intercept_
-
-			# Helper function to construct the polynomial expression
-			def construct_polynomial_expression(coefficients, intercept):
-				expression = f'f(x) = {intercept} '
-				for i, coef in enumerate(coefficients):
-					expression += f'+ ({coef})x^{i+1} '
-				return expression
-
-			# Save the function to text output
-			timestamp = datetime.now().strftime('%Y.%m-%d-%H:%M')
-			filename = f'function_{timestamp}.txt'
-			log_dir = os.path.join(os.path.dirname(__file__), '..', 'log')
-			os.makedirs(log_dir, exist_ok=True)
-			filepath = os.path.join(log_dir, filename)
-
-			with open(filepath, 'w') as file:
-				file.write(datetime.now().strftime('%Y.%m-%d-%H:%M'))
-				file.write(f'\nGenerated function: {construct_polynomial_expression(coefficients, intercept)}\n')
-				file.write(f'Best R-squared score for given degree range: {BEST_R_SQUARED}')
-
-			return lambda x_vals: REGRESSOR.predict(POLY_FEATURES.transform(np.array(x_vals).reshape(-1, 1))).flatten()
+		return lambda x_vals: best_fit_model.predict(best_poly_features.transform(np.array(x_vals).reshape(-1, 1))).flatten()
 
 	def polygraph(self,
 		main_data: Union[List[Tuple[float, float]], str],
