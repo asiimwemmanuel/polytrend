@@ -163,42 +163,70 @@ This formula calculates the lowest order polynomial $P(x)$ that passes through t
 
 **Note**: $n$ in the formula is not the same as the polynomial degree $q$ used in the previous section.
 
-For more information on the Lagrange polynomial, refer to the [Lagrange polynomial Wiki](https://en.wikipedia.org/wiki/Lagrange_polynomial).
+> For more information on the Lagrange polynomial, refer to the [Lagrange polynomial Wiki](https://en.wikipedia.org/wiki/Lagrange_polynomial).
 
-To increase error tolerance and applicability in real-world data, a new technique is incorporated. 📈🔍
+To increase error tolerance and applicability in real-world data, a new technique is incorporated.
 
 ### Polynomial Regression
 
 Polynomial regression is used to shift from discrete to continuous data, making it applicable in real-world data analytics where error is present. It offers a tradeoff between accuracy and generality for various applications.
 
-Given a set of $n$ data points $(x, f(x))$, the polynomial function is approximated as:
+Given a set of $n$ data points $(x, f(x))$, the polynomial function of degree $m$ is approximated as:
 
-$$f(x) \approx \beta_0 + \beta_1x + \beta_2x^2 + ...+ \beta_px^p + \varepsilon$$
+\[ f(x_i) = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + \cdots + \beta_m x_i^m + \varepsilon_i \quad \text{(for } i = 1, 2, \ldots, n\text{)} \]
 
-Where $p$ is the decided maximum power. Each $\beta_i$ represents a coefficient in the function, and $\varepsilon$ represents random error.
+Here, $m$ signifies the chosen maximum power, each $\beta_i$ represents a coefficient in the function, and $\varepsilon_i$ denotes random error.
 
-The approximation is determined by solving the equation:
+The approximation is determined by solving for $\vec{\beta}$ in the matrix equation:
 
-$$\begin{bmatrix}1 & x_0 & x_0^2 & ... & x_0^p \\ 1 & x_1 & x_1^2 & ... & x_1^p \\ \vdots & \vdots & \vdots & \ddots & \vdots\\ 1 & x_n & x_n^2 & ... & x_n^p\\ \end{bmatrix} \cdot \begin{bmatrix}\beta_0 \\ \beta_1 \\ \vdots \\ \beta_p \\ \end{bmatrix} \approx \begin{bmatrix}y_0 \\ y_1 \\ \vdots \\ y_n \\ \end{bmatrix}$$
+\[ \begin{bmatrix} y_0 \\ y_1 \\ y_2 \\ \vdots \\ y_n \end{bmatrix} = \begin{bmatrix} 1 & x_0 & x_0^2 & \dots & x_0^m \\ 1 & x_1 & x_1^2 & \dots & x_1^m \\ 1 & x_2 & x_2^2 & \dots & x_2^m \\ \vdots & \vdots & \vdots & \ddots & \vdots \\ 1 & x_n & x_n^2 & \dots & x_n^m \end{bmatrix} \begin{bmatrix} \beta_0\\ \beta_1\\ \beta_2\\ \vdots \\ \beta_m \end{bmatrix} + \begin{bmatrix} \varepsilon_0\\ \varepsilon_1\\ \varepsilon_2 \\ \vdots \\ \varepsilon_n \end{bmatrix} \]
 
-The matrix equation $XB \approx Y$ is solved using the [*Normal Equation*](https://www.geeksforgeeks.org/ml-normal-equation-in-linear-regression/): $$B \approx (X^{T}X)^{-1}(X^{T}Y)$$
+The matrix equation $\vec{y} = \mathbf{X} \vec{\beta} + \vec{\varepsilon}$ is solved using the [Normal Equation](https://www.geeksforgeeks.org/ml-normal-equation-in-linear-regression):
+
+\[ \widehat{\vec{\beta}} = (\mathbf{X}^\mathsf{T} \mathbf{X})^{-1} \mathbf{X}^\mathsf{T} \vec{y} \]
 
 Where:
 
-- $B$ is the coefficient vector.
-- $X$ is the matrix of input features.
-- $Y$ is the vector of target values.
-- $X^{T}$ denotes the transpose of the input feature matrix.
-- $(X^{T}X)^{-1}$ represents the inverse of the covariance matrix of the input features.
+- $\widehat{\vec{\beta}}$ is the estimated coefficient vector.
+- $\mathbf{X}$ is the matrix of input features.
+- $\vec{y}$ is the vector of target values.
+- $\mathbf{X}^\mathsf{T}$ denotes the transpose of the input feature matrix.
+- $(\mathbf{X}^\mathsf{T} \mathbf{X})^{-1}$ represents the inverse of the covariance matrix of the input features.
 
 Dimensions of the matrices:
 
-- $X$ is $(n+1)$ by $(p+1)$,
-- $B$ is $(p+1)$ by $1$,
-- $Y$ is $(n+1)$ by $1$.
+- $\mathbf{X}$ is $(n+1)$ by $(m+1)$,
+- $\widehat{\vec{\beta}}$ is $(m+1)$ by $1$,
+- $\vec{y}$ is $(n+1)$ by $1$.
 
 > **Note**:
 > For further information on polynomial regression, refer to the [Polynomial regression Wiki](https://en.wikipedia.org/wiki/Polynomial_regression). 📈🔢
+
+### Model Selection
+
+Throughout my implementation of polynomial regression methods in generating predictive models, I noticed a peculiar tendency; given the task of choosing the degree most optimal for the model, say between $a$ and $b$, the algorithm always chose $max(a, b)$. This made sense since the algorithm judged the better degree to be that whose polynomial achieved a higher score whose metric I simply took to be MSE.
+
+I am convinced this was a notorious problem at least offhead by Occam's Razor (that the simpler answer is often more correct), by the fact that programmers would likely refine their algorithms to cut out needless calculation, and also by the fact that there were already multiple responses to it, the majority of which resembled (as they tend to in such fields).
+
+The Bayesian Information Criterion (BIC) is the most well known, and states:
+
+\[ BIC = n \cdot \ln(MSE) + k \cdot \ln(n) \]
+
+Where:
+
+- \( n \) is the number of data points.
+- \( MSE \) is the mean squared error.
+- \( k \) is the number of parameters in the linear regression model.
+
+\[ MSE = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2 \]
+
+Where:
+
+- \( n \) is the number of data points.
+- \( y_i \) is the actual value for the \(i\)-th data point.
+- \( \hat{y}_i \) is the predicted value for the \(i\)-th data point.
+
+The beauty of BIC is while it rewards accuracy (the first term in the summation), it also penelizes complexity in its second term. What I find peculiar is it's additive rather than multiplicative as we've observed with numerous scientific derived quantities (one example of which is velocity). This intrigued me to investigate its derivation.
 
 ## Future Improvements 🔮🔧
 
