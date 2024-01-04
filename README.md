@@ -1,3 +1,4 @@
+<!-- print linux branch onto master, delete all app dev branches. -->
 <!-- next part of development: register on PyPI, make docker image, generate binaries -->
 
 # PolyTrend 📈
