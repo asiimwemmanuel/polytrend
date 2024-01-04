@@ -1,4 +1,3 @@
-<!-- chatgpt should update this and all other documentation to suit the software -->
 <!-- next part of development: register on PyPI, make docker image, generate binaries -->
 
 # PolyTrend 📈
@@ -169,6 +168,8 @@ To increase error tolerance and applicability in real-world data, a new techniqu
 
 ### Polynomial Regression
 
+talk about how matrices solve the least squares problem and how matrices are really applicable for a variety of problems beyong this one
+
 Polynomial regression is used to shift from discrete to continuous data, making it applicable in real-world data analytics where error is present. It offers a tradeoff between accuracy and generality for various applications.
 
 Given a set of $n$ data points $(x, f(x))$, the polynomial function of degree $m$ is approximated as:
@@ -181,7 +182,7 @@ The approximation is determined by solving for $\vec{\beta}$ in the matrix equat
 
 \[ \begin{bmatrix} y_0 \\ y_1 \\ y_2 \\ \vdots \\ y_n \end{bmatrix} = \begin{bmatrix} 1 & x_0 & x_0^2 & \dots & x_0^m \\ 1 & x_1 & x_1^2 & \dots & x_1^m \\ 1 & x_2 & x_2^2 & \dots & x_2^m \\ \vdots & \vdots & \vdots & \ddots & \vdots \\ 1 & x_n & x_n^2 & \dots & x_n^m \end{bmatrix} \begin{bmatrix} \beta_0\\ \beta_1\\ \beta_2\\ \vdots \\ \beta_m \end{bmatrix} + \begin{bmatrix} \varepsilon_0\\ \varepsilon_1\\ \varepsilon_2 \\ \vdots \\ \varepsilon_n \end{bmatrix} \]
 
-The matrix equation $\vec{y} = \mathbf{X} \vec{\beta} + \vec{\varepsilon}$ is solved using the [Normal Equation](https://www.geeksforgeeks.org/ml-normal-equation-in-linear-regression):
+The matrix equation $\vec{y} = \mathbf{X} \vec{\beta} + \vec{\varepsilon}$ is solved using the [Normal Equation](http://mlwiki.org/index.php/Normal_Equation):
 
 \[ \widehat{\vec{\beta}} = (\mathbf{X}^\mathsf{T} \mathbf{X})^{-1} \mathbf{X}^\mathsf{T} \vec{y} \]
 
@@ -193,14 +194,15 @@ Where:
 - $\mathbf{X}^\mathsf{T}$ denotes the transpose of the input feature matrix.
 - $(\mathbf{X}^\mathsf{T} \mathbf{X})^{-1}$ represents the inverse of the covariance matrix of the input features.
 
+Note that the product of the transpose and inverse of the covariance of \( \mathbf{X}\) is also termed the [pseudoinverse](http://mlwiki.org/index.php?title=General_Inverse&action=edit&redlink=1) \(\mathbf{X^{+}}\), thus the coefficient vector is the product of the pseudoinverse and the target vector.
+
 Dimensions of the matrices:
 
 - $\mathbf{X}$ is $(n+1)$ by $(m+1)$,
 - $\widehat{\vec{\beta}}$ is $(m+1)$ by $1$,
 - $\vec{y}$ is $(n+1)$ by $1$.
 
-> **Note**:
-> For further information on polynomial regression, refer to the [Polynomial regression Wiki](https://en.wikipedia.org/wiki/Polynomial_regression). 📈🔢
+> For further information on polynomial regression, refer to the [Polynomial regression Wiki](https://en.wikipedia.org/wiki/Polynomial_regression)
 
 ### Model Selection
 
@@ -216,7 +218,7 @@ Where:
 
 - \( n \) is the number of data points.
 - \( MSE \) is the mean squared error.
-- \( k \) is the number of parameters in the linear regression model.
+- \( k \) is the number of parameters in the regression model.
 
 \[ MSE = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2 \]
 
@@ -227,6 +229,10 @@ Where:
 - \( \hat{y}_i \) is the predicted value for the \(i\)-th data point.
 
 The beauty of BIC is while it rewards accuracy (the first term in the summation), it also penelizes complexity in its second term. What I find peculiar is it's additive rather than multiplicative as we've observed with numerous scientific derived quantities (one example of which is velocity). This intrigued me to investigate its derivation.
+
+> For more info, see [BIC](https://en.wikipedia.org/wiki/Bayesian_information_criterion)
+
+<!-- find a way to incorporate hypothesis testing, specifically to reject the null hypothesis, and maybe tie connections with linear algebra -->
 
 ## Future Improvements 🔮🔧
 
