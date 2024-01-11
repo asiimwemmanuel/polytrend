@@ -1,0 +1,5 @@
+DAY 1: replicate view with React
+DAY 2: design API for python scripts
+DAY 3: improve python function(s)
+
+UPDATE ANCIENT FOLDER TO ALWAYS TRACK THE MASTER BRANCH
