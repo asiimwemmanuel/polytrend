@@ -3,24 +3,6 @@ import { useState } from "react";
 import "./App.css";
 
 function App() {
-	const [name, setName] = useState("");
-
-	// define object for file stuff
-	const saveImage = async (dataUrl) => {
-		const suggestedFilename = "image.png";
-
-		// Save into the default downloads directory, like in the browser
-		const filePath = await save({
-			defaultPath: (await downloadsDir()) + "/" + suggestedFilename,
-		});
-
-		// Now we can write the file to the disk
-		await writeBinaryFile(
-			file,
-			await fetch(dataUrl).then((res) => res.blob())
-		);
-	};
-
 	return (
 		<div
 			className="App"
