@@ -14,6 +14,7 @@
 # along with PolyTrend. If not, see <https://www.gnu.org/licenses/>.
 
 import sys
+import shutil
 import pandas as pd
 from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog
 from src.polytrend import PolyTrend
@@ -78,6 +79,18 @@ class PolyTrendApp(QMainWindow):
 
 		# Plot the graph using the polyplot function while checking if the 'Save to PNG' checkbox is checked and save the figure if it is
 		poly_trend.polyplot(degrees, list((zip(x_values, y_values))), extrap, self.ui.save_checkbox.isChecked())
+	
+	def closeEvent(self, event):
+		# Delete specified folders on application close
+		folders_to_delete = ['./src/__pycache__', './src/view/__pycache__']
+		for folder in folders_to_delete:
+			try:
+				shutil.rmtree(folder)
+			except FileNotFoundError:
+				pass
+
+		event.accept()
+
 
 if __name__ == '__main__':
 	app = QApplication(sys.argv)
