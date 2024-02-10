@@ -1,4 +1,4 @@
-# strictly for research purposes
+# strictly for research purposes, out of commission
 
 import os
 import random
