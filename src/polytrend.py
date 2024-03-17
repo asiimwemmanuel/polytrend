@@ -25,8 +25,9 @@ from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.metrics import mean_squared_error
 
+
 class PolyTrend:
-	'''
+	"""
 	PolyTrend: A utility for polynomial trend fitting, visualization, and extrapolation.
 
 	This class provides methods for finding the best-fit polynomial function for a given set of known data points,
@@ -36,21 +37,19 @@ class PolyTrend:
 		- polyplot(): Finds and plots the best polynomial fit on the known data.
 		- polyfind(): Finds the best-fit polynomial function.z
 		- polygraph(): Plots the function, known data, and extrapolated data.
-	'''
+	"""
 
-	def _read_main_data(self,
-			main_data: Union[List[Tuple[float, float]], str]
-		) -> List:
+	def _read_main_data(self, main_data: Union[List[Tuple[float, float]], str]) -> List:
 		"""
 		Read and extract known data from either a list of tuples or a CSV file.
 
 		Args:
-			main_data (Union[List[Tuple[float, float]], str]): Known data points or CSV file path.
+		main_data (Union[List[Tuple[float, float]], str]): Known data points or CSV file path.
 
 		Returns:
-			List: [str, str, str, List[Tuple[float, float]]]
+																		List: [str, str, str, List[Tuple[float, float]]]
 		"""
-		graph_title = x_axis_label = y_axis_label = ''
+		graph_title = x_axis_label = y_axis_label = ""
 		x_main_values = y_main_values = []
 
 		if isinstance(main_data, str):
@@ -60,29 +59,32 @@ class PolyTrend:
 			y_axis_label = data_frame.columns[1]
 			x_main_values = data_frame[x_axis_label].values
 			y_main_values = data_frame[y_axis_label].values
-			graph_title = f'Fitted Function via PolyTrend - Data from {main_data}'
+			graph_title = f"Fitted Function via PolyTrend - Data from {main_data}"
 
 		elif isinstance(main_data, list):
 			# Unpack list of tuples into separate x_main and y_data arrays
-			x_axis_label = 'x'
-			y_axis_label = 'f(x)'
+			x_axis_label = "x"
+			y_axis_label = "f(x)"
 			x_main_values, y_main_values = zip(*main_data)
-			graph_title = f'Fitted Function via PolyTrend'
+			graph_title = f"Fitted Function via PolyTrend"
 
 		else:
-			raise ValueError('Data must be a non-empty list of tuples or CSV file path')
+			raise ValueError("Data must be a non-empty list of tuples or CSV file path")
 
-		data_points = [(float(x), float(y)) for x, y in zip(x_main_values, y_main_values)]
+		data_points = [
+			(float(x), float(y)) for x, y in zip(x_main_values, y_main_values)
+		]
 
 		return [graph_title, x_axis_label, y_axis_label, data_points]
 
-	def polyplot(self,
+	def polyplot(
+		self,
 		degrees: List[int],
 		main_data: Union[List[Tuple[float, float]], str],
 		extrapolate_data: List[float] = [],
-		save_figure: bool = False
+		save_figure: bool = False,
 	) -> None:
-		'''
+		"""
 		Plot the polynomial fit on the known data.
 
 		Args:
@@ -93,16 +95,16 @@ class PolyTrend:
 
 		Raises:
 			ValueError: If degrees and/or known data is not specified or empty.
-		'''
+		"""
 		fitted_model = self.polyfind(degrees, main_data)
-		self.polygraph(main_data, extrapolate_data, function=fitted_model, save_figure=save_figure)
+		self.polygraph(
+			main_data, extrapolate_data, function=fitted_model, save_figure=save_figure
+		)
 
 	def polyfind(
-		self,
-		degrees: List[int],
-		main_data: Union[List[Tuple[float, float]], str]
+		self, degrees: List[int], main_data: Union[List[Tuple[float, float]], str]
 	) -> Callable[[List[float]], np.ndarray]:
-		'''
+		"""
 		Find the best-fit polynomial function.
 
 		Args:
@@ -111,13 +113,19 @@ class PolyTrend:
 
 		Returns:
 			Callable[[List[float]], List[float]]: A function that predicts values based on the polynomial.
-		'''
+		"""
+
+		def _construct_polynomial_expression(coefficients, intercept):
+			expression = f"f(x) = {intercept:.3g} "
+			for i, coef in enumerate(coefficients):
+				expression += f"+ ({coef:.3g})x^{i + 1} "
+			return expression
+		
 		def _model_selector(
-				x_main: np.ndarray,
-				y_main: np.ndarray
+			x_main: np.ndarray, y_main: np.ndarray
 		) -> Tuple[LinearRegression, PolynomialFeatures, float]:
 
-			buffer_bic = float('inf')
+			buffer_bic = float("inf")
 			buffer_model = None
 			buffer_poly_features = None
 
@@ -142,7 +150,7 @@ class PolyTrend:
 					buffer_poly_features = poly_features
 
 			if buffer_model is None or buffer_poly_features is None:
-				raise ValueError('All models had a BIC score of infinity...')
+				raise ValueError("All models had a BIC score of infinity...")
 
 			return buffer_model, buffer_poly_features, buffer_bic
 
@@ -156,32 +164,29 @@ class PolyTrend:
 		coefficients = best_fit_model.coef_
 		intercept = best_fit_model.intercept_
 
-		def construct_polynomial_expression(coefficients, intercept):
-			expression = f'f(x) = {intercept} '
-			for i, coef in enumerate(coefficients):
-				expression += f'+ ({coef})x^{i + 1} '
-			return expression
+		# current_timestamp = datetime.now().strftime('%Y.%m-%d-%H:%M')
+		# output_filename = f'function_{current_timestamp}.txt'
+		# log_directory = os.path.join(os.path.dirname(__file__), '..', 'log')
+		# os.makedirs(log_directory, exist_ok=True)
+		# output_filepath = os.path.join(log_directory, output_filename)
 
-		current_timestamp = datetime.now().strftime('%Y.%m-%d-%H:%M')
-		output_filename = f'function_{current_timestamp}.txt'
-		log_directory = os.path.join(os.path.dirname(__file__), '..', 'log')
-		os.makedirs(log_directory, exist_ok=True)
-		output_filepath = os.path.join(log_directory, output_filename)
+		global func_expression
+		func_expression = _construct_polynomial_expression(coefficients, intercept)
 
-		with open(output_filepath, 'w') as file:
-			file.write(datetime.now().strftime('%Y.%m-%d-%H:%M'))
-			file.write(f'\nGenerated function: {construct_polynomial_expression(coefficients, intercept)}\n')
-			file.write(f'Best BIC score for given degree range: {best_bic}')
+		print(f"{datetime.now().strftime('%Y.%m-%d-%H:%M')}\nGenerated function: {func_expression}\nBest BIC score for given degree range: {best_bic}")
 
-		return lambda x_vals: best_fit_model.predict(best_poly_features.transform(np.array(x_vals).reshape(-1, 1))).flatten()
+		return lambda x_vals: best_fit_model.predict(
+			best_poly_features.transform(np.array(x_vals).reshape(-1, 1))
+		).flatten()
 
-	def polygraph(self,
+	def polygraph(
+		self,
 		main_data: Union[List[Tuple[float, float]], str],
 		extrapolate_data: List[float] = [],
 		function: Optional[Callable[[List[float]], np.ndarray]] = None,
-		save_figure: bool = False
+		save_figure: bool = False,
 	) -> None:
-		'''
+		"""
 		Plot the function, known data, and extrapolated data.
 
 		Args:
@@ -193,9 +198,11 @@ class PolyTrend:
 		Raises:
 			ValueError: If known data is empty.
 			ValueError: If extrapolation data is provided but no function is given.
-		'''
+		"""
 		if extrapolate_data and function is None:
-			raise ValueError("If extrapolation data is provided, a function to generate predicted values must also be given.")
+			raise ValueError(
+				"If extrapolation data is provided, a function to generate predicted values must also be given."
+			)
 
 		# Making the graph figure
 		plt.figure()
@@ -210,12 +217,12 @@ class PolyTrend:
 		plt.title(title)
 		plt.xlabel(x_label)
 		plt.ylabel(y_label)
-		plt.scatter(x_main, y_main, color='blue', label='Known Data')
+		plt.scatter(x_main, y_main, color="blue", label="Known Data")
 
 		if function:
 			x_func = np.linspace(min(x_main), max(x_main), 100)
 			y_func = function(list(x_func))
-			plt.plot(x_func, y_func, color='green', label='Fitted Function')
+			plt.plot(x_func, y_func, color="green", label=f"{func_expression}")
 
 			if extrapolate_data:
 				# Extract and plot extrapolated data
@@ -224,9 +231,11 @@ class PolyTrend:
 				# extending the function line
 				x_func_extension = np.linspace(max(x_main), max(extrapolate_data), 100)
 				y_func_extension = function(list(x_func_extension))
-				plt.plot(x_func_extension, y_func_extension, color='green')
+				plt.plot(x_func_extension, y_func_extension, color="green")
 
-				plt.scatter(extrapolate_data, y_extrap, color='red', label='Extrapolated data')
+				plt.scatter(
+					extrapolate_data, y_extrap, color="red", label="Extrapolated data"
+				)
 
 		# Add legend and display the plot
 		plt.legend()
@@ -236,26 +245,32 @@ class PolyTrend:
 			plt.show()
 		else:
 			# Save the plot as PNG with timestamp in the filename
-			timestamp = datetime.now().strftime('%Y.%m-%d-%H:%M')
-			filename = f'plot_{timestamp}_{random.randint(0,10)}.png'
-			figures_dir = os.path.join(os.path.dirname(__file__), '..', 'images')
+			timestamp = datetime.now().strftime("%Y.%m-%d-%H:%M")
+			filename = f"plot_{timestamp}_{random.randint(0,10)}.png"
+			figures_dir = os.path.join(os.path.dirname(__file__), "..", "images")
 			os.makedirs(figures_dir, exist_ok=True)
 			filepath = os.path.join(figures_dir, filename)
 
 			try:
 				# Save the plot to the specified filepath
 				plt.savefig(filepath)
-				print(f'Figure saved successfully: {filepath}')
+				print(f"Figure saved successfully: {filepath}")
 			except Exception as e:
-				print(f'Error saving figure: {str(e)}')
+				print(f"Error saving figure: {str(e)}")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
 	degrees = [1, 2, 3]
-	data = [(float(x), float(0.5*x**2 - 2*x + 1 + random.uniform(-1000, 1000))) for x in range(0, 100)]
+	data = [
+		(float(x), float(0.5 * x**2 - 2 * x + 1 + random.uniform(-1000, 1000)))
+		for x in range(0, 100)
+	]
 	polytrend_instance = PolyTrend()
 
 	try:
-		polytrend_instance.polyplot(degrees, data, extrapolate_data=[15, 20], save_figure=False)
+		polytrend_instance.polyplot(
+			degrees, data, extrapolate_data=[15, 20], save_figure=False
+		)
 	except ValueError as ve:
 		print(f"Error: {ve}")
 
