@@ -20,80 +20,88 @@ from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog
 from src.polytrend import PolyTrend
 from src.view.gui_ui import Ui_PolyTrend
 
+
 class PolyTrendApp(QMainWindow):
-	def __init__(self):
-		super().__init__()
-		self.ui = Ui_PolyTrend()
-		self.ui.setupUi(self)
-		self.setWindowTitle("PolyTrend")  # Set the title of the window
+    def __init__(self):
+        super().__init__()
+        self.ui = Ui_PolyTrend()
+        self.ui.setupUi(self)
+        self.setWindowTitle("PolyTrend")  # Set the title of the window
 
-		# Connect the 'Find' button click event to the plot_graph function
-		self.ui.plot.clicked.connect(self.plot_graph)
+        # Connect the 'Find' button click event to the plot_graph function
+        self.ui.plot.clicked.connect(self.plot_graph)
 
-		# Connect the 'Import CSV' button click event to the import_csv function
-		self.ui.csv_button.clicked.connect(self.import_csv)
+        # Connect the 'Import CSV' button click event to the import_csv function
+        self.ui.csv_button.clicked.connect(self.import_csv)
 
-		# Enable/disable the 'Find' button based on the data in the text boxes
-		self.ui.x_box.textChanged.connect(self.manage_find_button)
-		self.ui.y_box.textChanged.connect(self.manage_find_button)
-		self.ui.degree_box.textChanged.connect(self.manage_find_button)
+        # Enable/disable the 'Find' button based on the data in the text boxes
+        self.ui.x_box.textChanged.connect(self.manage_find_button)
+        self.ui.y_box.textChanged.connect(self.manage_find_button)
+        self.ui.degree_box.textChanged.connect(self.manage_find_button)
 
-	def enable_csv_path_box(self):
-		# Enable the CSV path text box when the 'Import CSV' button is clicked
-		self.ui.save_checkbox.setEnabled(True)
+    def enable_csv_path_box(self):
+        # Enable the CSV path text box when the 'Import CSV' button is clicked
+        self.ui.save_checkbox.setEnabled(True)
 
-	def manage_find_button(self):
-		x_values = self.ui.x_box.toPlainText().split()
-		y_values = self.ui.y_box.toPlainText().split()
-		degrees = self.ui.degree_box.toPlainText().split()
+    def manage_find_button(self):
+        x_values = self.ui.x_box.toPlainText().split()
+        y_values = self.ui.y_box.toPlainText().split()
+        degrees = self.ui.degree_box.toPlainText().split()
 
-		# Enable the 'Find' button if there are at least two rows of data in x and y, and at least one row for degrees
-		if len(x_values) >= 2 and len(y_values) >= 2 and len(degrees) >= 1:
-			self.ui.plot.setEnabled(True)
-		else:
-			self.ui.plot.setEnabled(False)
+        # Enable the 'Find' button if there are at least two rows of data in x and y, and at least one row for degrees
+        if len(x_values) >= 2 and len(y_values) >= 2 and len(degrees) >= 1:
+            self.ui.plot.setEnabled(True)
+        else:
+            self.ui.plot.setEnabled(False)
 
-	def import_csv(self):
-		csv_path, _ = QFileDialog.getOpenFileName(self, "Open CSV File", "", "CSV Files (*.csv)")
+    def import_csv(self):
+        csv_path, _ = QFileDialog.getOpenFileName(
+            self, "Open CSV File", "", "CSV Files (*.csv)"
+        )
 
-		if csv_path:
-			# Load CSV file using the provided path
-			df = pd.read_csv(csv_path)
-			x_values = df[df.columns[0]].tolist()
-			y_values = df[df.columns[1]].tolist()
-			self.ui.x_box.setPlainText(" ".join(map(str, x_values)))
-			self.ui.y_box.setPlainText(" ".join(map(str, y_values)))
+        if csv_path:
+            # Load CSV file using the provided path
+            df = pd.read_csv(csv_path)
+            x_values = df[df.columns[0]].tolist()
+            y_values = df[df.columns[1]].tolist()
+            self.ui.x_box.setPlainText(" ".join(map(str, x_values)))
+            self.ui.y_box.setPlainText(" ".join(map(str, y_values)))
 
-			# Trigger the find button management
-			self.manage_find_button()
+            # Trigger the find button management
+            self.manage_find_button()
 
-	def plot_graph(self):
-		# Get the values from the text boxes and convert to floats
-		x_values = list(map(float, self.ui.x_box.toPlainText().split()))
-		y_values = list(map(float, self.ui.y_box.toPlainText().split()))
-		extrap = list(map(float, self.ui.extrap_box.toPlainText().split()))
-		degrees = list(map(int, self.ui.degree_box.toPlainText().split()))
+    def plot_graph(self):
+        # Get the values from the text boxes and convert to floats
+        x_values = list(map(float, self.ui.x_box.toPlainText().split()))
+        y_values = list(map(float, self.ui.y_box.toPlainText().split()))
+        extrap = list(map(float, self.ui.extrap_box.toPlainText().split()))
+        degrees = list(map(int, self.ui.degree_box.toPlainText().split()))
 
-		# Create a PolyTrend object
-		poly_trend = PolyTrend()
+        # Create a PolyTrend object
+        poly_trend = PolyTrend()
 
-		# Plot the graph using the polyplot function while checking if the 'Save to PNG' checkbox is checked and save the figure if it is
-		poly_trend.polyplot(degrees, list((zip(x_values, y_values))), extrap, self.ui.save_checkbox.isChecked())
-	
-	def closeEvent(self, event):
-		# Delete specified folders on application close
-		folders_to_delete = ['./src/__pycache__', './src/view/__pycache__']
-		for folder in folders_to_delete:
-			try:
-				shutil.rmtree(folder)
-			except FileNotFoundError:
-				pass
+        # Plot the graph using the polyplot function while checking if the 'Save to PNG' checkbox is checked and save the figure if it is
+        poly_trend.polyplot(
+            degrees,
+            list((zip(x_values, y_values))),
+            extrap,
+            self.ui.save_checkbox.isChecked(),
+        )
 
-		event.accept()
+    def closeEvent(self, event):
+        # Delete specified folders on application close
+        folders_to_delete = ["./src/__pycache__", "./src/view/__pycache__"]
+        for folder in folders_to_delete:
+            try:
+                shutil.rmtree(folder)
+            except FileNotFoundError:
+                pass
+
+        event.accept()
 
 
-if __name__ == '__main__':
-	app = QApplication(sys.argv)
-	window = PolyTrendApp()
-	window.show()
-	sys.exit(app.exec())
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = PolyTrendApp()
+    window.show()
+    sys.exit(app.exec())
