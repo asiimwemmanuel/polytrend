@@ -10,6 +10,9 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
 #
+# You should have received a copy of the GNU General Public License
+# along with PolyTrend. If not, see <https://www.gnu.org/licenses/>.
+
 # Form implementation generated from reading ui file 'src/view/gui.ui'
 #
 # Created by: PyQt6 UI code generator 6.6.1
@@ -300,6 +303,9 @@ class Ui_PolyTrend(object):
         self.plot.setPalette(palette)
         self.plot.setObjectName("plot")
         self.verticalLayout.addWidget(self.plot)
+        self.save_checkbox = QtWidgets.QCheckBox(parent=self.centralwidget)
+        self.save_checkbox.setObjectName("save_checkbox")
+        self.verticalLayout.addWidget(self.save_checkbox)
         PolyTrend.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(parent=PolyTrend)
         self.statusbar.setObjectName("statusbar")
@@ -315,7 +321,9 @@ class Ui_PolyTrend(object):
         self.intro.setText(_translate("PolyTrend", "For csv data, your data MUST be in the form x,f(x).\n"
 "It is assumed that values on the same row correspond to the same point.\n"
 "Make sure your CSV data starts with the axis lables in the first row\n"
-"Accepted delimiters are whitespace and linebreaks in the text boxes below"))
+"Accepted delimiters are whitespace and linebreaks in the text boxes below\n"
+"Saved PNGs will be in the \'images\' folder of the application\n"
+"For the algebraic expressions of the models, visit the \'log\' folder"))
         self.y_box.setPlaceholderText(_translate("PolyTrend", "Input your y values..."))
         self.degree_box.setPlaceholderText(_translate("PolyTrend", "Specify input degrees..."))
         self.x_box.setPlaceholderText(_translate("PolyTrend", "Input your x values..."))
@@ -329,3 +337,4 @@ class Ui_PolyTrend(object):
         self.label_5.setText(_translate("PolyTrend", "degrees"))
         self.csv_button.setText(_translate("PolyTrend", "Import csv file"))
         self.plot.setText(_translate("PolyTrend", "Fit regression line"))
+        self.save_checkbox.setText(_translate("PolyTrend", "Save to PNG"))
