@@ -82,7 +82,7 @@ class PolyTrend:
 		degrees: List[int],
 		main_data: Union[List[Tuple[float, float]], str],
 		extrapolate_data: List[float] = [],
-		save_figure: bool = False,
+		# save_figure: bool = False,
 	) -> None:
 		"""
 		Plot the polynomial fit on the known data.
@@ -98,7 +98,7 @@ class PolyTrend:
 		"""
 		fitted_model = self.polyfind(degrees, main_data)
 		self.polygraph(
-			main_data, extrapolate_data, function=fitted_model, save_figure=save_figure
+			main_data, extrapolate_data, function=fitted_model
 		)
 
 	def polyfind(
@@ -184,7 +184,7 @@ class PolyTrend:
 		main_data: Union[List[Tuple[float, float]], str],
 		extrapolate_data: List[float] = [],
 		function: Optional[Callable[[List[float]], np.ndarray]] = None,
-		save_figure: bool = False,
+		# save_figure: bool = False,
 	) -> None:
 		"""
 		Plot the function, known data, and extrapolated data.
@@ -239,24 +239,24 @@ class PolyTrend:
 
 		# Add legend and display the plot
 		plt.legend()
+		plt.show()
 
-		if not save_figure:
-			# Display the plot if savefigure is not requested
-			plt.show()
-		else:
-			# Save the plot as PNG with timestamp in the filename
-			timestamp = datetime.now().strftime("%Y.%m-%d-%H:%M")
-			filename = f"plot_{timestamp}_{random.randint(0,10)}.png"
-			figures_dir = os.path.join(os.path.dirname(__file__), "..", "images")
-			os.makedirs(figures_dir, exist_ok=True)
-			filepath = os.path.join(figures_dir, filename)
+		# if not save_figure:
+		# 	# Display the plot if savefigure is not requested
+		# else:
+		# 	# Save the plot as PNG with timestamp in the filename
+		# 	timestamp = datetime.now().strftime("%Y.%m-%d-%H:%M")
+		# 	filename = f"plot_{timestamp}_{random.randint(0,10)}.png"
+		# 	figures_dir = os.path.join(os.path.dirname(__file__), "..", "images")
+		# 	os.makedirs(figures_dir, exist_ok=True)
+		# 	filepath = os.path.join(figures_dir, filename)
 
-			try:
-				# Save the plot to the specified filepath
-				plt.savefig(filepath)
-				print(f"Figure saved successfully: {filepath}")
-			except Exception as e:
-				print(f"Error saving figure: {str(e)}")
+		# 	try:
+		# 		# Save the plot to the specified filepath
+		# 		plt.savefig(filepath)
+		# 		print(f"Figure saved successfully: {filepath}")
+		# 	except Exception as e:
+		# 		print(f"Error saving figure: {str(e)}")
 
 
 if __name__ == "__main__":
@@ -269,7 +269,7 @@ if __name__ == "__main__":
 
 	try:
 		polytrend_instance.polyplot(
-			degrees, data, extrapolate_data=[15, 20], save_figure=False
+			degrees, data, extrapolate_data=[15, 20]
 		)
 	except ValueError as ve:
 		print(f"Error: {ve}")

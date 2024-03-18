@@ -16,7 +16,7 @@
 import sys
 import shutil
 import pandas as pd
-from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog
+from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog
 from src.polytrend import PolyTrend
 from src.view.gui_ui import Ui_PolyTrend
 
@@ -84,8 +84,7 @@ class PolyTrendApp(QMainWindow):
         poly_trend.polyplot(
             degrees,
             list((zip(x_values, y_values))),
-            extrap,
-            self.ui.save_checkbox.isChecked(),
+            extrap
         )
 
     def closeEvent(self, event):
