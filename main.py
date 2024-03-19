@@ -10,9 +10,11 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
 #
+
 # You should have received a copy of the GNU General Public License
 # along with PolyTrend. If not, see <https://www.gnu.org/licenses/>.
 
+import re
 import sys
 import shutil
 import pandas as pd
@@ -26,12 +28,10 @@ class PolyTrendApp(QMainWindow):
         super().__init__()
         self.ui = Ui_PolyTrend()
         self.ui.setupUi(self)
-        self.setWindowTitle("PolyTrend")  # Set the title of the window
+        self.setWindowTitle("PolyTrend")
 
-        # Connect the 'Find' button click event to the plot_graph function
         self.ui.plot.clicked.connect(self.plot_graph)
 
-        # Connect the 'Import CSV' button click event to the import_csv function
         self.ui.csv_button.clicked.connect(self.import_csv)
 
         # Enable/disable the 'Find' button based on the data in the text boxes
@@ -40,7 +40,6 @@ class PolyTrendApp(QMainWindow):
         self.ui.degree_box.textChanged.connect(self.manage_find_button)
 
     def enable_csv_path_box(self):
-        # Enable the CSV path text box when the 'Import CSV' button is clicked
         self.ui.save_checkbox.setEnabled(True)
 
     def manage_find_button(self):
@@ -60,27 +59,31 @@ class PolyTrendApp(QMainWindow):
         )
 
         if csv_path:
-            # Load CSV file using the provided path
             df = pd.read_csv(csv_path)
             x_values = df[df.columns[0]].tolist()
             y_values = df[df.columns[1]].tolist()
             self.ui.x_box.setPlainText(" ".join(map(str, x_values)))
             self.ui.y_box.setPlainText(" ".join(map(str, y_values)))
 
-            # Trigger the find button management
             self.manage_find_button()
 
     def plot_graph(self):
-        # Get the values from the text boxes and convert to floats
-        x_values = list(map(float, self.ui.x_box.toPlainText().split()))
-        y_values = list(map(float, self.ui.y_box.toPlainText().split()))
-        extrap = list(map(float, self.ui.extrap_box.toPlainText().split()))
-        degrees = list(map(int, self.ui.degree_box.toPlainText().split()))
+        def _extract_values(text):
+            if text.strip():
+                values = re.split(r'[\s,\n]+', text.strip())
+                return [float(x) for x in values if x]
+            else:
+                return []
 
-        # Create a PolyTrend object
+        # Textual data processing & preparation for analysis
+        x_values = _extract_values(self.ui.x_box.toPlainText())
+        y_values = _extract_values(self.ui.y_box.toPlainText())
+        extrap = _extract_values(self.ui.extrap_box.toPlainText())
+        degrees = _extract_values(self.ui.degree_box.toPlainText())
+        degrees = [int(x) for x in degrees]
+        
         poly_trend = PolyTrend()
 
-        # Plot the graph using the polyplot function while checking if the 'Save to PNG' checkbox is checked and save the figure if it is
         poly_trend.polyplot(
             degrees,
             list((zip(x_values, y_values))),
@@ -88,7 +91,6 @@ class PolyTrendApp(QMainWindow):
         )
 
     def closeEvent(self, event):
-        # Delete specified folders on application close
         folders_to_delete = ["./src/__pycache__", "./src/view/__pycache__"]
         for folder in folders_to_delete:
             try:
