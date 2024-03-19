@@ -60,7 +60,7 @@
  [],
  False,
  False,
- 1710831133,
+ 1710875170,
  [('run',
    '/home/magawkgawks/.pyenv/versions/3.10.13/envs/pt/lib/python3.10/site-packages/PyInstaller/bootloader/Linux-64bit-intel/run',
    'EXECUTABLE')],

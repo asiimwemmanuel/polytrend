@@ -3,13 +3,13 @@
 
 <!-- # PolyTrend 📈 -->
 <p align="center">
-    <img src="./assets/images/logo.jpg" alt="logo" width="400" textali>
+    <img src="./assets/images/logo.jpg" alt="logo" width="400">
 </p>
 <!-- ![Cat](./assets/images/logo.jpg) -->
 
 ## Introduction 💡
 
-PolyTrend is a regression algorithm that approximates and plots a polynomial function onto given data. It provides insights and conclusions in the fields of interpolation and polynomial regression, specifically in the subfield of approximation theory.
+PolyTrend is a Python app that approximates and plots a polynomial function onto given data. Its development provides insights and conclusions in the fields of interpolation, polynomial regression and approximation theory.
 
 <div style="display:flex; justify-content:center;">
     <div style="flex:1; text-align:center;">
@@ -19,9 +19,6 @@ PolyTrend is a regression algorithm that approximates and plots a polynomial fun
         <img src="./assets/images/starter.png" alt="graph" width="400">
     </div>
 </div>
-
-> **Note**:
-> For more detailed information and comprehensive exploration, refer to the documentation available in the `./docs/` folder. 📚🔬
 
 ## Installation ⚙️
 
