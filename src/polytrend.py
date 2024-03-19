@@ -13,7 +13,6 @@
 # You should have received a copy of the GNU General Public License
 # along with PolyTrend. If not, see <https://www.gnu.org/licenses/>.
 
-import os
 import random
 from datetime import datetime
 from typing import Union, List, Tuple, Callable, Optional
@@ -31,7 +30,7 @@ class PolyTrend:
 	PolyTrend: A utility for polynomial trend fitting, visualization, and extrapolation.
 
 	This class provides methods for finding the best-fit polynomial function for a given set of known data points,
-	plotting the function along with the known data points and extrapolated data points, and saving the plots as PNG images if specified.
+	plotting the function along with the known data points and extrapolated data points.
 
 	Main Methods:
 		- polyplot(): Finds and plots the best polynomial fit on the known data.
@@ -47,13 +46,12 @@ class PolyTrend:
 		main_data (Union[List[Tuple[float, float]], str]): Known data points or CSV file path.
 
 		Returns:
-																		List: [str, str, str, List[Tuple[float, float]]]
+			List: [str, str, str, List[Tuple[float, float]]]
 		"""
 		graph_title = x_axis_label = y_axis_label = ""
 		x_main_values = y_main_values = []
 
 		if isinstance(main_data, str):
-			# Read data from CSV file
 			data_frame = pd.read_csv(main_data)
 			x_axis_label = data_frame.columns[0]
 			y_axis_label = data_frame.columns[1]
@@ -82,7 +80,6 @@ class PolyTrend:
 		degrees: List[int],
 		main_data: Union[List[Tuple[float, float]], str],
 		extrapolate_data: List[float] = [],
-		# save_figure: bool = False,
 	) -> None:
 		"""
 		Plot the polynomial fit on the known data.
@@ -91,19 +88,18 @@ class PolyTrend:
 			degrees (List[int]): List of polynomial degrees to consider.
 			main_data (Union[List[Tuple[float, float]], str]): List of tuples representing the known data points or CSV file path.
 			extrapolate_data (List[float], optional): List of x coordinates for extrapolation. Defaults to [].
-			savefigure (bool, optional): Whether to save the figure as a PNG. Defaults to False.
 
 		Raises:
 			ValueError: If degrees and/or known data is not specified or empty.
 		"""
 		fitted_model = self.polyfind(degrees, main_data)
 		self.polygraph(
-			main_data, extrapolate_data, function=fitted_model
+			main_data, extrapolate_data, function=fitted_model[0]
 		)
 
 	def polyfind(
 		self, degrees: List[int], main_data: Union[List[Tuple[float, float]], str]
-	) -> Callable[[List[float]], np.ndarray]:
+	) -> Tuple[Callable[[list], np.ndarray], int]:
 		"""
 		Find the best-fit polynomial function.
 
@@ -150,7 +146,7 @@ class PolyTrend:
 					buffer_poly_features = poly_features
 
 			if buffer_model is None or buffer_poly_features is None:
-				raise ValueError("All models had a BIC score of infinity...")
+				raise ValueError("All models had a BIC score of positive infinity... 何？！")
 
 			return buffer_model, buffer_poly_features, buffer_bic
 
@@ -164,27 +160,24 @@ class PolyTrend:
 		coefficients = best_fit_model.coef_
 		intercept = best_fit_model.intercept_
 
-		# current_timestamp = datetime.now().strftime('%Y.%m-%d-%H:%M')
-		# output_filename = f'function_{current_timestamp}.txt'
-		# log_directory = os.path.join(os.path.dirname(__file__), '..', 'log')
-		# os.makedirs(log_directory, exist_ok=True)
-		# output_filepath = os.path.join(log_directory, output_filename)
-
 		global func_expression
 		func_expression = _construct_polynomial_expression(coefficients, intercept)
 
 		print(f"{datetime.now().strftime('%Y.%m-%d-%H:%M')}\nGenerated function: {func_expression}\nBest BIC score for given degree range: {best_bic}")
 
+		# return lambda x_vals: best_fit_model.predict(
+		# 	best_poly_features.transform(np.array(x_vals).reshape(-1, 1))
+		# ).flatten()
+
 		return lambda x_vals: best_fit_model.predict(
 			best_poly_features.transform(np.array(x_vals).reshape(-1, 1))
-		).flatten()
+		).flatten(), len(coefficients) - 1  # Assuming coefficients include the intercept
 
 	def polygraph(
 		self,
 		main_data: Union[List[Tuple[float, float]], str],
 		extrapolate_data: List[float] = [],
 		function: Optional[Callable[[List[float]], np.ndarray]] = None,
-		# save_figure: bool = False,
 	) -> None:
 		"""
 		Plot the function, known data, and extrapolated data.
@@ -193,7 +186,6 @@ class PolyTrend:
 			main_data (Union[List[Tuple[float, float]], str]): List of tuples representing the known data points or CSV file path.
 			extrapolate_data (List[float], optional): List of extrapolation data points. Defaults to [].
 			func (Optional[Callable[[List[float]], np.ndarray]], optional): Function to generate predicted values. Defaults to None.
-			savefigure (bool, optional): Whether to save the figure as a PNG. Defaults to False.
 
 		Raises:
 			ValueError: If known data is empty.
@@ -204,16 +196,13 @@ class PolyTrend:
 				"If extrapolation data is provided, a function to generate predicted values must also be given."
 			)
 
-		# Making the graph figure
 		plt.figure()
 
-		# Reading (and extracting from) the known data
-		temp_list = self._read_main_data(main_data)
-		title = temp_list[0]
-		x_label, y_label = temp_list[1], temp_list[2]
-		x_main, y_main = zip(*temp_list[3])
+		processed_data = self._read_main_data(main_data)
+		title = processed_data[0]
+		x_label, y_label = processed_data[1], processed_data[2]
+		x_main, y_main = zip(*processed_data[3])
 
-		# Setting prereqs
 		plt.title(title)
 		plt.xlabel(x_label)
 		plt.ylabel(y_label)
@@ -237,27 +226,17 @@ class PolyTrend:
 					extrapolate_data, y_extrap, color="red", label="Extrapolated data"
 				)
 
-		# Add legend and display the plot
+				# Label each extrapolated point with its coordinates
+				for x, y in zip(extrapolate_data, y_extrap):
+					plt.annotate(f"({x:.2f}, {y:.2f})", 
+								(x, y), 
+								textcoords="offset points", 
+								xytext=(0,10), 
+								ha='center',
+								bbox=dict(boxstyle="round,pad=0.3", facecolor="white", edgecolor="black", linewidth=0.5)) # Adding a white background
+
 		plt.legend()
 		plt.show()
-
-		# if not save_figure:
-		# 	# Display the plot if savefigure is not requested
-		# else:
-		# 	# Save the plot as PNG with timestamp in the filename
-		# 	timestamp = datetime.now().strftime("%Y.%m-%d-%H:%M")
-		# 	filename = f"plot_{timestamp}_{random.randint(0,10)}.png"
-		# 	figures_dir = os.path.join(os.path.dirname(__file__), "..", "images")
-		# 	os.makedirs(figures_dir, exist_ok=True)
-		# 	filepath = os.path.join(figures_dir, filename)
-
-		# 	try:
-		# 		# Save the plot to the specified filepath
-		# 		plt.savefig(filepath)
-		# 		print(f"Figure saved successfully: {filepath}")
-		# 	except Exception as e:
-		# 		print(f"Error saving figure: {str(e)}")
-
 
 if __name__ == "__main__":
 	degrees = [1, 2, 3]
