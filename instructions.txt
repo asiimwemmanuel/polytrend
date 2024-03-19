@@ -1,0 +1,17 @@
+PolyTrend v1.0
+
+1. INSTRUCTIONS:
+   - Run the 'main' file in the polytrend directory
+
+2. TROUBLESHOOTING:
+   - If you encounter any issues, uninstall and reinstall the software
+   - Contact technical support (johnsonted072@gmail.com) for further assistance.
+   - Alternatively, you can post the issue on the official GitHub repository: https://github.com/asiimwemmanuel/polytrend/issues 
+
+3. ADDITIONAL NOTES:
+   - For comprehensive exploration and detailed information or if you seek to contribute, refer to https://github.com/asiimwemmanuel/polytrend/.
+
+4. LICENSE:
+   PolyTrend is licensed under the GNU General Public License v3.0. You can find the full text of the license at https://www.gnu.org/licenses/gpl-3.0.en.html.
+
+Author: Emmanuel Asiimwe
