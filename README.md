@@ -1,11 +1,24 @@
 <!-- print linux branch onto master, delete all app dev branches. -->
 <!-- next part of development: register on PyPI, make docker image, generate binaries -->
 
-# PolyTrend 📈
+<!-- # PolyTrend 📈 -->
+<p align="center">
+    <img src="./assets/images/logo.jpg" alt="logo" width="400" textali>
+</p>
+<!-- ![Cat](./assets/images/logo.jpg) -->
 
 ## Introduction 💡
 
 PolyTrend is a regression algorithm that approximates and plots a polynomial function onto given data. It provides insights and conclusions in the fields of interpolation and polynomial regression, specifically in the subfield of approximation theory.
+
+<div style="display:flex; justify-content:center;">
+    <div style="flex:1; text-align:center;">
+        <img src="./assets/images/ui.png" alt="UI" width="400">
+    </div>
+    <div style="flex:1; text-align:center;">
+        <img src="./assets/images/starter.png" alt="graph" width="400">
+    </div>
+</div>
 
 > **Note**:
 > For more detailed information and comprehensive exploration, refer to the documentation available in the `./docs/` folder. 📚🔬
@@ -14,24 +27,68 @@ PolyTrend is a regression algorithm that approximates and plots a polynomial fun
 
 <!-- methods to include: source (suitable for modification/customization), python package index (suitable for usage in projects), docker image (suitable for running in a VM), installation wizard with binary(suitable for standalone releases) -->
 
+### From release page
+
+To install PolyTrend from the release page with included instructions and ensure compatibility with the specified Python version, follow these steps:
+
+1. Visit the [PolyTrend release page](https://github.com/asiimwemmanuel/polytrend/releases) and download the desired release package (ZIP or GZ file).
+
+2. Extract the downloaded package to a directory of your choice.
+
+3. Navigate to the extracted directory in your file explorer.
+
+4. Locate the installation instructions file included in the extracted package. This file typically contains detailed instructions on how to set up and run PolyTrend.
+
+5. Follow the instructions provided in the file to install and run PolyTrend. Make sure to pay attention to any specific requirements or recommendations mentioned in the instructions.
+
 ### From source
 
-To install PolyTrend **from source**, follow these steps:
+To install PolyTrend **from source** and ensure the correct Python version using a virtual environment, follow these steps:
 
-- Install [Python](https://www.python.org/downloads/) and [Git](https://git-scm.com/downloads) if not already installed on your system. 💻
+1. Install [Python](https://www.python.org/downloads/) and [Git](https://git-scm.com/downloads) if not already installed on your system. 💻
 
-- Set up the environment (clone repo, install reqs, sample the runs)
+2. Set up the virtual environment:
 
 ```shell
 git clone https://github.com/asiimwemmanuel/polytrend.git
 cd polytrend
+python -m venv venv_name
+```
+
+Replace `venv_name` with the desired name for your virtual environment.
+
+3. Activate the virtual environment:
+
+- On Windows:
+
+```shell
+venv_name\Scripts\activate
+```
+
+- On Unix or MacOS:
+
+```shell
+source venv_name/bin/activate
+```
+
+4. Install required dependencies:
+
+```shell
 pip install -r requirements.txt
 ```
 
-- Run the app
+5. Verify and set the Python version specified in `.python-version`:
 
 ```shell
-py main.py
+pyenv local $(cat .python-version)
+```
+
+This command sets the Python version specified in `.python-version` as the local version for the current directory. Ensure you have `pyenv` installed for this command to work.
+
+6. Run the app:
+
+```shell
+python main.py
 ```
 
 > Note for linux: If issues persist, visit [this website](https://web.stanford.edu/dept/cs_edu/resources/qt/install-linux) and follow the instructions to configure Qt on your system
