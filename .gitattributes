@@ -4,5 +4,5 @@ build/main filter=lfs diff=lfs merge=lfs -text
 dist/windows filter=lfs diff=lfs merge=lfs -text
 dist/linux filter=lfs diff=lfs merge=lfs -text
 dist/macOS filter=lfs diff=lfs merge=lfs -text
-dist/linux/_internal/pyarrow/libarrow.so.1500 filter=lfs diff=lfs merge-lfs -text
-dist/linux/polytrend-v1.0-linux-x64.tar.gz filter=lfs diff=lfs merge-lfs -text
+dist/linux/_internal/pyarrow/libarrow.so.1500 filter=lfs diff=lfs merge=lfs -text
+dist/linux/polytrend-v1.0-linux-x64.tar.gz filter=lfs diff=lfs merge=lfs -text
