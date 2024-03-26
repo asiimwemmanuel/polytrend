@@ -22,7 +22,6 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog
 from src.polytrend import PolyTrend
 from src.view.gui_ui import Ui_PolyTrend
 
-
 class PolyTrendApp(QMainWindow):
     def __init__(self):
         super().__init__()
