@@ -3,7 +3,7 @@
 
 <!-- # PolyTrend 📈 -->
 <p align="center">
-    <img src="./assets/images/logo.jpg" alt="logo" width="400">
+    <img src="./assets/images/logo.jpg" alt="PolyTrend logo" width="400">
 </p>
 <!-- ![Cat](./assets/images/logo.jpg) -->
 
@@ -13,10 +13,10 @@ PolyTrend is a Python app that approximates and plots a polynomial function onto
 
 <div style="display:flex; justify-content:center;">
     <div style="flex:1; text-align:center;">
-        <img src="./assets/images/ui.png" alt="UI" width="400">
+        <img src="./assets/images/ui.png" alt="PolyTrend UI screenshot" width="400">
     </div>
     <div style="flex:1; text-align:center;">
-        <img src="./assets/images/starter.png" alt="graph" width="400">
+        <img src="./assets/images/starter.png" alt="PolyTrend graph screenshot" width="400">
     </div>
 </div>
 
@@ -42,47 +42,75 @@ To install PolyTrend from the release page with included instructions and ensure
 
 To install PolyTrend **from source** and ensure the correct Python version using a virtual environment, follow these steps:
 
-1. Install [Python](https://www.python.org/downloads/) and [Git](https://git-scm.com/downloads) if not already installed on your system. 💻
+#### 1. Install [Python](https://www.python.org/downloads/) and [Git](https://git-scm.com/downloads) if not already installed on your system.
 
-2. Set up the virtual environment:
+#### 2. Install `freeglut3-dev`
+
+> - **Debian/Ubuntu (apt)**:
+>    ```bash
+>    sudo apt-get install freeglut3-dev
+>    ```
+> 
+> - **Fedora (dnf)**:
+>    ```bash
+>    sudo dnf install freeglut-devel
+>    ```
+> 
+> - **Red Hat/CentOS (yum)**:
+>    ```bash
+>    sudo yum install freeglut-devel
+>    ```
+> 
+> - **Arch Linux (pacman)**:
+>    ```bash
+>    sudo pacman -S freeglut
+>    ```
+> 
+> - **openSUSE (zypper)**:
+>    ```bash
+>    sudo zypper install freeglut-devel
+>    ```
+
+#### 3. Set up the virtual environment (via [pyenv](https://github.com/pyenv/pyenv)):
 
 ```shell
 git clone https://github.com/asiimwemmanuel/polytrend.git
 cd polytrend
-python -m venv venv_name
+pyenv virtualenv venv_name # or python -m venv venv_name
 ```
 
 Replace `venv_name` with the desired name for your virtual environment.
 
-3. Activate the virtual environment:
+#### 4. Activate the virtual environment:
 
-- On Windows:
+- On **Windows**:
 
 ```shell
 venv_name\Scripts\activate
 ```
 
-- On Unix or MacOS:
+- On **Unix or MacOS**:
 
 ```shell
-source venv_name/bin/activate
+pyenv activate venv_name # or source venv_name/bin/activate
 ```
 
-4. Install required dependencies:
-
-```shell
-pip install -r requirements.txt
-```
-
-5. Verify and set the Python version specified in `.python-version`:
+#### 5. Verify and set the Python version specified in `.python-version`:
 
 ```shell
 pyenv local $(cat .python-version)
 ```
 
+#### 6. Install required dependencies:
+
+```shell
+pip install -r requirements.txt
+```
+
+
 This command sets the Python version specified in `.python-version` as the local version for the current directory. Ensure you have `pyenv` installed for this command to work.
 
-6. Run the app:
+#### 7. Run the app:
 
 ```shell
 python main.py
@@ -122,7 +150,7 @@ The code defines a class called `PolyTrend` that provides methods for polynomial
 
 The `PolyTrend` class encapsulates methods for polynomial trend analysis.
 
-### Method: `polyplot` 📈
+### Method: `polyplot`
 
 This method plots the best polynomial fit for known data points. It takes the following parameters:
 
@@ -130,7 +158,7 @@ This method plots the best polynomial fit for known data points. It takes the fo
 - `known_data`: A list of tuples representing the known data points.
 - `extrap_data` (optional): A list of x coordinates for extrapolation.
 
-### Method: `polyfind` 🔍
+### Method: `polyfind`
 
 This method finds the best-fit polynomial function. It takes the following parameters:
 
@@ -138,7 +166,7 @@ This method finds the best-fit polynomial function. It takes the following param
 - `known_data`: A list of tuples representing the known data points.
 - It returns a callable function that predicts values based on the polynomial.
 
-### Method: `polygraph` 📊
+### Method: `polygraph`
 
 This method plots the function, known data points, and extrapolated data points. It takes the following parameters:
 
@@ -146,13 +174,9 @@ This method plots the function, known data points, and extrapolated data points.
 - `extrap_data` (optional): A list of extrapolation data points.
 - `func` (optional): A function to generate predicted values.
 
-### Error Handling ❗️
+### Error Handling
 
 The code includes error handling to raise a `ValueError` if required parameters are missing or invalid.
-
-### File Saving 💾
-
-The code saves the generated plot as a PNG file in the `./models` directory with a timestamp and a random integer between 0 and 1000.
 
 ## Theory 🔍🔢
 
