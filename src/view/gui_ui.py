@@ -478,16 +478,15 @@ class Ui_PolyTrend(object):
         self.heading.setText(
             _translate(
                 "PolyTrend",
-                "This is PolyTrend - a simple clean way to create polynomial fits in data",
+                "PolyTrend: Simple Polynomial Fitting Tool",
             )
         )
         self.intro.setText(
             _translate(
                 "PolyTrend",
-                "For csv data, your data MUST be in the form x,f(x).\n"
-                "It is assumed that values on the same row correspond to the same point.\n"
-                "Make sure your CSV data starts with the axis lables in the first row\n"
-                "Accepted delimiters are whitespace and linebreaks in the text boxes below",
+                "General Instructions:                                  Instructions for CSV:\n"
+                "   1. Each row corresponds to a data point.      1. Data format: x,f(x).\n"
+                "   2. Delimiters: whitespace or linebreaks.       2. First row contains axis labels.\n\n",
             )
         )
         self.y_box.setPlaceholderText(_translate("PolyTrend", "Input your y values..."))
