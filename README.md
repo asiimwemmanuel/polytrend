@@ -1,6 +1,12 @@
 <!-- print linux branch onto master, delete all app dev branches. -->
+<!-- print linux branch onto master, delete all app dev branches. -->
 <!-- next part of development: register on PyPI, make docker image, generate binaries -->
 
+<!-- # PolyTrend 📈 -->
+<p align="center">
+    <img src="./assets/images/logo.jpg" alt="PolyTrend logo" width="400">
+</p>
+<!-- ![Cat](./assets/images/logo.jpg) -->
 <!-- # PolyTrend 📈 -->
 <p align="center">
     <img src="./assets/images/logo.jpg" alt="PolyTrend logo" width="400">
@@ -10,7 +16,16 @@
 ## Introduction 💡
 
 PolyTrend is a Python app that approximates and plots a polynomial function onto given data. Its development provides insights and conclusions in the fields of interpolation, polynomial regression and approximation theory.
+PolyTrend is a Python app that approximates and plots a polynomial function onto given data. Its development provides insights and conclusions in the fields of interpolation, polynomial regression and approximation theory.
 
+<div style="display:flex; justify-content:center;">
+    <div style="flex:1; text-align:center;">
+        <img src="./assets/images/ui.png" alt="PolyTrend UI screenshot" width="400">
+    </div>
+    <div style="flex:1; text-align:center;">
+        <img src="./assets/images/starter.png" alt="PolyTrend graph screenshot" width="400">
+    </div>
+</div>
 <div style="display:flex; justify-content:center;">
     <div style="flex:1; text-align:center;">
         <img src="./assets/images/ui.png" alt="PolyTrend UI screenshot" width="400">
@@ -38,8 +53,23 @@ To install PolyTrend from the release page with included instructions and ensure
 
 5. Follow the instructions provided in the file to install and run PolyTrend. Make sure to pay attention to any specific requirements or recommendations mentioned in the instructions.
 
+### From release page
+
+To install PolyTrend from the release page with included instructions and ensure compatibility with the specified Python version, follow these steps:
+
+1. Visit the [PolyTrend release page](https://github.com/asiimwemmanuel/polytrend/releases) and download the desired release package (ZIP or GZ file).
+
+2. Extract the downloaded package to a directory of your choice.
+
+3. Navigate to the extracted directory in your file explorer.
+
+4. Locate the installation instructions file included in the extracted package. This file typically contains detailed instructions on how to set up and run PolyTrend.
+
+5. Follow the instructions provided in the file to install and run PolyTrend. Make sure to pay attention to any specific requirements or recommendations mentioned in the instructions.
+
 ### From source
 
+To install PolyTrend **from source** and ensure the correct Python version using a virtual environment, follow these steps:
 To install PolyTrend **from source** and ensure the correct Python version using a virtual environment, follow these steps:
 
 #### 1. Install [Python](https://www.python.org/downloads/) and [Git](https://git-scm.com/downloads) if not already installed on your system.
@@ -112,6 +142,34 @@ pyenv local $(cat .python-version)
 #### 6. Install required dependencies:
 
 ```shell
+pyenv virtualenv venv_name # or python -m venv venv_name
+```
+
+Replace `venv_name` with the desired name for your virtual environment.
+
+#### 4. Activate the virtual environment:
+
+- On **Windows**:
+
+```shell
+venv_name\Scripts\activate
+```
+
+- On **Unix or MacOS**:
+
+```shell
+pyenv activate venv_name # or source venv_name/bin/activate
+```
+
+#### 5. Verify and set the Python version specified in `.python-version`:
+
+```shell
+pyenv local $(cat .python-version)
+```
+
+#### 6. Install required dependencies:
+
+```shell
 pip install -r requirements.txt
 ```
 
@@ -120,7 +178,12 @@ This command sets the Python version specified in `.python-version` as the local
 
 #### 7. Run the app:
 
+This command sets the Python version specified in `.python-version` as the local version for the current directory. Ensure you have `pyenv` installed for this command to work.
+
+#### 7. Run the app:
+
 ```shell
+python main.py
 python main.py
 ```
 
@@ -159,6 +222,7 @@ The code defines a class called `PolyTrend` that provides methods for polynomial
 The `PolyTrend` class encapsulates methods for polynomial trend analysis.
 
 ### Method: `polyplot`
+### Method: `polyplot`
 
 This method plots the best polynomial fit for known data points. It takes the following parameters:
 
@@ -166,6 +230,7 @@ This method plots the best polynomial fit for known data points. It takes the fo
 - `known_data`: A list of tuples representing the known data points.
 - `extrap_data` (optional): A list of x coordinates for extrapolation.
 
+### Method: `polyfind`
 ### Method: `polyfind`
 
 This method finds the best-fit polynomial function. It takes the following parameters:
@@ -175,6 +240,7 @@ This method finds the best-fit polynomial function. It takes the following param
 - It returns a callable function that predicts values based on the polynomial.
 
 ### Method: `polygraph`
+### Method: `polygraph`
 
 This method plots the function, known data points, and extrapolated data points. It takes the following parameters:
 
@@ -182,6 +248,7 @@ This method plots the function, known data points, and extrapolated data points.
 - `extrap_data` (optional): A list of extrapolation data points.
 - `func` (optional): A function to generate predicted values.
 
+### Error Handling
 ### Error Handling
 
 The code includes error handling to raise a `ValueError` if required parameters are missing or invalid.
@@ -192,7 +259,7 @@ The code includes error handling to raise a `ValueError` if required parameters 
 
 If a quadratic sequence follows the form:
 
-$a, b, c$
+\(a, b, c\)
 
 And while letting;
 
@@ -212,8 +279,8 @@ or
     \alpha + \sum_{i=1}^{n-1}x
 ```
 
-Taking the bottommost layer (x) of the difference table to have a degree of 0 i.e constant, the linear sequence can be seen as a summation of $x_i$ and the first term. After all, finding the nth term at any degree involves regressive computation of the underlying layers.
-With this same logic, quadratic sequences (and any other, for that matter) can be computed as their first term $a$ summed with a certain combination of underlying variables.
+Taking the bottommost layer (x) of the difference table to have a degree of 0 i.e constant, the linear sequence can be seen as a summation of \(x_i\) and the first term. After all, finding the nth term at any degree involves regressive computation of the underlying layers.
+With this same logic, quadratic sequences (and any other, for that matter) can be computed as their first term \(a\) summed with a certain combination of underlying variables.
 
 Asiimwe's general form of quadratic nth term problems:
 
@@ -227,7 +294,7 @@ The above formula is limited to linear and quadratic sequences, requiring a diff
 
 It's also interesting to think about traversing the layers downwards as differentiation and upwards as integration.
 
-**HYPOTHESIS**: when the sequence is represented with a polynomial, the $f^{(d)}$ derivative is a constant equating the bottommost layer.
+**HYPOTHESIS**: when the sequence is represented with a polynomial, the \(f^{(d)}\) derivative is a constant equating the bottommost layer.
 
 My attempts to use this property to build `quadseq` via Calculus thereby forming a general method for all degree problems fell short as attempting to integrate (traverse upwards) from the lower layers led to the loss of information (constants and extra terms), causing a transformation in the plots of the main sequence and the integrated one.
 
@@ -247,21 +314,25 @@ The Lagrange interpolation formula is given by:
 
 Where:
 
-- $P(x)$ represents the polynomial of degree $n$ (where $n$ is the number of data points). <!-- ! check for error... -->
-- $y_i$ denotes the y-coordinate of the $i^{th}$ data point.
-- $x_i$ represents the x-coordinate of the $i^{th}$ data point.
+- \(P(x)\) represents the polynomial of degree \(n\) (where \(n\) is the number of data points). <!-- ! check for error... -->
+- \(y_i\) denotes the y-coordinate of the \(i^{th}\) data point.
+- \(x_i\) represents the x-coordinate of the \(i^{th}\) data point.
 
-This formula calculates the lowest order polynomial $P(x)$ that passes through the given data points $x_i, y_i$. It uses a weighted sum of Lagrange basis polynomials to interpolate the function or estimate the
+This formula calculates the lowest order polynomial \(P(x)\) that passes through the given data points \(x_i, y_i\). It uses a weighted sum of Lagrange basis polynomials to interpolate the function or estimate the
 
- value at a specific point $x$, where $x$ represents $n$.
+ value at a specific point \(x\), where \(x\) represents \(n\).
 
-**Note**: $n$ in the formula is not the same as the polynomial degree $q$ used in the previous section.
+**Note**: \(n\) in the formula is not the same as the polynomial degree \(q\) used in the previous section.
 
+> For more information on the Lagrange polynomial, refer to the [Lagrange polynomial Wiki](https://en.wikipedia.org/wiki/Lagrange_polynomial).
 > For more information on the Lagrange polynomial, refer to the [Lagrange polynomial Wiki](https://en.wikipedia.org/wiki/Lagrange_polynomial).
 
 To increase error tolerance and applicability in real-world data, a new technique is incorporated.
+To increase error tolerance and applicability in real-world data, a new technique is incorporated.
 
 ### Polynomial Regression
+
+talk about how matrices solve the least squares problem and how matrices are really applicable for a variety of problems beyong this one
 
 talk about how matrices solve the least squares problem and how matrices are really applicable for a variety of problems beyong this one
 
