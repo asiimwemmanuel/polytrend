@@ -46,30 +46,38 @@ To install PolyTrend **from source** and ensure the correct Python version using
 
 #### 2. Install `freeglut3-dev`
 
+> - **macOS (brew)**:
+>```bash
+>    brew install freeglut
+>```
+> - **Windows (chocolatey)**:
+>```bash
+>    choco install freeglut
+>```
 > - **Debian/Ubuntu (apt)**:
->    ```bash
+>```bash
 >    sudo apt-get install freeglut3-dev
->    ```
+>```
 > 
 > - **Fedora (dnf)**:
->    ```bash
+>```bash
 >    sudo dnf install freeglut-devel
->    ```
+>```
 > 
 > - **Red Hat/CentOS (yum)**:
->    ```bash
+>```bash
 >    sudo yum install freeglut-devel
->    ```
+>```
 > 
 > - **Arch Linux (pacman)**:
->    ```bash
+>```bash
 >    sudo pacman -S freeglut
->    ```
+>```
 > 
 > - **openSUSE (zypper)**:
->    ```bash
+>```bash
 >    sudo zypper install freeglut-devel
->    ```
+>```
 
 #### 3. Set up the virtual environment (via [pyenv](https://github.com/pyenv/pyenv)):
 
@@ -184,28 +192,34 @@ The code includes error handling to raise a `ValueError` if required parameters 
 
 If a quadratic sequence follows the form:
 
-\(a, b, c\)
+$a, b, c$
 
 And while letting;
 
-- \(\alpha = b - c\)
-- \(\beta = c - b\)
-- \(x = \beta - \alpha\)
+- $\alpha = b - a$
+- $\beta = c - b$
+- $x = \beta - \alpha$
 
-It can be observed that \(\alpha\) and \(\beta\) form a linear sequence, represented as:
+It can be observed that $\alpha$ and $\beta$ form a linear sequence, represented as:
 
-\[xn + (\alpha - x)\]
+```math
+    xn + (\alpha - x)
+```
 
 or
 
-\[\alpha + \sum_{i=1}^{n-1}x\]
+```math
+    \alpha + \sum_{i=1}^{n-1}x
+```
 
-Taking the bottommost layer (x) of the difference table to have a degree of 0 i.e constant, the linear sequence can be seen as a summation of \(x_i\) and the first term. After all, finding the nth term at any degree involves regressive computation of the underlying layers.
-With this same logic, quadratic sequences (and any other, for that matter) can be computed as their first term \(a\) summed with a certain combination of underlying variables.
+Taking the bottommost layer (x) of the difference table to have a degree of 0 i.e constant, the linear sequence can be seen as a summation of $x_i$ and the first term. After all, finding the nth term at any degree involves regressive computation of the underlying layers.
+With this same logic, quadratic sequences (and any other, for that matter) can be computed as their first term $a$ summed with a certain combination of underlying variables.
 
 Asiimwe's general form of quadratic nth term problems:
 
-\[a + \sum_{i=1}^{n-1}\alpha + x(i-1)\]
+```math
+    a + \sum_{i=1}^{n-1}\alpha + x(i-1)
+```
 
 <!-- also comment about how this ties into Sequences and series, and general formulae for calculating summations -->
 
@@ -213,7 +227,7 @@ The above formula is limited to linear and quadratic sequences, requiring a diff
 
 It's also interesting to think about traversing the layers downwards as differentiation and upwards as integration.
 
-**HYPOTHESIS**: when the sequence is represented with a polynomial, the \(f^{(d)}\) derivative is a constant equating the bottommost layer.
+**HYPOTHESIS**: when the sequence is represented with a polynomial, the $f^{(d)}$ derivative is a constant equating the bottommost layer.
 
 My attempts to use this property to build `quadseq` via Calculus thereby forming a general method for all degree problems fell short as attempting to integrate (traverse upwards) from the lower layers led to the loss of information (constants and extra terms), causing a transformation in the plots of the main sequence and the integrated one.
 
@@ -227,19 +241,21 @@ Lagrange interpolation is a method primarily used for in-bound approximation. Ho
 
 The Lagrange interpolation formula is given by:
 
-\[P(x)=\sum_{i=0}^{n}\left(y_i\prod_{j=0,j\neq i}^{n}\frac{x-x_j}{x_i-x_j}\right)\]
+```math
+    P(x)=\sum_{i=0}^{n}\left(y_i\prod_{j=0,j\neq i}^{n}\frac{x-x_j}{x_i-x_j}\right)
+```
 
 Where:
 
-- \(P(x)\) represents the polynomial of degree \(n\) (where \(n\) is the number of data points). <!-- ! check for error... -->
-- \(y_i\) denotes the y-coordinate of the \(i^{th}\) data point.
-- \(x_i\) represents the x-coordinate of the \(i^{th}\) data point.
+- $P(x)$ represents the polynomial of degree $n$ (where $n$ is the number of data points). <!-- ! check for error... -->
+- $y_i$ denotes the y-coordinate of the $i^{th}$ data point.
+- $x_i$ represents the x-coordinate of the $i^{th}$ data point.
 
-This formula calculates the lowest order polynomial \(P(x)\) that passes through the given data points \(x_i, y_i\). It uses a weighted sum of Lagrange basis polynomials to interpolate the function or estimate the
+This formula calculates the lowest order polynomial $P(x)$ that passes through the given data points $x_i, y_i$. It uses a weighted sum of Lagrange basis polynomials to interpolate the function or estimate the
 
- value at a specific point \(x\), where \(x\) represents \(n\).
+ value at a specific point $x$, where $x$ represents $n$.
 
-**Note**: \(n\) in the formula is not the same as the polynomial degree \(q\) used in the previous section.
+**Note**: $n$ in the formula is not the same as the polynomial degree $q$ used in the previous section.
 
 > For more information on the Lagrange polynomial, refer to the [Lagrange polynomial Wiki](https://en.wikipedia.org/wiki/Lagrange_polynomial).
 
@@ -251,15 +267,18 @@ talk about how matrices solve the least squares problem and how matrices are rea
 
 Polynomial regression is used to shift from discrete to continuous data, making it applicable in real-world data analytics where error is present. It offers a tradeoff between accuracy and generality for various applications.
 
-Given a set of \(n\) data points \((x, f(x))\), the polynomial function of degree \(m\) is approximated as:
+Given a set of $n$ data points $(x, f(x))$, the polynomial function of degree $m$ is approximated as:
 
-\[ f(x_i) = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + \cdots + \beta_m x_i^m + \varepsilon_i \quad \text{(for i = 1, 2, \ldots, n\text)} \]
+```math
+     f(x_i) = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + \cdots + \beta_m x_i^m + \varepsilon_i \quad \text{(for i = 1, 2, \ldots, n\text)} 
+```
 
-Here, \(m\) signifies the chosen maximum power, each \(\beta_i\) represents a coefficient in the function, and \(\varepsilon_i\) denotes random error.
+Here, $m$ signifies the chosen maximum power, each $\beta_i$ represents a coefficient in the function, and $\varepsilon_i$ denotes random error.
 
-The approximation is determined by solving for \(\vec{\beta}\) in the matrix equation:
+The approximation is determined by solving for $\vec{\beta}$ in the matrix equation:
 
-\[
+```math
+
     \begin{bmatrix}
         1 & x_0 & x_0^2 & \dots & x_0^m \\
         1 & x_1 & x_1^2 & \dots & x_1^m \\
@@ -291,53 +310,60 @@ The approximation is determined by solving for \(\vec{\beta}\) in the matrix equ
         \vdots \\
         y_n
     \end{bmatrix}
-\]
 
-The matrix equation \( \mathbf{X} \vec{\beta} + \vec{\varepsilon} = \vec{y}\) is solved using the [Normal Equation](http://mlwiki.org/index.php/Normal_Equation):
+```
 
-\[ \widehat{\vec{\beta}} = (\mathbf{X}^\mathsf{T} \mathbf{X})^{-1} \mathbf{X}^\mathsf{T} \vec{y} \]
+The matrix equation $ \mathbf{X} \vec{\beta} + \vec{\varepsilon} = \vec{y}$ is solved using the [Normal Equation](http://mlwiki.org/index.php/Normal_Equation):
+
+```math
+    \widehat{\vec{\beta}} = (\mathbf{X}^\mathsf{T} \mathbf{X})^{-1} \mathbf{X}^\mathsf{T} \vec{y} 
+```
 
 Where:
 
-- \(\widehat{\vec{\beta}}\) is the estimated coefficient vector.
-- \(\mathbf{X}\) is the matrix of input features.
-- \(\vec{y}\) is the vector of target values.
-- \(\mathbf{X}^\mathsf{T}\) denotes the transpose of the input feature matrix.
-- \((\mathbf{X}^\mathsf{T} \mathbf{X})^{-1}\) represents the inverse of the covariance matrix of the input features.
+- $\widehat{\vec{\beta}}$ is the estimated coefficient vector.
+- $\mathbf{X}$ is the matrix of input features.
+- $\vec{y}$ is the vector of target values.
+- $\mathbf{X}^\mathsf{T}$ denotes the transpose of the input feature matrix.
+- $(\mathbf{X}^\mathsf{T} \mathbf{X})^{-1}$ represents the inverse of the covariance matrix of the input features.
 
-Note that the product of the transpose and inverse of the covariance of \( \mathbf{X}\) is also termed the [pseudoinverse](http://mlwiki.org/index.php?title=General_Inverse&action=edit&redlink=1) \(\mathbf{X^{+}}\), thus the coefficient vector is the product of the pseudoinverse and the target vector.
+Note that the product of the transpose and inverse of the covariance of $ \mathbf{X}$ is also termed the [pseudoinverse](http://mlwiki.org/index.php?title=General_Inverse&action=edit&redlink=1) $\mathbf{X^{+}}$, thus the coefficient vector is the product of the pseudoinverse and the target vector.
 
 Dimensions of the matrices:
 
-- \(\mathbf{X}\) is \((n+1)\) by \((m+1)\),
-- \(\widehat{\vec{\beta}}\) is \((m+1)\) by \(1\),
-- \(\vec{y}\) is \((n+1)\) by \(1\).
+- $\mathbf{X}$ is $(n+1)$ by $(m+1)$,
+- $\widehat{\vec{\beta}}$ is $(m+1)$ by $1$,
+- $\vec{y}$ is $(n+1)$ by $1$.
 
 > For further information on polynomial regression, refer to the [Polynomial regression Wiki](https://en.wikipedia.org/wiki/Polynomial_regression)
 
 ### Model Selection
 
-Throughout my implementation of polynomial regression methods in generating predictive models, I noticed a peculiar tendency; given the task of choosing the degree most optimal for the model, say between \(a\) and \(b\), the algorithm always chose \(max(a, b)\). This made sense since the algorithm judged the better degree to be that whose polynomial achieved a higher score whose metric I simply took to be MSE.
+Throughout my implementation of polynomial regression methods in generating predictive models, I noticed a peculiar tendency; given the task of choosing the degree most optimal for the model, say between $a$ and $b$, the algorithm always chose $max(a, b)$. This made sense since the algorithm judged the better degree to be that whose polynomial achieved a higher score whose metric I simply took to be MSE.
 
 I am convinced this was a notorious problem at least offhead by Occam's Razor (that the simpler answer is often more correct), by the fact that programmers would likely refine their algorithms to cut out needless calculation, and also by the fact that there were already multiple responses to it, the majority of which resembled (as they tend to in such fields).
 
 The Bayesian Information Criterion (BIC) is the most well known, and states:
 
-\[ BIC = n \cdot \ln(MSE) + k \cdot \ln(n) \]
+```math
+     BIC = n \cdot \ln(MSE) + k \cdot \ln(n) 
+```
 
 Where:
 
-- \( n \) is the number of data points.
-- \( MSE \) is the mean squared error.
-- \( k \) is the number of parameters in the regression model.
+- $ n $ is the number of data points.
+- $ MSE $ is the mean squared error.
+- $ k $ is the number of parameters in the regression model.
 
-\[ MSE = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2 \]
+```math
+     MSE = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2 
+```
 
 Where:
 
-- \( n \) is the number of data points.
-- \( y_i \) is the actual value for the \(i\)-th data point.
-- \( \hat{y}_i \) is the predicted value for the \(i\)-th data point.
+- $ n $ is the number of data points.
+- $ y_i $ is the actual value for the $i$-th data point.
+- $ \hat{y}_i $ is the predicted value for the $i$-th data point.
 
 The beauty of BIC is while it rewards accuracy (the first term in the summation), it also penelizes complexity in its second term. What I find peculiar is it's additive rather than multiplicative as we've observed with numerous scientific derived quantities (one example of which is velocity). This intrigued me to investigate its derivation.
 
