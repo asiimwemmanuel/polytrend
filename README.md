@@ -310,9 +310,7 @@ This formula calculates the lowest order polynomial $P(x)$ that passes through t
 **Note**: $n$ in the formula is not the same as the polynomial degree $q$ used in the previous section.
 
 > For more information on the Lagrange polynomial, refer to the [Lagrange polynomial Wiki](https://en.wikipedia.org/wiki/Lagrange_polynomial).
-> For more information on the Lagrange polynomial, refer to the [Lagrange polynomial Wiki](https://en.wikipedia.org/wiki/Lagrange_polynomial).
 
-To increase error tolerance and applicability in real-world data, a new technique is incorporated.
 To increase error tolerance and applicability in real-world data, a new technique is incorporated.
 
 ### Polynomial Regression
@@ -428,8 +426,6 @@ The beauty of BIC is while it rewards accuracy (the first term in the summation)
 <!-- find a way to incorporate hypothesis testing, specifically to reject the null hypothesis, and maybe tie connections with linear algebra -->
 
 ## Future Improvements 🔮🔧
-
-Here are some possible improvements for the script:
 
 🚀 **Possible Improvements for the Script:**
 
