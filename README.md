@@ -1,12 +1,6 @@
 <!-- print linux branch onto master, delete all app dev branches. -->
-<!-- print linux branch onto master, delete all app dev branches. -->
 <!-- next part of development: register on PyPI, make docker image, generate binaries -->
 
-<!-- # PolyTrend 📈 -->
-<p align="center">
-    <img src="./assets/images/logo.jpg" alt="PolyTrend logo" width="400">
-</p>
-<!-- ![Cat](./assets/images/logo.jpg) -->
 <!-- # PolyTrend 📈 -->
 <p align="center">
     <img src="./assets/images/logo.jpg" alt="PolyTrend logo" width="400">
@@ -16,16 +10,7 @@
 ## Introduction 💡
 
 PolyTrend is a Python app that approximates and plots a polynomial function onto given data. Its development provides insights and conclusions in the fields of interpolation, polynomial regression and approximation theory.
-PolyTrend is a Python app that approximates and plots a polynomial function onto given data. Its development provides insights and conclusions in the fields of interpolation, polynomial regression and approximation theory.
 
-<div style="display:flex; justify-content:center;">
-    <div style="flex:1; text-align:center;">
-        <img src="./assets/images/ui.png" alt="PolyTrend UI screenshot" width="400">
-    </div>
-    <div style="flex:1; text-align:center;">
-        <img src="./assets/images/starter.png" alt="PolyTrend graph screenshot" width="400">
-    </div>
-</div>
 <div style="display:flex; justify-content:center;">
     <div style="flex:1; text-align:center;">
         <img src="./assets/images/ui.png" alt="PolyTrend UI screenshot" width="400">
