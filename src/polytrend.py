@@ -112,9 +112,7 @@ class PolyTrend:
 		"""
 
 		def _construct_polynomial_expression(coefficients, intercept):
-			expression = f"f(x) = {intercept:.3g} "
-			for i, coef in enumerate(coefficients):
-				expression += f"+ ({coef:.3g})x^{i + 1} "
+			expression = f"f(x) = {intercept:.3g} " + " ".join([f"+ ({coef:.3g})x^{i + 1}" for i, coef in enumerate(coefficients)])
 			return expression
 		
 		def _model_selector(
