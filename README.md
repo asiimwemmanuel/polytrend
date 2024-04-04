@@ -244,7 +244,7 @@ The code includes error handling to raise a `ValueError` if required parameters 
 
 If a quadratic sequence follows the form:
 
-\(a, b, c\)
+$a, b, c$
 
 And while letting;
 
@@ -264,8 +264,8 @@ or
     \alpha + \sum_{i=1}^{n-1}x
 ```
 
-Taking the bottommost layer (x) of the difference table to have a degree of 0 i.e constant, the linear sequence can be seen as a summation of \(x_i\) and the first term. After all, finding the nth term at any degree involves regressive computation of the underlying layers.
-With this same logic, quadratic sequences (and any other, for that matter) can be computed as their first term \(a\) summed with a certain combination of underlying variables.
+Taking the bottommost layer (x) of the difference table to have a degree of 0 i.e constant, the linear sequence can be seen as a summation of $x_i$ and the first term. After all, finding the nth term at any degree involves regressive computation of the underlying layers.
+With this same logic, quadratic sequences (and any other, for that matter) can be computed as their first term $a$ summed with a certain combination of underlying variables.
 
 Asiimwe's general form of quadratic nth term problems:
 
@@ -279,7 +279,7 @@ The above formula is limited to linear and quadratic sequences, requiring a diff
 
 It's also interesting to think about traversing the layers downwards as differentiation and upwards as integration.
 
-**HYPOTHESIS**: when the sequence is represented with a polynomial, the \(f^{(d)}\) derivative is a constant equating the bottommost layer.
+**HYPOTHESIS**: when the sequence is represented with a polynomial, the $f^{(d)}$ derivative is a constant equating the bottommost layer.
 
 My attempts to use this property to build `quadseq` via Calculus thereby forming a general method for all degree problems fell short as attempting to integrate (traverse upwards) from the lower layers led to the loss of information (constants and extra terms), causing a transformation in the plots of the main sequence and the integrated one.
 
@@ -299,15 +299,15 @@ The Lagrange interpolation formula is given by:
 
 Where:
 
-- \(P(x)\) represents the polynomial of degree \(n\) (where \(n\) is the number of data points). <!-- ! check for error... -->
-- \(y_i\) denotes the y-coordinate of the \(i^{th}\) data point.
-- \(x_i\) represents the x-coordinate of the \(i^{th}\) data point.
+- $P(x)$ represents the polynomial of degree $n$ (where $n$ is the number of data points). <!-- ! check for error... -->
+- $y_i$ denotes the y-coordinate of the $i^{th}$ data point.
+- $x_i$ represents the x-coordinate of the $i^{th}$ data point.
 
-This formula calculates the lowest order polynomial \(P(x)\) that passes through the given data points \(x_i, y_i\). It uses a weighted sum of Lagrange basis polynomials to interpolate the function or estimate the
+This formula calculates the lowest order polynomial $P(x)$ that passes through the given data points $x_i, y_i$. It uses a weighted sum of Lagrange basis polynomials to interpolate the function or estimate the
 
- value at a specific point \(x\), where \(x\) represents \(n\).
+ value at a specific point $x$, where $x$ represents $n$.
 
-**Note**: \(n\) in the formula is not the same as the polynomial degree \(q\) used in the previous section.
+**Note**: $n$ in the formula is not the same as the polynomial degree $q$ used in the previous section.
 
 > For more information on the Lagrange polynomial, refer to the [Lagrange polynomial Wiki](https://en.wikipedia.org/wiki/Lagrange_polynomial).
 > For more information on the Lagrange polynomial, refer to the [Lagrange polynomial Wiki](https://en.wikipedia.org/wiki/Lagrange_polynomial).
