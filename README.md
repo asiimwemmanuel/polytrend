@@ -323,9 +323,9 @@ Polynomial regression is used to shift from discrete to continuous data, making 
 
 Given a set of $n$ data points $(x, f(x))$, the polynomial function of degree $m$ is approximated as:
 
-$$
+```math
     f(x_i) = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + \cdots + \beta_m x_i^m + \varepsilon_i \quad \text{(for i = 1, 2, \ldots, n\text)} 
-$$
+```
 
 Here, $m$ signifies the chosen maximum power, each $\beta_i$ represents a coefficient in the function, and $\varepsilon_i$ denotes random error.
 
