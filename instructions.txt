@@ -1,7 +1,7 @@
-PolyTrend v1.0
+PolyTrend v1.0.0
 
 1. INSTRUCTIONS:
-   - Run the 'main' file in the polytrend directory
+   - Run the 'PolyTrend' file in the polytrend directory
 
 2. TROUBLESHOOTING:
    - If you encounter any issues, uninstall and reinstall the software
