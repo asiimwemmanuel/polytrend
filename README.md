@@ -373,8 +373,10 @@ Intuitively, this phenomenon aligns with Occam's Razor principle, which posits t
 
 The Bayesian Information Criterion (BIC) is the most well known, and states:
 
+<!-- ! confirm this formula... it may be invalid -->
+
 ```math
-     BIC = n \cdot \ln(MSE) + k \cdot \ln(n) 
+     BIC = n \cdot \ln(MSE) + k \cdot \ln(n)
 ```
 
 Where:
@@ -407,6 +409,7 @@ A compilation of articles connected on the mentioned subjects
 [Polynomial Regression](https://en.wikipedia.org/wiki/Polynomial_regression).
 [Regression Analysis](https://en.wikipedia.org/wiki/Regression_analysis)
 [Interpolation](https://en.wikipedia.org/wiki/Interpolation)
+[Bayesian Information Criterion](https://en.wikipedia.org/wiki/Bayesian_information_criterion)
 
 ### Videos
 [Lagrange Interpolation](https://youtu.be/bzp_q7NDdd4?feature=shared)
