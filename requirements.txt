@@ -1,4 +1,4 @@
-# reverted to old-reqs
+# reverted to old requirements
 
 cx_Freeze==6.15.16
 matplotlib==3.8.3
