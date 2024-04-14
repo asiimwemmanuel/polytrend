@@ -6,6 +6,32 @@
 </p>
 <!-- ![Cat](./assets/images/logo.jpg) -->
 
+# Table of Contents
+
+1. [Introduction](#introduction-)
+   - [Key Functionalities](#key-functionalities-)
+   - [Use cases](#use-cases-)
+2. [License](#license-)
+3. [Installation](#installation-)
+   - [From release page](#from-release-page)
+   - [From pip (CLI version)](#from-pip-cli-version)
+   - [From source](#from-source)
+4. [Theory](#theory-)
+   - [Quadratic Sequences](#quadratic-sequences)
+   - [Lagrange Interpolation](#lagrange-interpolation)
+   - [Polynomial Regression](#polynomial-regression)
+   - [Model Selection](#model-selection)
+5. [Additional Resources](#additional-resources-)
+   - [Articles](#articles)
+   - [Videos](#videos)
+6. [Future Improvements](#future-improvements-)
+   - [Batch Plotting](#-batch-plotting)
+   - [Data Normalization](#-data-normalization)
+   - [Parallelization](#-parallelization)
+   - [Cross-Validation](#-cross-validation)
+   - [Regularization](#-regularization)
+   - [Caching](#-caching)
+
 ## Introduction 💡
 
 PolyTrend is a Python app aimed at facilitating polynomial trend fitting, visualization, and extrapolation. It offers a comprehensive set of functionalities to analyze and interpret data using polynomial regression techniques. Its development provides insights and conclusions in the fields of interpolation, polynomial regression and approximation theory.
