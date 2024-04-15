@@ -1,7 +1,14 @@
 PolyTrend v1.0.0
 
 1. INSTRUCTIONS:
-   - Run the 'PolyTrend' file in the polytrend directory
+   1. Run the 'PolyTrend' file in the polytrend directory
+   2. Input your x and y values in the first two boxes.
+   3. Choose the complexity of the function in the third box:
+      - 1 for linear
+      - 2 for quadratic
+      - 3 for cubic, etc.
+   4. Enter the x values you want to predict in the fourth box.
+   5. Press the 'fit regression line' button
 
 2. TROUBLESHOOTING:
    - If you encounter any issues, uninstall and reinstall the software
