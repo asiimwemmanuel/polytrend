@@ -40,6 +40,6 @@ exe = EXE(
 app = BUNDLE(
     exe,
     name='PolyTrend.app',
-    icon=None,
+    icon='./assets/images/logo.ico',
     bundle_identifier=None,
 )
