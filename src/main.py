@@ -19,8 +19,9 @@ import sys
 import shutil
 import pandas as pd
 from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog
-from src.polytrend import PolyTrend
-from src.view.gui_ui import Ui_PolyTrend
+from polytrend import PolyTrend
+from view.gui_ui import Ui_PolyTrend
+
 
 class PolyTrendApp(QMainWindow):
     def __init__(self):
@@ -69,7 +70,7 @@ class PolyTrendApp(QMainWindow):
     def plot_graph(self):
         def _extract_values(text):
             if text.strip():
-                values = re.split(r'[\s,\n]+', text.strip())
+                values = re.split(r"[\s,\n]+", text.strip())
                 return [float(x) for x in values if x]
             else:
                 return []
@@ -80,14 +81,10 @@ class PolyTrendApp(QMainWindow):
         extrap = _extract_values(self.ui.extrap_box.toPlainText())
         degrees = _extract_values(self.ui.degree_box.toPlainText())
         degrees = [int(x) for x in degrees]
-        
+
         poly_trend = PolyTrend()
 
-        poly_trend.polyplot(
-            degrees,
-            list((zip(x_values, y_values))),
-            extrap
-        )
+        poly_trend.polyplot(degrees, list((zip(x_values, y_values))), extrap)
 
     def closeEvent(self, event):
         folders_to_delete = ["./src/__pycache__", "./src/view/__pycache__"]
