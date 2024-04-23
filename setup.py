@@ -32,7 +32,7 @@ setup(
 		'PyQt6==6.6.1',
 		'PyQt6_sip==13.6.0',
 		'scikit_learn==1.4.1.post1',
-		'setuptools==65.5.0'
+		'setuptools==69.5.1'
 	],
 	options = {
 		'build_exe': {
