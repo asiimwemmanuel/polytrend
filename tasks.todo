@@ -38,3 +38,18 @@ rules for the polynomial expression
 
 1. all numbers should be to 3 dp, except it's absolute value is exactly zero, then 2 dp
 2. for all non-intercept numbers (ie COEFFICIENTS), if, after applying rule 1, it has an absolute of 0, do not consider it in the expression
+
+# Friday 3rd May 2024
+
+premium only:
+
+
+1. ERROR BARS:
+note: error bars are only relevant in plotting, not actual calculation
+    a. modify input to ask for error bars ✅
+    b. modify the main.py file to input data from new field
+    c. modify backend to handle error values
+
+2. RESIDUAL ANALYSIS
+
+3. LABELLED POITNS
