@@ -43,7 +43,6 @@ rules for the polynomial expression
 
 premium only:
 
-
 1. ERROR BARS:
 note: error bars are only relevant in plotting, not actual calculation
     a. modify input to ask for error bars ✅
@@ -53,3 +52,8 @@ note: error bars are only relevant in plotting, not actual calculation
 2. RESIDUAL ANALYSIS
 
 3. LABELLED POITNS
+
+THERE IS NO NEED TO UPDATE PYPI; ERROR BARS AREN'T USEFUL TO ANALYSTS IN CREATING MODELS
+(but just to be safe, review changes and make a decision)
+
+SECONDARY OBJECTIVE: COULD ADD SOME VARIANCE IN THE MODEL BASED ON THE ERROR BARS
