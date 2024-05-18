@@ -1,4 +1,4 @@
-import tests.ptest as ptest
+import tests.test_main as test_main
 # import numpy as np
 from unittest.mock import patch
 # from io import StringIO
@@ -18,7 +18,7 @@ class TestPolyTrend:
         polytrend_instance = PolyTrend()
         main_data = [(1.0, 2.0), (2.0, 3.0), (3.0, 5.0)]
         extrapolate_data = [4.0, 5.0]
-        with ptest.raises(ValueError):
+        with test_main.raises(ValueError):
             polytrend_instance.polygraph(main_data, extrapolate_data)
 
     @patch("pandas.read_csv")
@@ -42,7 +42,7 @@ class TestPolyTrend:
         assert isinstance(result_csv, list), "Should return a list"
         assert result_csv[3] == [(1.0, 2.0), (2.0, 3.0), (3.0, 5.0)], "Should correctly extract data from CSV file"
 
-    @ptest.mark.parametrize("degrees, main_data, expected_degree", [
+    @test_main.mark.parametrize("degrees, main_data, expected_degree", [
         ([1, 2, 3], [(1.0, 2.0), (2.0, 3.0), (3.0, 5.0)], 2),
         ([2, 3, 4], [(1.0, 1.0), (2.0, 4.0), (3.0, 9.0)], 3),
     ])

@@ -14,16 +14,14 @@
 # You should have received a copy of the GNU General Public License
 # along with PolyTrend. If not, see <https://www.gnu.org/licenses/>.
 
-import re
-import sys
-import os
-import shutil
-# import pandas as pd
-import csv
+from re import split
+from sys import exit, argv
+from os import path
+from shutil import rmtree
+from csv import reader
 from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog
 from polytrend import PolyTrend
 from view.gui_ui import Ui_PolyTrend
-
 
 class PolyTrendApp(QMainWindow):
     def __init__(self):
@@ -74,7 +72,7 @@ class PolyTrendApp(QMainWindow):
 
             with open(csv_path, newline='') as csvfile:
                 # Create a CSV reader object
-                csvreader = csv.reader(csvfile)
+                csvreader = reader(csvfile)
 
                 # Skip the header row
                 next(csvreader)
@@ -91,17 +89,17 @@ class PolyTrendApp(QMainWindow):
                         err_values.append(0)
 
             # * A note on Albert's old request
-            # * If whitespace existed in production prior to the request, re.split() parameter changes in plot_graph() wouldn't be necessary
-            self.ui.x_box.setPlainText(" ".join(map(str, x_values)))
-            self.ui.y_box.setPlainText(" ".join(map(str, y_values)))
-            self.ui.error_box.setPlainText(" ".join(map(str, err_values)))
+            # * If whitespace existed in production prior to the request, split() parameter changes in plot_graph() wouldn't be necessary
+            self.ui.x_box.setPlainText("\n".join(map(str, x_values)))
+            self.ui.y_box.setPlainText("\n".join(map(str, y_values)))
+            self.ui.error_box.setPlainText("\n".join(map(str, err_values)))
 
             self.toggle_find_button_state()
 
     def plot_graph(self):
         def _extract_values(text):
             if text.strip():
-                values = re.split(r"[\s,\n]+", text.strip())
+                values = split(r"[\s,\n]+", text.strip())
                 return [float(x) for x in values if x]
             else:
                 return []
@@ -128,14 +126,14 @@ class PolyTrendApp(QMainWindow):
 
     def closeEvent(self, event):
         # Construct absolute paths for the folders to delete
-        base_dir = os.path.dirname(os.path.abspath(__file__))
+        base_dir = path.dirname(path.abspath(__file__))
         folders_to_delete = [
-            os.path.join(base_dir, "__pycache__"),
-            os.path.join(base_dir, "view/__pycache__")
+            path.join(base_dir, "__pycache__"),
+            path.join(base_dir, "view/__pycache__")
         ]
         for folder in folders_to_delete:
             try:
-                shutil.rmtree(folder)
+                rmtree(folder)
                 print(f"Folder '{folder}' deleted successfully.")
             except FileNotFoundError:
                 print(f"Folder '{folder}' not found.")
@@ -147,7 +145,7 @@ class PolyTrendApp(QMainWindow):
         event.accept()
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
+    app = QApplication(argv)
     window = PolyTrendApp()
     window.show()
-    sys.exit(app.exec())
+    exit(app.exec())

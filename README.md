@@ -1,4 +1,5 @@
 <!-- update master branch with deploy, delete deploy ONLY AFTER JMUKS FINISHES -->
+<!-- using upx to shrink executable -->
 
 <!-- # PolyTrend 📈 -->
 <p align="center">

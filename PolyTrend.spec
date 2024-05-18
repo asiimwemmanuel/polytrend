@@ -2,7 +2,7 @@
 
 
 a = Analysis(
-    ['main.py'],
+    ['src/main.py'],
     pathex=[],
     binaries=[],
     datas=[],
@@ -36,10 +36,4 @@ exe = EXE(
     codesign_identity=None,
     entitlements_file=None,
     icon=['assets/images/logo.ico'],
-)
-app = BUNDLE(
-    exe,
-    name='PolyTrend.app',
-    icon='./assets/images/logo.ico',
-    bundle_identifier=None,
 )

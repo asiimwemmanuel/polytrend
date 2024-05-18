@@ -57,3 +57,20 @@ THERE IS NO NEED TO UPDATE PYPI; ERROR BARS AREN'T USEFUL TO ANALYSTS IN CREATIN
 (but just to be safe, review changes and make a decision)
 
 SECONDARY OBJECTIVE: COULD ADD SOME VARIANCE IN THE MODEL BASED ON THE ERROR BARS
+
+---------------------- 14th May 2024 ----------------------
+
+Use UPX to shrink file size to ~ 80%
+https://youtu.be/4rDK9JBr6Fs?feature=shared
+
+Also investigate and experiment with various implementations of polynomial regression on GeeksforGeeks
+https://www.geeksforgeeks.org/polynomial-regression-from-scratch-using-python/
+
+
+---------------------- 17th May 2024 ----------------------
+
+Use different plotting functions for either error bars or not
+Fix the 'insert zeroes for importing csv
+remove the deprecated log folder
+
+consider adding 'zones' of possible functions in case of errors, showing variance in the best model
