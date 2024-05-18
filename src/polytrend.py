@@ -19,7 +19,7 @@ from typing import Union, List, Tuple, Callable, Optional
 
 import numpy as np
 import matplotlib.pyplot as plt
-from pandas import read_csv
+from csv import reader
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import Ridge
@@ -49,16 +49,21 @@ class PolyTrend:
         Returns:
             List: [str, str, str, List[Tuple[float, float, float]]]
         """
-        graph_title = x_axis_label = y_axis_label = ""
+        graph_title = x_axis_label = y_axis_label = str()
         x_main_values = y_main_values = err_values = []
 
         if isinstance(main_data, str):
-            # ? may have to change that to use csv built-in
-            data_frame = read_csv(main_data)
-            x_axis_label = data_frame.columns[0]
-            y_axis_label = data_frame.columns[1]
-            x_main_values = data_frame[x_axis_label].values
-            y_main_values = data_frame[y_axis_label].values
+            with open(main_data, mode='r') as file:
+                reader_var = reader(file)
+                headers = next(reader_var)
+                # this doesn't work right now
+                x_axis_label = headers[0].strip()
+                y_axis_label = headers[1].strip()
+                x_main_values = []
+                y_main_values = []
+                for row in reader_var:
+                    x_main_values.append(row[0])
+                    y_main_values.append(row[1])
             graph_title = f"Fitted Function via PolyTrend - Data from {main_data}"
 
         elif isinstance(main_data, list):
@@ -292,7 +297,7 @@ class PolyTrend:
 if __name__ == "__main__":
     degrees = [1, 2, 3]
     data = [
-        (float(x), float(0.5 * x**2 - 2 * x + 1 + uniform(-1000, 1000)))
+        (float(x), float(0.5 * x**2 - 2 * x + 1 + uniform(-1000, 1000)), 1.0)
         for x in range(0, 100)
     ]
     polytrend_instance = PolyTrend()
