@@ -20,9 +20,8 @@ from typing import Union, List, Tuple, Callable, Optional
 import numpy as np
 import matplotlib.pyplot as plt
 from csv import reader
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LinearRegression, Ridge
 from sklearn.preprocessing import PolynomialFeatures
-from sklearn.linear_model import Ridge
 from sklearn.metrics import mean_squared_error, r2_score
 
 

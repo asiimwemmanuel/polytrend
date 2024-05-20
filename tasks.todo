@@ -74,3 +74,7 @@ Fix the 'insert zeroes for importing csv
 remove the deprecated log folder
 
 consider adding 'zones' of possible functions in case of errors, showing variance in the best model
+
+---------------------- 20th May 2024 ----------------------
+
+Manually (?) refactor gui_ui.py to improve Cython compilatinon

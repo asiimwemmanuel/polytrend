@@ -4,9 +4,9 @@
 a = Analysis(
     ['src/main.py'],
     pathex=[],
-    binaries=[],
+    binaries=[('src/view/gui_ui.cpython-311-x86_64-linux-gnu.so', 'src/view/'), ('src/polytrend.cpython-311-x86_64-linux-gnu.so', 'src/')],
     datas=[],
-    hiddenimports=[],
+    hiddenimports=['numpy', 'matplotlib', 'sklearn.linear_model', 'sklearn.preprocessing', 'sklearn.metrics', 'PyQt6.QtCore', 'PyQt6.QtGui', 'PyQt6.QtWidgets'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
@@ -35,5 +35,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['assets/images/logo.ico'],
+    icon=['assets/images/icon.ico'],
 )

@@ -179,34 +179,6 @@ pyenv local $(cat .python-version)
 #### 6. Install required dependencies:
 
 ```shell
-pyenv virtualenv venv_name # or python -m venv venv_name
-```
-
-Replace `venv_name` with the desired name for your virtual environment.
-
-#### 4. Activate the virtual environment:
-
-- On **Windows**:
-
-```shell
-venv_name\Scripts\activate
-```
-
-- On **Unix or MacOS**:
-
-```shell
-pyenv activate venv_name # or source venv_name/bin/activate
-```
-
-#### 5. Verify and set the Python version specified in `.python-version`:
-
-```shell
-pyenv local $(cat .python-version)
-```
-
-#### 6. Install required dependencies:
-
-```shell
 pip install -r requirements.txt
 ```
 
