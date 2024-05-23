@@ -78,3 +78,21 @@ consider adding 'zones' of possible functions in case of errors, showing varianc
 ---------------------- 20th May 2024 ----------------------
 
 Manually (?) refactor gui_ui.py to improve Cython compilatinon
+
+FIX THE PYQT ISSUES WITH WINDOWS & MAC
+main.py:125: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+
+Internet says roll back from v6 to v5
+
+
+---------------------- 23rd May 2024 ----------------------
+
+Currently converting source to Cython (with pyx/pyd/pyi file structure)
+long time venture, will do in summer
+Very similar to typical C++ structure
+Guides:
+    https://cython.readthedocs.io/en/latest/
+    https://www.peterbaumgartner.com/blog/intro-to-just-enough-cython-to-be-useful/
+    https://www.peterspython.com/en/blog/using-pyinstaller-and-cython-to-create-a-python-executable
+
+Also considering moving from PyQt to Qt (C++): https://wiki.qt.io/Qt_for_Beginners

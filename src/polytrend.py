@@ -23,6 +23,7 @@ from csv import reader
 from sklearn.linear_model import LinearRegression, Ridge
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.metrics import mean_squared_error, r2_score
+import cython
 
 
 class PolyTrend:

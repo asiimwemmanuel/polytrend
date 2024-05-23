@@ -29,7 +29,7 @@ pyinstaller \
     --hidden-import=sklearn.linear_model \
     --hidden-import=sklearn.preprocessing \
     --hidden-import=sklearn.metrics \
-    --hidden-import=PyQt6.QtCore \
-    --hidden-import=PyQt6.QtGui \
-    --hidden-import=PyQt6.QtWidgets \
+    --hidden-import=PyQt5.QtCore \
+    --hidden-import=PyQt5.QtGui \
+    --hidden-import=PyQt5.QtWidgets \
     src/main.py

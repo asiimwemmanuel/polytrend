@@ -19,7 +19,7 @@ from sys import exit, argv
 from os import path
 from shutil import rmtree
 from csv import reader
-from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog
+from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog
 from polytrend import PolyTrend
 from view.gui_ui import Ui_PolyTrend
 

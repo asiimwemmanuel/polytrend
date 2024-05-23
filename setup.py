@@ -28,7 +28,7 @@ setup(
         'matplotlib>=3.0.0',
         'numpy>=1.16.0',
         'scipy>=1.2.0',
-        'PyQt6>=6.0.0',  # or 'PySide6>=6.0.0', depending on your choice
+        'PyQt5>=5.15.10',
         'scikit-learn>=0.24.0',
         'setuptools>=30.3.0'
     ],
@@ -44,7 +44,7 @@ setup(
     cmdclass={'build_ext': build_ext},
     options={
         'build_exe': {
-            'packages': ['numpy', 'sklearn', 'matplotlib', 'PyQt6'],  # or 'PySide6'
+            'packages': ['numpy', 'sklearn', 'matplotlib', 'PyQt5'],  # or 'PySide6'
             'includes': ['os', 'random', 'datetime', 'typing', 'sys'],
             'excludes': [
                 'Qt_6.5', 'whichcraft', 'bottle', 'altgraph', 'zope.interface',
