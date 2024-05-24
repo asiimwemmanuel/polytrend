@@ -8,7 +8,7 @@ setup(
     version='1.1.0',
     license='GPL-3.0',
     description='Regression algorithm for polynomial function approximation',
-    long_description=open('README.md').read(),
+    long_description='PolyTrend is a Python app aimed at facilitating polynomial trend fitting, visualization, and extrapolation. It offers a comprehensive set of functionalities to analyze and interpret data using polynomial regression techniques. Its development provides insights and conclusions in the fields of interpolation, polynomial regression and approximation theory.',
     author='Emmanuel Asiimwe',
     author_email='asiimwemmanuel47@gmail.com',
     url='https://github.com/asiimwemmanuel/polytrend',
