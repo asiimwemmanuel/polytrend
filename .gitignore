@@ -2,3 +2,4 @@
 .vscode
 *.c
 *.so
+*.pyd
