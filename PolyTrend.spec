@@ -7,7 +7,7 @@ a = Analysis(
     binaries=[('src/view/gui_ui.cpython-311-x86_64-linux-gnu.so', 'src/view/'), ('src/polytrend.cpython-311-x86_64-linux-gnu.so', 'src/')],
     datas=[],
     hiddenimports=['numpy', 'matplotlib', 'sklearn.linear_model', 'sklearn.preprocessing', 'sklearn.metrics', 'PyQt5.QtCore', 'PyQt5.QtGui', 'PyQt5.QtWidgets'],
-    hookspath=[],
+    hookspath=['./.pyinstaller_hooks.py'],
     hooksconfig={},
     runtime_hooks=[],
     excludes=[],
@@ -35,5 +35,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['assets/images/icon.ico'],
+    icon=['assets/images/logo.ico'],
 )

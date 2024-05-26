@@ -136,10 +136,10 @@ class PolyTrendApp(QMainWindow):
                 rmtree(folder)
                 print(f"Folder '{folder}' deleted successfully.")
             except FileNotFoundError:
-                print(f"Folder '{folder}' not found.")
-                # Folder not found, continue to the next one
-                continue
-            except Exception as e:
+                raise FileNotFoundError(f"Folder '{folder}' not found.")
+            except PermissionError:
+                print(f"Permission denied to delete the folder '{folder}'.")
+            except OSError as e:
                 print(f"Error occurred while deleting folder '{folder}': {e}")
 
         event.accept()

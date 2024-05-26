@@ -23,7 +23,6 @@ from csv import reader
 from sklearn.linear_model import LinearRegression, Ridge
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.metrics import mean_squared_error, r2_score
-import cython
 
 
 class PolyTrend:
@@ -233,8 +232,8 @@ class PolyTrend:
                 ValueError: If extrapolation data is provided but no function is given.
         """
         if extrapolate_data and function is None:
-            raise ValueError(
-                "If extrapolation data is provided, a function to generate predicted values must also be given."
+            raise RuntimeError(
+                "Internal logic error: A function to generate predicted values is expected but not provided."
             )
 
         plt.figure()

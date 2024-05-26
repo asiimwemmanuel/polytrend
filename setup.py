@@ -8,7 +8,7 @@ setup(
     version='1.1.0',
     license='GPL-3.0',
     description='Regression algorithm for polynomial function approximation',
-    long_description=open('README.md').read(),
+    long_description='PolyTrend is a Python app aimed at facilitating polynomial trend fitting, visualization, and extrapolation. It offers a comprehensive set of functionalities to analyze and interpret data using polynomial regression techniques. Its development provides insights and conclusions in the fields of interpolation, polynomial regression and approximation theory.',
     author='Emmanuel Asiimwe',
     author_email='asiimwemmanuel47@gmail.com',
     url='https://github.com/asiimwemmanuel/polytrend',
@@ -27,9 +27,9 @@ setup(
         'cx_Freeze>=6.15.16',
         'matplotlib>=3.0.0',
         'numpy>=1.16.0',
-        'scipy>=1.2.0',
-        'PyQt5>=5.15.10',
+        'scipy>=1.13.0',
         'scikit-learn>=0.24.0',
+        'PyQt5>=5.15.10',
         'setuptools>=30.3.0'
     ],
     ext_modules=cythonize([
@@ -44,9 +44,9 @@ setup(
     cmdclass={'build_ext': build_ext},
     options={
         'build_exe': {
-            'packages': ['numpy', 'sklearn', 'matplotlib', 'PyQt5'],  # or 'PySide6'
+            'packages': ['numpy', 'scikit-learn', 'matplotlib', 'PyQt5'],  # or 'PySide6'
             'includes': ['os', 'random', 'datetime', 'typing', 'sys'],
-            'excludes': [
+            'excludes': [ # these are due to building without venvs
                 'Qt_6.5', 'whichcraft', 'bottle', 'altgraph', 'zope.interface',
                 'zope.event', 'urllib3', 'pywin32-ctypes', 'pyinstaller-hooks-contrib',
                 'pycparser', 'pefile', 'idna', 'greenlet', 'future', 'charset-normalizer',
