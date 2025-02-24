@@ -116,26 +116,43 @@ class PolyTrend:
         """
 
         # ! broken, needs update
-        def _construct_polynomial_expression(coefficients: np.ndarray, intercept: np.ndarray):
-            processed_coeffs = coefficients[0].tolist()[::-1]
-            processed_intercept = intercept.tolist()
+        def _construct_polynomial_expression(coefficients: np.ndarray, intercept: np.ndarray) -> str:
+            """
+            Constructs a human-readable string representation of a polynomial equation based on the regression model's coefficients and intercept.
+
+            Args:
+                coefficients (np.ndarray): Coefficients of the polynomial.
+                intercept (np.ndarray): Intercept of the polynomial.
+
+            Returns:
+                str: A human-readable string representation of the polynomial equation.
+            """
+            # Convert coefficients and intercept to lists for easier manipulation
+            coefficients_list = np.asarray(coefficients).tolist()[::-1] # Reverse to match the order of the polynomial
+
+            intercept_list = intercept.tolist()
+
+            # Initialize the polynomial string
             polynomial = ""
 
-            for i in range(0, len(processed_coeffs)):
-                # rounding is messy for really small coeffs
-                coeff_rounded = round(processed_coeffs[i], 3)
-                term = f"({abs(coeff_rounded)})x^{len(processed_coeffs) - i}"
+            # Construct the polynomial string
+            for i, coeff in enumerate(coefficients_list):
+                # Round the coefficient for readability
+                rounded_coeff = round(float(coeff), 3)
+                # Construct the term
+                term = f"({abs(rounded_coeff)})x^{len(coefficients_list) - i}"
+                # Add the term to the polynomial string
                 if i == 0:
-                    polynomial += f"({coeff_rounded})x^{len(processed_coeffs)}" + " "
+                    polynomial += f"({rounded_coeff})x^{len(coefficients_list)}" + " "
                 else:
-                    sign = "+ " if coeff_rounded > 0 else "- "
+                    sign = "+ " if rounded_coeff > 0 else "- "
                     polynomial += sign + term + " "
 
-            # might be an error in indexing; could be 1D array
-            if processed_intercept[0] < 0:
-                polynomial += f"- {abs(round(processed_intercept[0], 3))}"
+            # Add the intercept to the polynomial string
+            if intercept_list[0] < 0:
+                polynomial += f"- {abs(round(intercept_list[0], 3))}"
             else:
-                polynomial += f"+ {round(processed_intercept[0], 3)}"
+                polynomial += f"+ {round(intercept_list[0], 3)}"
 
             return polynomial
 
@@ -199,13 +216,15 @@ class PolyTrend:
         coefficients = best_model.coef_
         intercept = best_model.intercept_
 
-        global func_expression
-        func_expression = _construct_polynomial_expression(coefficients, intercept)
+        # polynomial_expression = _construct_polynomial_expression(coefficients, intercept)
+        # print(
+        #     f"{datetime.now().strftime('%Y.%m-%d-%H:%M')}\nPolynomial Expression: {polynomial_expression}\nBest BIC score for given degree range: {best_bic}\nCoefficient of determination (r-squared value): {r_value}"
+        # )
 
-        print(
-            f"{datetime.now().strftime('%Y.%m-%d-%H:%M')}\nGenerated function: {func_expression}\nBest BIC score for given degree range: {best_bic}\nCoefficient of determination (r-squared value): {r_value}"
-        )
-
+        print("Model Parameters:")
+        print(f"Degree: {len(coefficients) - 1}")
+        print(f"Coefficients (from lowest to highest degree): {coefficients}")
+        print(f"Intercept: {intercept}")
         return (
             lambda x_vals: best_model.predict(
                 best_poly_features.transform(np.array(x_vals).reshape(-1, 1))
@@ -246,14 +265,15 @@ class PolyTrend:
         plt.xlabel(x_label)
         plt.ylabel(y_label)
 
-        if all(x == 0 for x in err_main):
+        if all(abs(err) < 1e-10 for err in err_main):
             plt.scatter(x_main, y_main, color="blue", label="Known Data")
-        plt.errorbar(x_main, y_main, yerr=err_main, label="Known Data", fmt='o', capsize=5)
+        else:
+            plt.errorbar(x_main, y_main, yerr=err_main, label="Known Data", fmt='o', capsize=5)
 
         if function:
             x_func = np.linspace(min(x_main), max(x_main), 100)
             y_func = function(list(x_func))
-            plt.plot(x_func, y_func, color="green", label=f"{func_expression}")
+            plt.plot(x_func, y_func, color="green", label="Line of best fit")
             
             # * RESIDUAL ANALYSIS: plots a 2nd graph, not relevant to HS
             # func_predictions = function(list(x_main))
