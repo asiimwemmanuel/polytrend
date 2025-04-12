@@ -22,8 +22,11 @@ import matplotlib.pyplot as plt
 from csv import reader
 from sklearn.linear_model import LinearRegression, Ridge
 from sklearn.preprocessing import PolynomialFeatures
-from sklearn.metrics import mean_squared_error, r2_score
-
+from sklearn.metrics import (
+    r2_score,
+    mean_squared_error,
+    mean_absolute_error
+)
 
 class PolyTrend:
     """
@@ -101,136 +104,157 @@ class PolyTrend:
         fitted_model = self.polyfind(degrees, main_data)
         self.polygraph(main_data, extrapolate_data, function=fitted_model[0])
 
+
     def polyfind(
-        self, degrees: List[int], main_data: Union[List[Tuple[float, float, float]], str]
-    ) -> Tuple[Callable[[list], np.ndarray], int]:
-        """
-        Find the best-fit polynomial function.
-
-        Args:
-            degrees (List[int]): List of polynomial degrees to consider.
-            main_data (Union[List[Tuple[float, float]], str]): List of tuples representing the known data points or CSV file path.
-
-        Returns:
-                Callable[[List[float]], List[float]]: A function that predicts values based on the polynomial.
-        """
-
-        # ! broken, needs update
-        def _construct_polynomial_expression(coefficients: np.ndarray, intercept: np.ndarray) -> str:
+            self, degrees: List[int], main_data: Union[List[Tuple[float, float, float]], str]
+        ) -> Tuple[Callable[[list], np.ndarray], int]:
             """
-            Constructs a human-readable string representation of a polynomial equation based on the regression model's coefficients and intercept.
+            Find the best-fit polynomial function with comprehensive statistical evaluation.
 
             Args:
-                coefficients (np.ndarray): Coefficients of the polynomial.
-                intercept (np.ndarray): Intercept of the polynomial.
+                degrees (List[int]): List of polynomial degrees to consider.
+                main_data (Union[List[Tuple[float, float]], str]): List of tuples representing the known data points or CSV file path.
 
             Returns:
-                str: A human-readable string representation of the polynomial equation.
+                Tuple containing:
+                    - Callable[[List[float]], List[float]]: A function that predicts values based on the polynomial
+                    - int: The degree of the selected polynomial
+                Also prints comprehensive statistical measures of the fit.
             """
-            # Convert coefficients and intercept to lists for easier manipulation
-            coefficients_list = np.asarray(coefficients).tolist()[::-1] # Reverse to match the order of the polynomial
 
-            intercept_list = intercept.tolist()
+            def _construct_polynomial_expression(coefficients: np.ndarray, intercept: np.ndarray) -> str:
+                """Constructs a human-readable polynomial equation string."""
+                coefficients_list = np.asarray(coefficients).tolist()[::-1]
+                intercept_list = intercept.tolist()
+                polynomial = ""
+                
+                for i, coeff in enumerate(coefficients_list):
+                    rounded_coeff = round(float(coeff), 3)
+                    term = f"({abs(rounded_coeff)})x^{len(coefficients_list) - i}"
+                    if i == 0:
+                        polynomial += f"({rounded_coeff})x^{len(coefficients_list)}" + " "
+                    else:
+                        sign = "+ " if rounded_coeff > 0 else "- "
+                        polynomial += sign + term + " "
 
-            # Initialize the polynomial string
-            polynomial = ""
-
-            # Construct the polynomial string
-            for i, coeff in enumerate(coefficients_list):
-                # Round the coefficient for readability
-                rounded_coeff = round(float(coeff), 3)
-                # Construct the term
-                term = f"({abs(rounded_coeff)})x^{len(coefficients_list) - i}"
-                # Add the term to the polynomial string
-                if i == 0:
-                    polynomial += f"({rounded_coeff})x^{len(coefficients_list)}" + " "
+                if intercept_list[0] < 0:
+                    polynomial += f"- {abs(round(intercept_list[0], 3))}"
                 else:
-                    sign = "+ " if rounded_coeff > 0 else "- "
-                    polynomial += sign + term + " "
+                    polynomial += f"+ {round(intercept_list[0], 3)}"
 
-            # Add the intercept to the polynomial string
-            if intercept_list[0] < 0:
-                polynomial += f"- {abs(round(intercept_list[0], 3))}"
-            else:
-                polynomial += f"+ {round(intercept_list[0], 3)}"
+                return polynomial
 
-            return polynomial
+            def _calculate_additional_metrics(y_true: np.ndarray, y_pred: np.ndarray, n_params: int) -> dict:
+                """Calculate various statistical metrics for model evaluation."""
+                n = len(y_true)
+                residuals = y_true - y_pred
+                
+                metrics = {
+                    'mse': mean_squared_error(y_true, y_pred),
+                    'rmse': np.sqrt(mean_squared_error(y_true, y_pred)),
+                    'mae': mean_absolute_error(y_true, y_pred),
+                    'r2': r2_score(y_true, y_pred),
+                    'adj_r2': 1 - (1 - r2_score(y_true, y_pred)) * (n - 1) / (n - n_params - 1),
+                    'aic': n * np.log(mean_squared_error(y_true, y_pred)) + 2 * n_params,
+                    'bic': n * np.log(mean_squared_error(y_true, y_pred)) + n_params * np.log(n),
+                    'residual_stats': {
+                        'mean': np.mean(residuals),
+                        'std': np.std(residuals),
+                        'min': np.min(residuals),
+                        'max': np.max(residuals)
+                    }
+                }
+                return metrics
 
+            def _model_selector(
+                x_main: np.ndarray, y_main: np.ndarray, errors: np.ndarray
+            ) -> Tuple[Union[Ridge, LinearRegression], PolynomialFeatures, dict]:
+                """Selects the best model based on multiple statistical criteria."""
+                
+                best_metrics = {
+                    'bic': float('inf'),
+                    'aic': float('inf'),
+                    'adj_r2': -float('inf'),
+                    'model': None,
+                    'poly_features': None,
+                    'degree': None
+                }
 
-        # * switched to ridge regression (see README)
-        def _model_selector(
-            x_main: np.ndarray, y_main: np.ndarray, errors: np.ndarray
-        ) -> Tuple[Union[Ridge, LinearRegression], PolynomialFeatures, float]:
-            # TODO there might be an optimization opportunity. look into other regression libs & algorithms
+                for degree in degrees:
+                    poly_features = PolynomialFeatures(degree=degree, include_bias=False)
+                    x_poly = poly_features.fit_transform(x_main)
 
-            best_bic = float("inf")
-            best_model = None
-            best_poly_features = None
-            best_r2_score = None
+                    if np.any(errors != 0):
+                        reg = Ridge(alpha=1.0)
+                        reg.fit(x_poly, y_main, sample_weight=1 / errors.ravel())
+                    else:
+                        reg = LinearRegression()
+                        reg.fit(x_poly, y_main)
 
-            for degree in degrees:
-                poly_features = PolynomialFeatures(degree=degree, include_bias=False)
-                x_poly = poly_features.fit_transform(x_main)
+                    y_pred = reg.predict(x_poly)
+                    n_params = x_poly.shape[1]  # Number of features (parameters)
+                    
+                    current_metrics = _calculate_additional_metrics(y_main, y_pred, n_params)
+                    current_metrics.update({
+                        'model': reg,
+                        'poly_features': poly_features,
+                        'degree': degree
+                    })
 
-                # there might be an inherent accuracy discrepancy between Ridge and OSE. see base.csv
-                if np.any(errors != 0):
-                    # TODO implement cross validation to avoid arbitrary alpha values
-                    reg = Ridge(alpha=1.0)
-                    reg.fit(x_poly, y_main, sample_weight=1 / errors.ravel())
-                else:
-                    reg = LinearRegression()
-                    reg.fit(x_poly, y_main)
+                    # Update best model if current model has better BIC (primary criterion)
+                    if current_metrics['bic'] < best_metrics['bic']:
+                        best_metrics = current_metrics
 
-                # Predicting y values with the current model
-                y_pred = reg.predict(x_poly)
+                if best_metrics['model'] is None:
+                    raise ValueError("All models had a BIC score of positive infinity... 何？！")
 
-                # Coefficient of determination
-                r2 = r2_score(y_main, y_pred)
+                return best_metrics
 
-                # Bayesian Information Criterion metric
-                n = len(y_main)
-                k = degree + 1
-                mse = mean_squared_error(y_main, y_pred)
-                bic_score = n * np.log(mse) + k * np.log(n)
+            # Process input data
+            processed_data = self._read_main_data(main_data=main_data)
+            x_main, y_main, err_main = zip(*processed_data[3])
+            x_main = np.asarray(x_main).reshape(-1, 1)
+            y_main = np.asarray(y_main).reshape(-1, 1)
+            err_main = np.asarray(err_main).reshape(-1, 1)
 
-                if bic_score < best_bic:
-                    best_bic = bic_score
-                    best_model = reg
-                    best_poly_features = poly_features
-                    best_r2_score = r2
+            # Select best model
+            best_metrics = _model_selector(x_main, y_main, err_main)
+            best_model = best_metrics['model']
+            best_poly_features = best_metrics['poly_features']
+            
+            # Get coefficients and intercept
+            coefficients = best_model.coef_
+            intercept = best_model.intercept_
 
-            if best_model is None or best_poly_features is None:
-                raise ValueError("All models had a BIC score of positive infinity... 何？！")
+            # Print comprehensive statistical report
+            print("\n=== Polynomial Regression Results ===")
+            print(f"Optimal degree: {best_metrics['degree']}")
+            print(f"\nPolynomial Expression:")
+            print(_construct_polynomial_expression(coefficients, intercept))
+            
+            print("\n=== Goodness-of-Fit Metrics ===")
+            print(f"R² (Coefficient of Determination): {best_metrics['r2']:.4f}")
+            print(f"Adjusted R²: {best_metrics['adj_r2']:.4f}")
+            print(f"Akaike Information Criterion (AIC): {best_metrics['aic']:.2f}")
+            print(f"Bayesian Information Criterion (BIC): {best_metrics['bic']:.2f}")
+            
+            print("\n=== Error Metrics ===")
+            print(f"Mean Squared Error (MSE): {best_metrics['mse']:.4f}")
+            print(f"Root Mean Squared Error (RMSE): {best_metrics['rmse']:.4f}")
+            print(f"Mean Absolute Error (MAE): {best_metrics['mae']:.4f}")
+            
+            print("\n=== Residual Analysis ===")
+            print(f"Residual Mean: {best_metrics['residual_stats']['mean']:.4f}")
+            print(f"Residual Std Dev: {best_metrics['residual_stats']['std']:.4f}")
+            print(f"Min Residual: {best_metrics['residual_stats']['min']:.4f}")
+            print(f"Max Residual: {best_metrics['residual_stats']['max']:.4f}")
 
-            return best_model, best_poly_features, best_bic, best_r2_score
-
-        processed_data = self._read_main_data(main_data=main_data)
-        x_main, y_main, err_main = zip(*processed_data[3])
-        # ! possible redundancy in reshaping
-        x_main = np.asarray(x_main).reshape(-1, 1)
-        y_main = np.asarray(y_main).reshape(-1, 1)
-        err_main = np.asarray(err_main).reshape(-1, 1)
-
-        best_model, best_poly_features, best_bic, r_value = _model_selector(x_main, y_main, err_main)
-
-        coefficients = best_model.coef_
-        intercept = best_model.intercept_
-
-        # polynomial_expression = _construct_polynomial_expression(coefficients, intercept)
-        # print(
-        #     f"{datetime.now().strftime('%Y.%m-%d-%H:%M')}\nPolynomial Expression: {polynomial_expression}\nBest BIC score for given degree range: {best_bic}\nCoefficient of determination (r-squared value): {r_value}"
-        # )
-
-        print("Model Parameters:")
-        print(f"Degree: {len(coefficients) - 1}")
-        print(f"Coefficients (from lowest to highest degree): {coefficients}")
-        print(f"Intercept: {intercept}")
-        return (
-            lambda x_vals: best_model.predict(
-                best_poly_features.transform(np.array(x_vals).reshape(-1, 1))
-            ).flatten(),
-            len(coefficients) - 1,
-        )  # Assuming coefficients include the intercept
+            return (
+                lambda x_vals: best_model.predict(
+                    best_poly_features.transform(np.array(x_vals).reshape(-1, 1))
+                ).flatten(),
+                best_metrics['degree']
+            )
 
     def polygraph(
         self,
