@@ -73,7 +73,6 @@ For detailed terms and conditions, please refer to the [COPYING](./COPYING) file
 
 ### From release page
 
-
 1. Visit the [PolyTrend release page](https://github.com/asiimwemmanuel/polytrend/releases) and download the relevant release package (ZIP for Windows, DMG for macOS, GZ for Linux).
 
 2. Extract the downloaded package to a directory of your choice.
@@ -114,37 +113,46 @@ pt.polyplot(degrees, data, extrapolate_data=[112, 140])
 #### 2. Install `freeglut3-dev`
 
 > - **macOS (brew)**:
->```bash
+>
+> ```bash
 >    brew install freeglut
->```
+> ```
+>
 > - **Windows (chocolatey)**:
->```bash
+>
+> ```bash
 >    choco install freeglut
->```
+> ```
+>
 > - **Debian/Ubuntu (apt)**:
->```bash
+>
+> ```bash
 >    sudo apt-get install freeglut3-dev
->```
-> 
+> ```
+>
 > - **Fedora (dnf)**:
->```bash
+>
+> ```bash
 >    sudo dnf install freeglut-devel
->```
-> 
+> ```
+>
 > - **Red Hat/CentOS (yum)**:
->```bash
+>
+> ```bash
 >    sudo yum install freeglut-devel
->```
-> 
+> ```
+>
 > - **Arch Linux (pacman)**:
->```bash
+>
+> ```bash
 >    sudo pacman -S freeglut
->```
-> 
+> ```
+>
 > - **openSUSE (zypper)**:
->```bash
+>
+> ```bash
 >    sudo zypper install freeglut-devel
->```
+> ```
 
 #### 3. Set up the virtual environment (via [pyenv](https://github.com/pyenv/pyenv)):
 
@@ -291,6 +299,8 @@ To enhance error tolerance and broaden applicability to real-world data, an augm
 ### Polynomial Regression
 
 <!-- talking point: matrices solve the least squares problem and how matrices are really applicable for a variety of problems beyong this one -->
+<!-- holy shit, you're not weighting you need a weight matrix (or at least weight vector). and you didn't explain minimization of the error function -->
+<!-- compared to the normal polynomial regressoin formula, only the transpose tags an additional factor in weighted polynomial regression -->
 
 Polynomial regression serves as a transition from discrete to continuous data, rendering it suitable for real-world data analytics scenarios characterized by inherent error. It offers a nuanced balance between accuracy and versatility across diverse applications.
 
@@ -343,7 +353,7 @@ The approximation is determined by solving for $\vec{\beta}$ in the matrix equat
 The matrix equation $ \mathbf{X} \vec{\beta} + \vec{\varepsilon} = \vec{y}$ is solved using the [Normal Equation](http://mlwiki.org/index.php/Normal_Equation):
 
 ```math
-    \widehat{\vec{\beta}} = (\mathbf{X}^\mathsf{T} \mathbf{X})^{-1} \mathbf{X}^\mathsf{T} \vec{y} 
+    \widehat{\vec{\beta}} = (\mathbf{X}^\mathsf{T} \mathbf{X})^{-1} \mathbf{X}^\mathsf{T} \vec{y}
 ```
 
 Where:
@@ -385,14 +395,14 @@ Where:
 - $ k $ is the number of parameters in the regression model.
 
 ```math
-     MSE = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2 
+     MSE = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
 ```
 
 Where:
 
 - $ n $ is the number of data points.
 - $ y_i $ is the actual value for the $i$-th data point.
-- $ \hat{y}_i $ is the predicted value for the $i$-th data point.
+- $ \hat{y}\_i $ is the predicted value for the $i$-th data point.
 
 The allure of the Bayesian Information Criterion (BIC) lies in its dual function of rewarding accuracy, encapsulated within its first term in the summation, while simultaneously penalizing complexity through its second term. What distinguishes BIC is its additive nature, a departure from the multiplicative relationships prevalent in various scientifically derived quantities, such as velocity, among others. This peculiarity piqued my curiosity, prompting an inquiry into its derivation.
 
@@ -405,12 +415,14 @@ The allure of the Bayesian Information Criterion (BIC) lies in its dual function
 A compilation of articles connected on the mentioned subjects
 
 ### Articles
+
 [Polynomial Regression](https://en.wikipedia.org/wiki/Polynomial_regression).
 [Regression Analysis](https://en.wikipedia.org/wiki/Regression_analysis)
 [Interpolation](https://en.wikipedia.org/wiki/Interpolation)
 [Bayesian Information Criterion](https://en.wikipedia.org/wiki/Bayesian_information_criterion)
 
 ### Videos
+
 [Lagrange Interpolation](https://youtu.be/bzp_q7NDdd4?feature=shared)
 [Polynomial Regression in Python](https://youtu.be/H8kocPOT5v0?feature=shared)
 [ Polynomial Regression in Python - sklearn ](https://youtu.be/nqNdBlA-j4w?feature=shared)
