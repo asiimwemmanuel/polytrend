@@ -4,6 +4,7 @@ It's meant to find relationships and fit curves onto data.
 Below are the specifics of the desktop version.
 
 # General UI
+
 'PolyTrend' heading
 Small "intro"; an explanation of the app and its functions
 Drop down menu for function type (options are listed below)
@@ -14,14 +15,15 @@ Short rundown of the relationship: how it was calculated and why that fit was ch
 (also include a light/dark theme option)
 
 # Possible function types
+
 1. auto
-2. linear: *f(n) -> an + b*
-2. polynomial: *f(n) -> a₀ + a₁n¹ + ... + axn^x*
-3. exponential: *f(n) -> abⁿ*
-4. logarithmic: *f(n) -> a + b ⨉ log(n)*
-5. power: *f(n) -> a ⨉ n^b*
-6. logistic: *f(n) -> L / 1 + e^-k(n - n₀)*
-7. sinusoidal (via Fast Fourier Transform)
+2. linear: _f(n) -> an + b_
+3. polynomial: _f(n) -> a₀ + a₁n¹ + ... + axn^x_
+4. exponential: _f(n) -> abⁿ_
+5. logarithmic: _f(n) -> a + b ⨉ log(n)_
+6. power: _f(n) -> a ⨉ n^b_
+7. logistic: _f(n) -> L / 1 + e^-k(n - n₀)_
+8. sinusoidal (via Fast Fourier Transform)
 
 'auto' is where the app will automatically pick the best curve fit among the listed types ie. the fit with the least error
 
@@ -33,12 +35,14 @@ the user can input any amount of data they wish
 for extrapolates, the user inputs a list of x values that the fitted curve will estimate their values.
 
 # Use case
+
 1. data points and extrapolates are provided
 2. type or relationship is given
 3. graph is plotted (with short explanation at the bottom), distinguishing between given and calculated data points
 4. include model description (with equation), assumptions, goodness of fit (with R-squared and RMSE and other statistical measures), coefficient estimates and discretions, diagnostic plots, validation routines used and any recommendations
 
 # Backend
+
 make a separate function for each of the possible function types, with the auto function utilizing all the others.
 make each function type output a lambda function such that the following example holds:
 
@@ -55,7 +59,7 @@ Make a Python script that implements a polynomial regression model on a given li
 It should plot a graph headed "Fitted Function via PolyTrend" and plots the model with a viewport of 150% of the size of the input data, differentiating between known vs calculated data with labels (which is given as a 2nd parameter list).
 
 The script also outputs the algebraic expression of the polynomial in the form
-*f(x) = a_n * x^n + a_(n-1) * x^(n-1) + ... + a_2 * x^2 + a_1 * x + a_0*
+_f(x) = a_n _ x^n + a\_(n-1) _ x^(n-1) + ... + a_2 _ x^2 + a*1 * x + a*0*
 
 This script must have 2 functions in the parent class polytrend, namely poly (1 parameter) and graph (3 parameters). poly returns a lambda function such that x = poly(data), x(4)
 

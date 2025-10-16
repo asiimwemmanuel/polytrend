@@ -1,16 +1,18 @@
 # 9:56 PM 21/11/22
-This project is to modularize my math functions and formulae, specifically *resistance in parallel* and the *general formula for quadratic sequences*.
+
+This project is to modularize my math functions and formulae, specifically _resistance in parallel_ and the _general formula for quadratic sequences_.
 
 **Go to ./theory/theory_v1 for documentation**
 
 <p style="font-family: consolas; font-size: 20px;">Languages used: C++23, Python3</p>
 
 ## Resources
-	- Abbott: Understanding Analysis
-	- John K. Hunter: An Introduction to Real Analysis
-	- Robert G. Bartle | Donald R. Sherbert: Introduction to Real Analysis
-	- William F. Trench: Introduction to Real Analysis
-	- Attached documentation
+
+    - Abbott: Understanding Analysis
+    - John K. Hunter: An Introduction to Real Analysis
+    - Robert G. Bartle | Donald R. Sherbert: Introduction to Real Analysis
+    - William F. Trench: Introduction to Real Analysis
+    - Attached documentation
 
 <br/>
 
@@ -28,9 +30,11 @@ This generalisation should not have compounding complexity ie. it should not hav
 
 > To be soon succeeded by a program analysing series of varying orders, not just quadratic under polynomial complexity
 >
-> *For **unique** & **non-repeating** terms a, b, c in quadratic series;*
-> > - *α = b - a* </br>
-> > - *x = c - b - α* </br> <!-- x = c + a - 2b*-->
+> _For **unique** & **non-repeating** terms a, b, c in quadratic series;_
+>
+> > - _α = b - a_ </br>
+> > - _x = c - b - α_ </br> <!-- x = c + a - 2b*-->
+>
 > <p style="font-family: Gabriola; font-size: 35px; text-align: center;">nth term = α + ∑ (xi + α - x) from i = 1 to n-1</p>
 > <p style="font-size: 15px; text-align: right;">(proof in the attached documentation)</p>
 
@@ -38,7 +42,8 @@ This generalisation should not have compounding complexity ie. it should not hav
 
 ## ANALYSIS OF RESISTANCE IN PARALLEL
 
-> For n resistors in parallel connection, ***the total resistance is the reciprocal of the sum of the reciprocals of the resistors***. </br>
+> For n resistors in parallel connection, **_the total resistance is the reciprocal of the sum of the reciprocals of the resistors_**. </br>
+>
 > <p style="font-family: Gabriola; font-size: 35px; text-align: center;">Ωt = 1/(∑ (1/Ωx) from x = 1 to n)</p>
 
 <br/>
@@ -49,9 +54,9 @@ Investigate the difference in rounding & display errors between cppver & pyver (
 
 Also look to fix variable duplication, and managing the math_tools class.
 
-***OPEN-RESEARCH POINT: What else should the class include, other than progession-related tools?***
+**_OPEN-RESEARCH POINT: What else should the class include, other than progession-related tools?_**
 
-Focus on how to get the best out of each language (through a .json file or an API) for the most optimal (if ever needed) *math-toolbox*.
+Focus on how to get the best out of each language (through a .json file or an API) for the most optimal (if ever needed) _math-toolbox_.
 
 Also compare the correct formula in the eqtn-ref branch with the control, and the limitations (eg. managing reducing progressions) of each.
 

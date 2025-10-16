@@ -4,7 +4,7 @@ from Cython.Distutils import build_ext
 
 # Project Metadata
 setup(
-    name='PolyTrend',
+    name="PolyTrend",
     version='1.1.0',
     license='GPL-3.0',
     description='Regression algorithm for polynomial function approximation',
