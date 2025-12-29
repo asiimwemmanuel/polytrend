@@ -49,17 +49,18 @@ class PolyTrendApp(QMainWindow):
         err_values = self.ui.error_box.toPlainText().split()
         degrees = self.ui.degree_box.toPlainText().split()
 
-        if all([
-            len(x_values) == len(y_values),
-            len(x_values) >= 2,
-            len(degrees) >= 1,
-            len(err_values) in {0, 1, len(y_values)}
-        ]):
+        if all(
+            [
+                len(x_values) == len(y_values),
+                len(x_values) >= 2,
+                len(degrees) >= 1,
+                len(err_values) in {0, 1, len(y_values)},
+            ]
+        ):
             self.ui.plot.setEnabled(True)
         else:
             self.ui.plot.setEnabled(False)
 
-    # works as expected
     def import_csv(self):
         csv_path, _ = QFileDialog.getOpenFileName(
             self, "Open CSV File", "", "CSV Files (*.csv)"
@@ -70,7 +71,7 @@ class PolyTrendApp(QMainWindow):
             y_values = []
             err_values = []
 
-            with open(csv_path, newline='') as csvfile:
+            with open(csv_path, newline="") as csvfile:
                 # Create a CSV reader object
                 csvreader = reader(csvfile)
 
@@ -97,7 +98,7 @@ class PolyTrendApp(QMainWindow):
             self.toggle_find_button_state()
 
     def plot_graph(self):
-        def _extract_values(text):
+        def _extract_values(text) -> list[float]:
             if text.strip():
                 values = split(r"[\s,\n]+", text.strip())
                 return [float(x) for x in values if x]
@@ -108,9 +109,7 @@ class PolyTrendApp(QMainWindow):
         x_values = _extract_values(self.ui.x_box.toPlainText())
         y_values = _extract_values(self.ui.y_box.toPlainText())
         err_values = _extract_values(self.ui.error_box.toPlainText())
-
-        # in case the user doesn't input any errors
-        err_values = [0] if not err_values else err_values
+        err_values = [0.00] if not err_values else err_values
 
         # Allows user to input only 1 value to apply to all the others
         # Minor efficiency gain: Directly replicate the first element of err_values if its length is 1 :)
@@ -122,14 +121,16 @@ class PolyTrendApp(QMainWindow):
 
         poly_trend = PolyTrend()
 
-        poly_trend.polyplot(degrees, list((zip(x_values, y_values, err_values))), extrap)
+        poly_trend.polyplot(
+            degrees, list((zip(x_values, y_values, err_values))), extrap
+        )
 
     def closeEvent(self, event):
         # Construct absolute paths for the folders to delete
         base_dir = path.dirname(path.abspath(__file__))
         folders_to_delete = [
             path.join(base_dir, "__pycache__"),
-            path.join(base_dir, "view/__pycache__")
+            path.join(base_dir, "view/__pycache__"),
         ]
         for folder in folders_to_delete:
             try:
