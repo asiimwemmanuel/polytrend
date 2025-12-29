@@ -1,7 +1,7 @@
 This file demonstrates the general format for the console output
 
 year.month-date-HH:MM
-Generated function: f(x) = (coeff_0)x^(0) + (coeff_1)x^(1) + ... + (coeff_n)x^(n)
+Generated function: f(x) = (coeff_n)x^(n) + (coeff_n-1)x^(n-1) + ... + (coeff_1)x _ (coeff_0)
 Best BIC score for given degree range: b
 
 coeff_x is a float != 0
