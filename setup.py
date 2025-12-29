@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages, Extension
 from Cython.Build import cythonize
-from Cython.Distutils import build_ext
+from Cython.Distutils.build_ext import build_ext
 
 # Project Metadata
 setup(

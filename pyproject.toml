@@ -1,0 +1,106 @@
+[project]
+name = "polytrend"
+version = "1.1.0"
+description = "Pedagogical polynomial regressor"
+authors = [
+    {name = "Emmanuel Asiimwe",email = "90935867+asiimwemmanuel@users.noreply.github.com"}
+]
+license = {text = "GPL-3.0"}
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+keywords = ["math", "numerical-analysis", "data-processing", "statistics"]
+dependencies = [
+    "contourpy>=1.2.1",
+    "cycler>=0.12.1",
+    "fonttools>=4.51.0",
+    "joblib>=1.4.2",
+    "kiwisolver>=1.4.5",
+    "matplotlib>=3.8.4",
+    "numpy>=1.26.4",
+    "packaging>=24.0",
+    "pillow>=10.3.0",
+    "pyparsing>=3.1.2",
+    "python-dateutil>=2.9.0.post0",
+    "pytz>=2024.1",
+    "scikit-learn>=1.4.2",
+    "scipy>=1.13.0",
+    "setuptools>=65.5.0",
+    "six>=1.16.0",
+    "threadpoolctl>=3.5.0",
+    "tzdata>=2024.1",
+    "pyqt5 (>=5.15.11,<6.0.0)",
+    "cython (>=3.2.2,<4.0.0)",
+]
+
+# classifiers = [
+#     "Development Status :: 5 - Production/Stable",
+#     "Intended Audience :: Developers",
+#     "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+#     "Programming Language :: Python :: 3",
+#     "Programming Language :: Python :: 3.11",
+#     "Programming Language :: Python :: 3.12",
+#     "Operating System :: Microsoft :: Windows",
+#     "Operating System :: POSIX :: Linux",
+#     "Operating System :: MacOS",
+# ]
+
+[project.urls]
+Homepage = "https://github.com/asiimwemmanuel/polytrend"
+Repository = "https://github.com/asiimwemmanuel/polytrend"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0", "setuptools>=65.5.0", "wheel"]
+build-backend = "poetry.core.masonry.api"
+# build-backend = "setuptools.build_meta"
+
+# Optional: cx_Freeze configuration for building executables
+# [tool.cxfreeze]
+# executables = [
+#     { script = "main.py", base = "Win32GUI", target_name = "PolyTrend" }
+# ]
+# 
+# [tool.cxfreeze.build_exe]
+# packages = ["numpy", "scikit-learn", "matplotlib", "PyQt5"]
+# includes = ["os", "random", "datetime", "typing", "sys"]
+# excludes = [
+#     "Qt_6.5", "whichcraft", "bottle", "altgraph", "zope.interface",
+#     "zope.event", "urllib3", "pywin32-ctypes", "pyinstaller-hooks-contrib",
+#     "pycparser", "pefile", "idna", "greenlet", "future", "charset-normalizer",
+#     "certifi", "requests", "pyinstaller", "cffi", "gevent", "gevent-websocket",
+#     "bottle-websocket", "Eel", "auto-py-to-exe"
+# ]
+# include_files = [
+#     ["./src/polytrend.py", "src"],
+#     ["./gui/gui.py", "gui"]
+# ]
+
+[tool.ruff]
+extend-exclude = [
+  "env",
+  "__pycache__",
+]
+
+line-length = 88
+indent-width = 2
+target-version = "py311"
+
+[tool.ruff.format]
+quote-style = "single"
+docstring-code-format = true
+
+# Uncomment to apply a balanced, non-intrusive rule set:
+# [tool.ruff.lint]
+# select = [
+#   "E",    # Pycodestyle errors
+#   "W",    # Pycodestyle warnings
+#   "F",    # Pyflakes: unused vars, imports, etc.
+#   "I",    # Import sorting
+#   "B",    # Bugbear: common correctness issues
+#   "UP",   # pyupgrade: modern Python idioms
+#   "SIM",  # Simplification rules
+#   "C4",   # Comprehension improvements
+#   "TID",  # Tidy imports
+#   "RUF"   # Ruff-specific enhancements
+# ]
+
+
