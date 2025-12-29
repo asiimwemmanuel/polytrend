@@ -1,5 +1,6 @@
 .history
 .vscode
+.venv
 *.c
 *.so
 *.pyd
