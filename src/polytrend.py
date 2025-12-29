@@ -14,8 +14,7 @@
 # along with PolyTrend. If not, see <https://www.gnu.org/licenses/>.
 
 from random import uniform
-from datetime import datetime
-from typing import Union, List, Tuple, Callable, Optional
+from typing import Union, Tuple, Callable, Optional
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -41,15 +40,15 @@ class PolyTrend:
         - polygraph(): Plots the function, known data, and extrapolated data.
     """
 
-    def _read_main_data(self, main_data: Union[List[Tuple[float, float, float]], str]) -> List:
+    def _read_main_data(self, main_data: Union[list[Tuple[float, float, float]], str]) -> list:
         """
         Read and extract known data from either a list of tuples or a CSV file.
 
         Args:
-            main_data (Union[List[Tuple[float, float, float]], str]): Known data points or CSV file path.
+            main_data (Union[list[Tuple[float, float, float]], str]): Known data points or CSV file path.
 
         Returns:
-            List: [str, str, str, List[Tuple[float, float, float]]]
+            list: [str, str, str, list[Tuple[float, float, float]]]
         """
         graph_title = x_axis_label = y_axis_label = str()
         x_main_values = y_main_values = err_values = []
@@ -73,7 +72,7 @@ class PolyTrend:
             x_axis_label = "x"
             y_axis_label = "f(x)"
             x_main_values, y_main_values, err_values = zip(*main_data)
-            graph_title = f"Fitted Function via PolyTrend"
+            graph_title = "Fitted Function via PolyTrend"
 
         else:
             raise ValueError("Data must be a non-empty list of tuples or CSV file path")
@@ -86,17 +85,17 @@ class PolyTrend:
 
     def polyplot(
         self,
-        degrees: List[int],
-        main_data: Union[List[Tuple[float, float, float]], str],
-        extrapolate_data: List[float] = [],
+        degrees: list[int],
+        main_data: Union[list[Tuple[float, float, float]], str],
+        extrapolate_data: list[float] = [],
     ) -> None:
         """
         Plot the polynomial fit on the known data.
 
         Args:
-                degrees (List[int]): List of polynomial degrees to consider.
-                main_data (Union[List[Tuple[float, float]], str]): List of tuples representing the known data points or CSV file path.
-                extrapolate_data (List[float], optional): List of x coordinates for extrapolation. Defaults to [].
+                degrees (list[int]): list of polynomial degrees to consider.
+                main_data (Union[list[Tuple[float, float]], str]): list of tuples representing the known data points or CSV file path.
+                extrapolate_data (list[float], optional): list of x coordinates for extrapolation. Defaults to [].
 
         Raises:
                 ValueError: If degrees and/or known data is not specified or empty.
@@ -106,43 +105,58 @@ class PolyTrend:
 
 
     def polyfind(
-            self, degrees: List[int], main_data: Union[List[Tuple[float, float, float]], str]
+            self, degrees: list[int], main_data: Union[list[Tuple[float, float, float]], str]
         ) -> Tuple[Callable[[list], np.ndarray], int]:
             """
             Find the best-fit polynomial function with comprehensive statistical evaluation.
 
             Args:
-                degrees (List[int]): List of polynomial degrees to consider.
-                main_data (Union[List[Tuple[float, float]], str]): List of tuples representing the known data points or CSV file path.
+                degrees (list[int]): list of polynomial degrees to consider.
+                main_data (Union[list[Tuple[float, float]], str]): list of tuples representing the known data points or CSV file path.
 
             Returns:
                 Tuple containing:
-                    - Callable[[List[float]], List[float]]: A function that predicts values based on the polynomial
+                    - Callable[[list[float]], list[float]]: A function that predicts values based on the polynomial
                     - int: The degree of the selected polynomial
                 Also prints comprehensive statistical measures of the fit.
             """
 
-            def _construct_polynomial_expression(coefficients: np.ndarray, intercept: np.ndarray) -> str:
+
+            def _construct_polynomial_expression(
+                coefficients: np.ndarray,
+                intercept: np.ndarray
+            ) -> str:
                 """Constructs a human-readable polynomial equation string."""
-                coefficients_list = np.asarray(coefficients).tolist()[::-1]
-                intercept_list = intercept.tolist()
-                polynomial = ""
-                
-                for i, coeff in enumerate(coefficients_list):
-                    rounded_coeff = round(float(coeff), 3)
-                    term = f"({abs(rounded_coeff)})x^{len(coefficients_list) - i}"
-                    if i == 0:
-                        polynomial += f"({rounded_coeff})x^{len(coefficients_list)}" + " "
+
+                coeffs = np.asarray(coefficients, dtype=float).ravel()[::-1]
+                intercept_value: float = float(np.asarray(intercept).ravel()[0])
+
+                polynomial_parts: list[str] = []
+                degree = len(coeffs)
+
+                for i, coeff in enumerate(coeffs):
+                    if coeff == 0:
+                        continue  # (3) skip zero coefficients
+
+                    rounded = round(coeff, 3)
+                    power = degree - i
+
+                    x_term = "x" if power == 1 else f"x^{power}"  # (1)
+
+                    if not polynomial_parts:
+                        polynomial_parts.append(f"({rounded}){x_term}")
                     else:
-                        sign = "+ " if rounded_coeff > 0 else "- "
-                        polynomial += sign + term + " "
+                        sign = "+ " if rounded > 0 else "- "
+                        polynomial_parts.append(f"{sign}({abs(rounded)}){x_term}")
 
-                if intercept_list[0] < 0:
-                    polynomial += f"- {abs(round(intercept_list[0], 3))}"
-                else:
-                    polynomial += f"+ {round(intercept_list[0], 3)}"
+                intercept_rounded = round(intercept_value, 3)
+                if intercept_rounded != 0:
+                    sign = "+ " if intercept_rounded > 0 else "- "
+                    polynomial_parts.append(f"{sign}{abs(intercept_rounded)}")
 
-                return polynomial
+                return " ".join(polynomial_parts)
+
+
 
             def _calculate_additional_metrics(y_true: np.ndarray, y_pred: np.ndarray, n_params: int) -> dict:
                 """Calculate various statistical metrics for model evaluation."""
@@ -229,7 +243,7 @@ class PolyTrend:
             # Print comprehensive statistical report
             print("\n=== Polynomial Regression Results ===")
             print(f"Optimal degree: {best_metrics['degree']}")
-            print(f"\nPolynomial Expression:")
+            print("\nPolynomial Expression:")
             print(_construct_polynomial_expression(coefficients, intercept))
             
             print("\n=== Goodness-of-Fit Metrics ===")
@@ -258,17 +272,17 @@ class PolyTrend:
 
     def polygraph(
         self,
-        main_data: Union[List[Tuple[float, float, float]], str],
-        extrapolate_data: List[float] = [],
-        function: Optional[Callable[[List[float]], np.ndarray]] = None,
+        main_data: Union[list[Tuple[float, float, float]], str],
+        extrapolate_data: list[float] = [],
+        function: Optional[Callable[[list[float]], np.ndarray]] = None,
     ) -> None:
         """
         Plot the function, known data, and extrapolated data.
 
         Args:
-                main_data (Union[List[Tuple[float, float]], str]): List of tuples representing the known data points or CSV file path.
-                extrapolate_data (List[float], optional): List of extrapolation data points. Defaults to [].
-                func (Optional[Callable[[List[float]], np.ndarray]], optional): Function to generate predicted values. Defaults to None.
+                main_data (Union[list[Tuple[float, float]], str]): list of tuples representing the known data points or CSV file path.
+                extrapolate_data (list[float], optional): list of extrapolation data points. Defaults to [].
+                func (Optional[Callable[[list[float]], np.ndarray]], optional): Function to generate predicted values. Defaults to None.
 
         Raises:
                 ValueError: If known data is empty.
