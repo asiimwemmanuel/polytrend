@@ -1,7 +1,5 @@
 import tests.test_main as test_main
-# import numpy as np
 from unittest.mock import patch
-# from io import StringIO
 import pandas as pd
 
 from polytrend import PolyTrend
