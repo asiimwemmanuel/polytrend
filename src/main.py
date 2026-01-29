@@ -14,14 +14,17 @@
 # You should have received a copy of the GNU General Public License
 # along with PolyTrend. If not, see <https://www.gnu.org/licenses/>.
 
-from re import split
-from sys import exit, argv
-from os import path
-from shutil import rmtree
 from csv import reader
-from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog
+from os import path
+from re import split
+from shutil import rmtree
+from sys import argv, exit
+
+from PyQt5.QtWidgets import QApplication, QFileDialog, QMainWindow
+
 from polytrend import PolyTrend
 from view.gui_ui import Ui_PolyTrend
+
 
 class PolyTrendApp(QMainWindow):
     def __init__(self):
@@ -144,6 +147,7 @@ class PolyTrendApp(QMainWindow):
                 print(f"Error occurred while deleting folder '{folder}': {e}")
 
         event.accept()
+
 
 if __name__ == "__main__":
     app = QApplication(argv)
