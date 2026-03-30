@@ -238,8 +238,6 @@ A paragonal solution to the recursive conundrum at hand is conceivable, particul
 
 1 \leq r \leq n-1
 
-````
-
 It is also intriguing to consider a framework wherein descending through the layers in this framework resembles differentiation, where each step involves deriving successive terms. Conversely, ascending through the layers mirrors integration, accumulating terms to reconstruct the original sequence. This analogy provides insight into the interplay of discrete elements, akin to calculus principles.
 
 **HYPOTHESIS**: Upon representing the sequence with a polynomial, it is conjectured that the \( f^{(d)} \) derivative assumes a constant value, thereby equating the bottommost layer.
@@ -256,7 +254,7 @@ The Lagrange interpolation formula is expressed as:
 
 ```math id="mlkjb1"
 P(x) = \sum_{i=0}^{n} \left( y_i \prod_{j=0, j \neq i}^{n} \frac{x - x_j}{x_i - x_j} \right)
-````
+```
 
 Herein:
 
