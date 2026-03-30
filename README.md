@@ -33,7 +33,7 @@
    - [Regularization](#-regularization)
    - [Caching](#-caching)
 
-## Introduction 💡
+## Introduction
 
 PolyTrend is a Python app aimed at facilitating polynomial trend fitting, visualization, and extrapolation. It offers a comprehensive set of functionalities to analyze and interpret data using polynomial regression techniques. Its development provides insights and conclusions in the fields of interpolation, polynomial regression and approximation theory.
 
@@ -46,7 +46,7 @@ PolyTrend is a Python app aimed at facilitating polynomial trend fitting, visual
     </div>
 </div>
 
-## Key Functionalities 🔑
+## Key Functionalities
 
 PolyTrend offers the following key functionalities:
 
@@ -54,7 +54,7 @@ PolyTrend offers the following key functionalities:
 - **polyfind()**: This method calculates the best-fit polynomial function by evaluating different polynomial degrees and selecting the one with the lowest Bayesian Information Criterion (BIC) score.
 - **polygraph()**: This method visualizes the polynomial function, the known data points, and any extrapolated data points if provided.
 
-## Use cases 📋
+## Use cases
 
 Users can utilize PolyTrend to perform the following tasks:
 
@@ -62,12 +62,12 @@ Users can utilize PolyTrend to perform the following tasks:
 2. **Visualization**: Visualize polynomial fits alongside original data points to gain insights into the relationship between variables.
 3. **Extrapolation**: Extrapolate future values based on the fitted polynomial function, enabling predictive modeling tasks.
 
-## License ⚖️
+## License
 
 This project is governed by the **GNU General Public License version 3 (GNU GPL v3)**.
 For detailed terms and conditions, please refer to the [COPYING](./COPYING) file included within the project repository.
 
-## Installation ⚙️
+## Installation
 
 <!-- methods to include: source (suitable for modification/customization), python package index (suitable for usage in projects), docker image (suitable for running in a VM), installation wizard with binary(suitable for standalone releases) -->
 
@@ -222,7 +222,7 @@ To install polytrend via a wizard, see [Releases](https://github.com/asiimwemman
 <!-- Note: If you are using WSL or a GUI incapable OS, install an X11 server like vcxsrv and link your forwarding instance with your terminal session.
 Do so only if the app fails to run in case you installed it from source -->
 
-## Theory 📚
+## Theory
 
 ### Quadratic Sequences
 
@@ -410,7 +410,7 @@ The allure of the Bayesian Information Criterion (BIC) lies in its dual function
 
 <!-- find a way to incorporate hypothesis testing, specifically to reject the null hypothesis, and maybe tie connections with linear algebra -->
 
-## Additional Resources 📚🔍
+## Additional Resources
 
 A compilation of articles connected on the mentioned subjects
 
@@ -427,30 +427,28 @@ A compilation of articles connected on the mentioned subjects
 [Polynomial Regression in Python](https://youtu.be/H8kocPOT5v0?feature=shared)
 [ Polynomial Regression in Python - sklearn ](https://youtu.be/nqNdBlA-j4w?feature=shared)
 
-## Future Improvements 🚀
+## Future Improvements
 
-### 📈 Batch Plotting:
+### Batch Plotting:
 
 Batch plotting automates the process of generating multiple plots from a dataset, streamlining visualizations for analysis or reporting purposes. This functionality is particularly useful when dealing with large datasets or when producing numerous plots with similar characteristics.
 
-### 🔢 Data Normalization:
+### Data Normalization:
 
 Data normalization is a preprocessing step that scales data to a standard range, enhancing the performance and convergence of machine learning models. By ensuring that all features contribute equally to the analysis, normalization prevents bias towards variables with larger scales, improving the overall robustness of the model.
 
-### ⚙️ Parallelization:
+### Parallelization:
 
 Parallelization divides tasks into smaller subtasks that can be executed simultaneously across multiple processing units. This technique significantly reduces computation time, making it particularly valuable for computationally intensive operations or tasks that lend themselves to parallel execution.
 
-### 🔄 Cross-Validation:
+### Cross-Validation:
 
 Cross-validation is a validation technique used to assess the performance of predictive models. By partitioning the dataset into multiple subsets and iteratively training and validating the model on different subsets, cross-validation provides a more reliable estimate of the model's performance, helping to identify overfitting and ensure generalization.
 
-### 🛡️ Regularization:
+### Regularization:
 
 Regularization is a technique used to prevent overfitting in machine learning models by adding a penalty term to the loss function. This penalty discourages overly complex models, promoting simpler models that generalize better to unseen data and improving overall model performance.
 
-### 🔍 Caching:
+### Caching:
 
 Caching involves storing frequently accessed data or computations in a temporary storage location to expedite future access. By reducing the need to recompute or retrieve data from slower storage mediums, caching improves performance, especially in applications where certain data or calculations are repeatedly accessed.
-
-## <center>Happy coding! 🥳</center>
