@@ -95,21 +95,20 @@ pt.polyplot(degrees, data, extrapolate_data=[112, 140])
 | Arch Linux      | `sudo pacman -S freeglut`            |
 | openSUSE        | `sudo zypper install freeglut-devel` |
 
-#### 3. Clone and set up the virtual environment
+#### 3. Clone and set up the project
 
 ```shell
 git clone --depth 1 https://github.com/asiimwemmanuel/polytrend.git
 cd polytrend
-pyenv virtualenv venv_name  # or: python -m venv venv_name
-pyenv activate venv_name    # or: source venv_name/bin/activate
-pyenv local $(cat .python-version)
+
+poetry env use python3.11
+poetry install
 ```
 
-#### 4. Install dependencies and run
+#### 4. Run the app
 
 ```shell
-pip install -r requirements.txt
-python main.py
+poetry run python main.py
 ```
 
 > **Linux note**: If GUI issues persist, see [Qt setup for Linux](https://web.stanford.edu/dept/cs_edu/resources/qt/install-linux).
