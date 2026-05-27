@@ -1,0 +1,131 @@
+# PolyTrend Testing Methodology
+
+## Overview
+
+The test suite targets the three public methods and one private method of `polytrend.py`: `_read_main_data`, `polyfind`, `polygraph`, and implicitly `polyplot` (which is a thin wrapper over the other three and is therefore covered transitively). No tests cover `main.py` or GUI behaviour.
+
+Tests are organised into three conceptual tiers. Each tier answers a different question and requires a different kind of reasoning to write. The division is not formal — a single test file may contain tests from multiple tiers — but it should be the mental model used when deciding what to test next.
+
+---
+
+## Tier 1 — Contract invariants
+
+**Question:** Does the method return what its signature promises, in the shape the rest of the code depends on?
+
+These tests make no claim about numeric accuracy. They verify that:
+
+- Return types and structures match documented contracts (e.g. `polyfind` returns `(callable, int)`).
+- The callable returned by `polyfind` accepts a `list[float]` and returns a `numpy.ndarray` of the same length.
+- `_read_main_data` always returns a four-element list: `[str, str, str, list[tuple[float, float, float]]]`.
+- Documented exceptions (`ValueError`, `RuntimeError`, `FileNotFoundError`) are raised on the inputs that are supposed to trigger them.
+- Side effects that must occur exactly once per call (`plt.show`, `plt.figure`) do so.
+
+Tier 1 tests are cheap to write and catch most regressions introduced by refactoring. They should be the first thing added when a new method or return-path is introduced.
+
+**What they cannot catch:** Numerically wrong answers that still have the right shape. A `polyfind` that always returns a flat line would pass every Tier 1 test.
+
+---
+
+## Tier 2 — Oracle / algebraic invariants
+
+**Question:** Is the numerical output correct?
+
+The "oracle problem" — not knowing the expected output without reimplementing the software — is sidestepped by generating test data from a _known_ ground-truth polynomial. When you write:
+
+```python
+data = [(float(x), float(x**2 - 3*x + 2), 0.0) for x in range(1, 21)]
+fn, _ = pt.polyfind([1, 2, 3], data)
+```
+
+you hold the oracle independently: the fitted function must reproduce `x² − 3x + 2` on training points to within floating-point tolerance, and BIC must select degree 2 because it achieves a perfect fit (MSE = 0 → BIC = −∞) before the loop even needs to compare degrees.
+
+This approach is not reimplementing the algorithm — it is testing the algorithm against closed-form mathematics that the algorithm is supposed to approximate.
+
+### Tolerance
+
+Reconstruction tests use `abs(predicted - expected) < 1e-4`. This is intentionally loose relative to machine epsilon. sklearn's internal solvers (normal equation for `LinearRegression`, conjugate gradient for `Ridge`) introduce small numerical errors, and a tolerance of `1e-4` is tight enough to catch a wrong degree or a broken weight path while loose enough not to fail on solver variation across platforms or library versions.
+
+### Degree recovery
+
+On noise-free data generated from a degree-`d` polynomial, the correct degree must be selected when `d` is among the candidates. This works because:
+
+1. A degree-`d` fit on degree-`d` data achieves MSE ≈ 0, which the code maps to BIC = −∞.
+2. BIC = −∞ is less than any finite BIC, so the correct degree wins regardless of what the competing degrees score.
+
+This guarantee breaks down as soon as noise is added (see Tier 3).
+
+---
+
+## Tier 3 — Behavioural / comparative invariants
+
+**Question:** Does the method behave _sensibly_ in ways that cannot be reduced to a single expected value?
+
+These tests assert ordering, direction, or relative magnitude rather than exact values.
+
+| Test                                                 | Invariant asserted                                       |
+| ---------------------------------------------------- | -------------------------------------------------------- |
+| Noise increases MSE                                  | `mse(noisy_fit) > mse(clean_fit)` on the same polynomial |
+| BIC penalises overfitting                            | Degree 1 selected over degree 5 on clean linear data     |
+| Weighted path returns callable                       | Non-zero errors trigger Ridge; result is still usable    |
+| Mixed zero/nonzero errors do not crash               | The zero-clamping fix is exercised end-to-end            |
+| Extrapolation calls `scatter` and `annotate` N times | Rendering branches are tested structurally               |
+
+Tier 3 tests are the most fragile: an invariant that seems obvious ("noise increases MSE") can fail if the noisy data happens to be unusually well-behaved for a particular random seed. Seeds are fixed in `generate_fixtures.py` for fixture-based tests; inline data generation in test files should also fix seeds explicitly.
+
+---
+
+## The fixture system
+
+Fixtures are CSV files in `tests/fixtures/`, generated by `tests/generate_fixtures.py`. Each file is named to encode its ground truth so that the test code reading it is self-documenting without needing to open the file.
+
+| File                  | Ground truth                            | Purpose             |
+| --------------------- | --------------------------------------- | ------------------- |
+| `linear_clean.csv`    | y = 2x + 1, no noise                    | Tier 2 oracle       |
+| `quadratic_clean.csv` | y = x² − 3x + 2, no noise               | Tier 2 oracle       |
+| `cubic_clean.csv`     | y = x³ − x² + x − 1, no noise           | Tier 2 oracle       |
+| `linear_noisy.csv`    | y = 2x + 1 + N(0,5)                     | Tier 3 behavioural  |
+| `quadratic_noisy.csv` | y = x² − 3x + 2 + N(0,10)               | Tier 3 behavioural  |
+| `uniform_errors.csv`  | y = 2x + 1, err = 1.0 (homogeneous)     | Weighted path       |
+| `mixed_errors.csv`    | y = x² − 3x + 2, err ~ \|N(0,2)\| + 0.1 | Weighted path       |
+| `two_points.csv`      | y = 2x + 1, n = 2                       | Minimum valid input |
+| `constant.csv`        | y = 7 for all x                         | Degenerate signal   |
+| `large.csv`           | y = x² − 3x + 2 + N(0,5), n = 200       | Performance pin     |
+| `negative_x.csv`      | y = 2x + 1, x ∈ [−50, 50]               | Negative domain     |
+| `duplicate_x.csv`     | y = 2x + 1 + N(0,0.5), repeated x       | Repeated abscissas  |
+
+Fixtures are committed to the repository. Running `generate_fixtures.py` again will overwrite them; do so only intentionally, and commit the result alongside any test changes that depend on the new values.
+
+---
+
+## Mocking matplotlib
+
+`polygraph` and `polyplot` call `plt.show()`, which requires a display and blocks test execution. All tests for these methods replace `polytrend.plt` with a `unittest.mock.MagicMock` via pytest's `monkeypatch`. This makes it possible to:
+
+- Assert that `plt.show()` was called exactly once (the side-effect contract).
+- Assert which rendering path was taken (`scatter` vs `errorbar`).
+- Assert the number of `annotate` calls matches the number of extrapolated points.
+
+The mock is applied as a `pytest.fixture(autouse=True)` scoped to each test file, so no individual test has to remember to patch it.
+
+This approach tests the _structure_ of the rendering logic, not the visual output. Pixel-level correctness of the resulting chart is out of scope.
+
+---
+
+## Known gaps and deliberate omissions
+
+**`polyplot` is not directly tested.** It is a three-line wrapper that calls `_read_main_data`, `polyfind`, and `polygraph` in sequence. Each of those is tested independently, and testing the wrapper would duplicate that coverage while adding GUI complexity. If `polyplot` ever acquires logic of its own, dedicated tests should be added.
+
+**`_polynomial_str` is not directly tested.** It is a nested function inside `polyfind`, inaccessible from the test boundary. Its output is printed to stdout and not returned. If it is ever extracted to a module-level function, it should get its own Tier 1 (format contract) and Tier 2 (known polynomial → known string) tests.
+
+**Performance is pinned only coarsely.** The `large.csv` test (n = 200) asserts that `polyfind` completes without error but sets no time bound. A proper performance regression test would need a baseline measurement and a CI environment with stable timing, which is out of scope for this suite.
+
+**Statistical degree recovery under noise is not guaranteed.** Tier 2 only asserts exact recovery on noise-free data, where BIC = −∞ makes the result deterministic. On noisy data (Tier 3), no degree-recovery assertion is made because BIC is not guaranteed to recover the true degree at low SNR — that is a property of the criterion, not a bug in the implementation.
+
+---
+
+## Adding a new test
+
+1. Decide which tier the new test belongs to. If it asserts a shape or type: Tier 1. If it asserts a numeric value against a ground truth you hold: Tier 2. If it asserts an ordering or direction: Tier 3.
+2. If it needs a new fixture CSV, add it to `generate_fixtures.py`, re-run the generator, and commit both.
+3. Place it in the appropriate file (`test_read_main_data.py`, `test_polyfind.py`, or `test_polygraph.py`) inside the class whose name matches its tier and subject.
+4. If the test involves `polygraph` or `polyplot`, ensure the `autouse` matplotlib mock is in scope. Do not call `plt.show()` for real in tests.

@@ -12,11 +12,12 @@
    - [From release page](#from-release-page)
    - [From pip (CLI version)](#from-pip-cli-version)
    - [From source](#from-source)
-4. [Theory](#theory)
+4. [Testing](#testing)
+5. [Theory](#theory)
    - [Polynomial Regression](#polynomial-regression)
    - [Model Selection](#model-selection)
-5. [Additional Resources](#additional-resources)
-6. [Future Improvements](#future-improvements)
+6. [Additional Resources](#additional-resources)
+7. [Future Improvements](#future-improvements)
 
 ## Introduction
 
@@ -112,6 +113,22 @@ poetry run python main.py
 ```
 
 > **Linux note**: If GUI issues persist, see [Qt setup for Linux](https://web.stanford.edu/dept/cs_edu/resources/qt/install-linux).
+
+## Testing
+
+The test suite lives in `tests/` and requires only `pytest`. No GUI or display is needed — matplotlib calls are mocked throughout.
+
+```shell
+# generate fixture CSVs (only needed once, or after changing fixture parameters)
+python tests/generate_fixtures.py
+
+# run the full suite
+poetry run pytest tests/ -v
+```
+
+The fixtures are deterministic (fixed random seed) and checked into the repo. If you change `generate_fixtures.py`, re-run it and commit the updated CSVs alongside.
+
+For the methodology behind what is tested and why, see [docs/testing.md](./docs/testing.md).
 
 ## Theory
 
