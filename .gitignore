@@ -4,3 +4,4 @@
 *.c
 *.so
 *.pyd
+tests/fixtures
