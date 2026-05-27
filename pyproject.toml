@@ -3,9 +3,9 @@ name = "polytrend"
 version = "1.1.0"
 description = "Pedagogical polynomial regressor"
 authors = [
-    {name = "Emmanuel Asiimwe",email = "90935867+asiimwemmanuel@users.noreply.github.com"}
+    {name = "Emmanuel Asiimwe",email = "catalog9731@proton.me"}
 ]
-license = {text = "GPL-3.0"}
+license = "GPL-3.0-or-later"
 readme = "README.md"
 requires-python = ">=3.11,<3.13"
 keywords = ["math", "numerical-analysis", "data-processing", "statistics"]
