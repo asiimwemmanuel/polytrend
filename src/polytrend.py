@@ -188,13 +188,22 @@ class PolyTrend:
       weighted = np.any(errors != 0)
       best: dict = {"bic": float("inf"), "model": None}
 
+      if weighted:
+        # Zero-error points represent perfectly known measurements and should
+        # receive the highest possible weight, but 1/0 is undefined.  Clamp
+        # any zeros to the smallest nonzero error present so those points
+        # retain a disproportionately large (but finite) weight while the
+        # inversion remains numerically stable.
+        nonzero_min = float(np.min(np.abs(errors[errors != 0])))
+        safe_errors = np.where(errors == 0, nonzero_min, errors)
+
       for degree in degrees:
         poly = PolynomialFeatures(degree=degree, include_bias=False)
         x_poly = poly.fit_transform(x)
 
         if weighted:
           reg = Ridge(alpha=1.0)
-          reg.fit(x_poly, y, sample_weight=1 / errors.ravel())
+          reg.fit(x_poly, y, sample_weight=1 / safe_errors.ravel())
         else:
           reg = LinearRegression()
           reg.fit(x_poly, y)
