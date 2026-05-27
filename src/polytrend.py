@@ -25,381 +25,312 @@ from sklearn.preprocessing import PolynomialFeatures
 
 
 class PolyTrend:
+  """
+  PolyTrend: A utility for polynomial trend fitting, visualization, and extrapolation.
+
+  Main Methods:
+    - polyplot(): Finds and plots the best polynomial fit on the known data.
+    - polyfind(): Finds the best-fit polynomial function.
+    - polygraph(): Plots the function, known data, and extrapolated data.
+  """
+
+  def _read_main_data(
+    self, main_data: Union[list[Tuple[float, float, float]], str]
+  ) -> list:
     """
-    PolyTrend: A utility for polynomial trend fitting, visualization, and extrapolation.
+    Read and extract known data from either a list of tuples or a CSV file.
 
-    This class provides methods for finding the best-fit polynomial function for a given set of known data points,
-    plotting the function along with the known data points and extrapolated data points.
+    Args:
+      main_data: Known data points as list of (x, y, err) tuples, or a CSV file path.
 
-    Main Methods:
-        - polyplot(): Finds and plots the best polynomial fit on the known data.
-        - polyfind(): Finds the best-fit polynomial function.z
-        - polygraph(): Plots the function, known data, and extrapolated data.
+    Returns:
+      [graph_title, x_label, y_label, list[Tuple[float, float, float]]]
+    """
+    if isinstance(main_data, str):
+      with open(main_data, mode="r") as file:
+        csv = reader(file)
+        headers = next(csv)
+        x_label = headers[0].strip()
+        y_label = headers[1].strip()
+        rows = list(csv)
+
+      x_vals = [r[0] for r in rows]
+      y_vals = [r[1] for r in rows]
+      # CSV path does not currently support error column; default to 0
+      err_vals = [r[2] if len(r) >= 3 else 0 for r in rows]
+      title = f"Fitted Function via PolyTrend - Data from {main_data}"
+
+    elif isinstance(main_data, list):
+      x_label = "x"
+      y_label = "f(x)"
+      x_vals, y_vals, err_vals = zip(*main_data)
+      title = "Fitted Function via PolyTrend"
+
+    else:
+      raise ValueError("main_data must be a list of (x, y, err) tuples or a CSV file path")
+
+    data_points = [
+      (float(x), float(y), float(e))
+      for x, y, e in zip(x_vals, y_vals, err_vals)
+    ]
+
+    return [title, x_label, y_label, data_points]
+
+  def polyplot(
+    self,
+    degrees: list[int],
+    main_data: Union[list[Tuple[float, float, float]], str],
+    extrapolate_data: Optional[list[float]] = None,
+  ) -> None:
+    """
+    Find and plot the best polynomial fit on the known data.
+
+    Args:
+      degrees: Polynomial degrees to evaluate.
+      main_data: Known data as list of (x, y, err) tuples or CSV path.
+      extrapolate_data: x-coordinates to extrapolate. Defaults to None.
+    """
+    extrapolate_data = extrapolate_data or []
+    processed = self._read_main_data(main_data)
+    fitted_fn, _ = self.polyfind(degrees, processed)
+    self.polygraph(processed, extrapolate_data, function=fitted_fn)
+
+  def polyfind(
+    self,
+    degrees: list[int],
+    main_data: Union[list[Tuple[float, float, float]], str, list],
+  ) -> Tuple[Callable[[list], np.ndarray], int]:
+    """
+    Find the best-fit polynomial, selected by lowest BIC across candidate degrees.
+
+    Args:
+      degrees: Polynomial degrees to evaluate.
+      main_data: Known data as list of (x, y, err) tuples, CSV path, or
+                 pre-processed output from _read_main_data.
+
+    Returns:
+      (predict_fn, best_degree) where predict_fn maps x-values to predictions.
+      Prints a statistical report to stdout.
     """
 
-    def _read_main_data(
-        self, main_data: Union[list[Tuple[float, float, float]], str]
-    ) -> list:
-        """
-        Read and extract known data from either a list of tuples or a CSV file.
+    def _polynomial_str(coefficients: np.ndarray, intercept: np.ndarray) -> str:
+      """Build a human-readable polynomial expression string."""
+      coeffs = np.asarray(coefficients, dtype=float).ravel()[::-1]
+      intercept_val: float = float(np.asarray(intercept).ravel()[0])
+      n_coeffs = len(coeffs)
+      parts: list[str] = []
 
-        Args:
-            main_data (Union[list[Tuple[float, float, float]], str]): Known data points or CSV file path.
+      for i, coeff in enumerate(coeffs):
+        if coeff == 0:
+          continue
+        rounded = round(coeff, 3)
+        power = n_coeffs - i
+        x_term = "x" if power == 1 else f"x^{power}"
 
-        Returns:
-            list: [str, str, str, list[Tuple[float, float, float]]]
-        """
-        graph_title = x_axis_label = y_axis_label = str()
-        x_main_values = y_main_values = err_values = []
-
-        if isinstance(main_data, str):
-            with open(main_data, mode="r") as file:
-                reader_var = reader(file)
-                headers = next(reader_var)
-                # this doesn't work right now
-                x_axis_label = headers[0].strip()
-                y_axis_label = headers[1].strip()
-                x_main_values = []
-                y_main_values = []
-                for row in reader_var:
-                    x_main_values.append(row[0])
-                    y_main_values.append(row[1])
-            graph_title = f"Fitted Function via PolyTrend - Data from {main_data}"
-
-        elif isinstance(main_data, list):
-            # Unpack list of tuples into separate x_main and y_data arrays
-            x_axis_label = "x"
-            y_axis_label = "f(x)"
-            x_main_values, y_main_values, err_values = zip(*main_data)
-            graph_title = "Fitted Function via PolyTrend"
-
+        if not parts:
+          parts.append(f"({rounded}){x_term}")
         else:
-            raise ValueError("Data must be a non-empty list of tuples or CSV file path")
+          sign = "+ " if rounded > 0 else "- "
+          parts.append(f"{sign}({abs(rounded)}){x_term}")
 
-        data_points = [
-            (float(x), float(y), float(e))
-            for x, y, e in zip(x_main_values, y_main_values, err_values)
-        ]
+      intercept_rounded = round(intercept_val, 3)
+      if intercept_rounded != 0:
+        sign = "+ " if intercept_rounded > 0 else "- "
+        parts.append(f"{sign}{abs(intercept_rounded)}")
 
-        return [graph_title, x_axis_label, y_axis_label, data_points]
+      return " ".join(parts)
 
-    def polyplot(
-        self,
-        degrees: list[int],
-        main_data: Union[list[Tuple[float, float, float]], str],
-        extrapolate_data: list[float] = [],
-    ) -> None:
-        """
-        Plot the polynomial fit on the known data.
+    def _metrics(y_true: np.ndarray, y_pred: np.ndarray, n_params: int) -> dict:
+      """Compute fit quality metrics for a candidate model."""
+      n = len(y_true)
+      if n == 0:
+        raise ValueError("y_true and y_pred must not be empty")
 
-        Args:
-                degrees (list[int]): list of polynomial degrees to consider.
-                main_data (Union[list[Tuple[float, float]], str]): list of tuples representing the known data points or CSV file path.
-                extrapolate_data (list[float], optional): list of x coordinates for extrapolation. Defaults to [].
+      residuals = y_true - y_pred
+      mse = mean_squared_error(y_true, y_pred)
+      r2 = r2_score(y_true, y_pred)
 
-        Raises:
-                ValueError: If degrees and/or known data is not specified or empty.
-        """
-        fitted_model = self.polyfind(degrees, main_data)
-        self.polygraph(main_data, extrapolate_data, function=fitted_model[0])
+      adj_r2 = (
+        1 - (1 - r2) * (n - 1) / (n - n_params - 1)
+        if n > n_params + 1 and np.isfinite(r2)
+        else np.nan
+      )
 
-    def polyfind(
-        self,
-        degrees: list[int],
-        main_data: Union[list[Tuple[float, float, float]], str],
-    ) -> Tuple[Callable[[list], np.ndarray], int]:
-        """
-        Find the best-fit polynomial function with comprehensive statistical evaluation.
+      # mse == 0 is a perfect fit: assign -inf so it always wins the BIC comparison
+      if mse == 0:
+        aic = bic = -float("inf")
+      elif n > 0:
+        aic = n * np.log(mse) + 2 * n_params
+        bic = n * np.log(mse) + n_params * np.log(n)
+      else:
+        aic = bic = np.nan
 
-        Args:
-            degrees (list[int]): list of polynomial degrees to consider.
-            main_data (Union[list[Tuple[float, float]], str]): list of tuples representing the known data points or CSV file path.
+      return {
+        "mse": mse,
+        "rmse": np.sqrt(mse),
+        "mae": mean_absolute_error(y_true, y_pred),
+        "r2": r2,
+        "adj_r2": adj_r2,
+        "aic": aic,
+        "bic": bic,
+        "residual_stats": {
+          "mean": np.mean(residuals),
+          "std": np.std(residuals, ddof=0),
+          "min": np.min(residuals),
+          "max": np.max(residuals),
+        },
+      }
 
-        Returns:
-            Tuple containing:
-                - Callable[[list[float]], list[float]]: A function that predicts values based on the polynomial
-                - int: The degree of the selected polynomial
-            Also prints comprehensive statistical measures of the fit.
-        """
+    def _select_model(
+      x: np.ndarray, y: np.ndarray, errors: np.ndarray
+    ) -> dict:
+      """Fit each candidate degree and return metrics for the best (lowest BIC)."""
+      weighted = np.any(errors != 0)
+      best: dict = {"bic": float("inf"), "model": None}
 
-        def _construct_polynomial_expression(
-            coefficients: np.ndarray, intercept: np.ndarray
-        ) -> str:
-            """Constructs a human-readable polynomial equation string."""
+      for degree in degrees:
+        poly = PolynomialFeatures(degree=degree, include_bias=False)
+        x_poly = poly.fit_transform(x)
 
-            coeffs = np.asarray(coefficients, dtype=float).ravel()[::-1]
-            intercept_value: float = float(np.asarray(intercept).ravel()[0])
-
-            polynomial_parts: list[str] = []
-            degree = len(coeffs)
-
-            for i, coeff in enumerate(coeffs):
-                if coeff == 0:
-                    continue  # (3) skip zero coefficients
-
-                rounded = round(coeff, 3)
-                power = degree - i
-
-                x_term = "x" if power == 1 else f"x^{power}"  # (1)
-
-                if not polynomial_parts:
-                    polynomial_parts.append(f"({rounded}){x_term}")
-                else:
-                    sign = "+ " if rounded > 0 else "- "
-                    polynomial_parts.append(f"{sign}({abs(rounded)}){x_term}")
-
-            intercept_rounded = round(intercept_value, 3)
-            if intercept_rounded != 0:
-                sign = "+ " if intercept_rounded > 0 else "- "
-                polynomial_parts.append(f"{sign}{abs(intercept_rounded)}")
-
-            return " ".join(polynomial_parts)
-
-        def _calculate_additional_metrics(
-            y_true: np.ndarray, y_pred: np.ndarray, n_params: int
-        ) -> dict:
-            """Calculate statistically sound evaluation metrics."""
-
-            n = len(y_true)
-            residuals = y_true - y_pred
-
-            metrics = {}
-
-            # --- Basic sanity ---
-            if n == 0:
-                raise ValueError("y_true and y_pred must not be empty")
-
-            mse = mean_squared_error(y_true, y_pred)
-            rmse = np.sqrt(mse)
-            mae = mean_absolute_error(y_true, y_pred)
-
-            # R² (may be nan if variance(y_true) == 0)
-            r2 = r2_score(y_true, y_pred)
-
-            # Adjusted R² — only defined if n > p + 1
-            if n > n_params + 1 and np.isfinite(r2):
-                adj_r2 = 1 - (1 - r2) * (n - 1) / (n - n_params - 1)
-            else:
-                adj_r2 = np.nan
-
-            # AIC / BIC — only defined if mse > 0 and n > 0
-            if mse > 0 and n > 0:
-                aic = n * np.log(mse) + 2 * n_params
-                bic = n * np.log(mse) + n_params * np.log(n)
-            else:
-                aic = np.nan
-                bic = np.nan
-
-            metrics.update(
-                {
-                    "mse": mse,
-                    "rmse": rmse,
-                    "mae": mae,
-                    "r2": r2,
-                    "adj_r2": adj_r2,
-                    "aic": aic,
-                    "bic": bic,
-                    "residual_stats": {
-                        "mean": np.mean(residuals),
-                        "std": np.std(residuals, ddof=0),
-                        "min": np.min(residuals),
-                        "max": np.max(residuals),
-                    },
-                }
-            )
-
-            return metrics
-
-        def _model_selector(
-            x_main: np.ndarray, y_main: np.ndarray, errors: np.ndarray
-        ) -> Tuple[Union[Ridge, LinearRegression], PolynomialFeatures, dict]:
-            """Selects the best model based on multiple statistical criteria."""
-
-            best_metrics = {
-                "bic": float("inf"),
-                "aic": float("inf"),
-                "adj_r2": -float("inf"),
-                "model": None,
-                "poly_features": None,
-                "degree": None,
-            }
-
-            for degree in degrees:
-                poly_features = PolynomialFeatures(degree=degree, include_bias=False)
-                x_poly = poly_features.fit_transform(x_main)
-
-                if np.any(errors != 0):
-                    reg = Ridge(alpha=1.0)
-                    reg.fit(x_poly, y_main, sample_weight=1 / errors.ravel())
-                else:
-                    reg = LinearRegression()
-                    reg.fit(x_poly, y_main)
-
-                y_pred = reg.predict(x_poly)
-                n_params = x_poly.shape[1]  # Number of features (parameters)
-
-                current_metrics = _calculate_additional_metrics(
-                    y_main, y_pred, n_params
-                )
-                current_metrics.update(
-                    {"model": reg, "poly_features": poly_features, "degree": degree}
-                )
-
-                # Update best model if current model has better BIC (primary criterion)
-                if current_metrics["bic"] < best_metrics["bic"]:
-                    best_metrics = current_metrics
-
-            if best_metrics["model"] is None:
-                raise ValueError(
-                    "All models had a BIC score of positive infinity... 何？！"
-                )
-
-            return best_metrics
-
-        # Process input data
-        processed_data = self._read_main_data(main_data=main_data)
-        x_main, y_main, err_main = zip(*processed_data[3])
-        x_main = np.asarray(x_main).reshape(-1, 1)
-        y_main = np.asarray(y_main).reshape(-1, 1)
-        err_main = np.asarray(err_main).reshape(-1, 1)
-
-        # Select best model
-        best_metrics = _model_selector(x_main, y_main, err_main)
-        best_model = best_metrics["model"]
-        best_poly_features = best_metrics["poly_features"]
-
-        # Get coefficients and intercept
-        coefficients = best_model.coef_
-        intercept = best_model.intercept_
-
-        # Print comprehensive statistical report
-        print("\n=== Polynomial Regression Results ===")
-        print(f'Optimal degree: {best_metrics["degree"]}')
-        print("\nPolynomial Expression:")
-        print(_construct_polynomial_expression(coefficients, intercept))
-
-        print("\n=== Goodness-of-Fit Metrics ===")
-        print(f'R² (Coefficient of Determination): {best_metrics["r2"]:.4f}')
-        print(f'Adjusted R²: {best_metrics["adj_r2"]:.4f}')
-        print(f'Akaike Information Criterion (AIC): {best_metrics["aic"]:.2f}')
-        print(f'Bayesian Information Criterion (BIC): {best_metrics["bic"]:.2f}')
-
-        print("\n=== Error Metrics ===")
-        print(f'Mean Squared Error (MSE): {best_metrics["mse"]:.4f}')
-        print(f'Root Mean Squared Error (RMSE): {best_metrics["rmse"]:.4f}')
-        print(f'Mean Absolute Error (MAE): {best_metrics["mae"]:.4f}')
-
-        print("\n=== Residual Analysis ===")
-        print(f'Residual Mean: {best_metrics["residual_stats"]["mean"]:.4f}')
-        print(f'Residual Std Dev: {best_metrics["residual_stats"]["std"]:.4f}')
-        print(f'Min Residual: {best_metrics["residual_stats"]["min"]:.4f}')
-        print(f'Max Residual: {best_metrics["residual_stats"]["max"]:.4f}')
-
-        return (
-            lambda x_vals: best_model.predict(
-                best_poly_features.transform(np.array(x_vals).reshape(-1, 1))
-            ).flatten(),
-            best_metrics["degree"],
-        )
-
-    def polygraph(
-        self,
-        main_data: Union[list[Tuple[float, float, float]], str],
-        extrapolate_data: list[float] = [],
-        function: Optional[Callable[[list[float]], np.ndarray]] = None,
-    ) -> None:
-        """
-        Plot the function, known data, and extrapolated data.
-
-        Args:
-                main_data (Union[list[Tuple[float, float]], str]): list of tuples representing the known data points or CSV file path.
-                extrapolate_data (list[float], optional): list of extrapolation data points. Defaults to [].
-                func (Optional[Callable[[list[float]], np.ndarray]], optional): Function to generate predicted values. Defaults to None.
-
-        Raises:
-                ValueError: If known data is empty.
-                ValueError: If extrapolation data is provided but no function is given.
-        """
-        if extrapolate_data and function is None:
-            raise RuntimeError(
-                "Internal logic error: A function to generate predicted values is expected but not provided."
-            )
-
-        plt.figure()
-
-        processed_data = self._read_main_data(main_data)
-        title, x_label, y_label = (
-            processed_data[0],
-            processed_data[1],
-            processed_data[2],
-        )
-        x_main, y_main, err_main = zip(*processed_data[3])
-
-        plt.title(title)
-        plt.xlabel(x_label)
-        plt.ylabel(y_label)
-
-        if all(abs(err) < 1e-10 for err in err_main):
-            plt.scatter(x_main, y_main, color="blue", label="Known Data")
+        if weighted:
+          reg = Ridge(alpha=1.0)
+          reg.fit(x_poly, y, sample_weight=1 / errors.ravel())
         else:
-            plt.errorbar(
-                x_main, y_main, yerr=err_main, label="Known Data", fmt="o", capsize=5
-            )
+          reg = LinearRegression()
+          reg.fit(x_poly, y)
 
-        if function:
-            x_func = np.linspace(min(x_main), max(x_main), 100)
-            y_func = function(list(x_func))
-            plt.plot(x_func, y_func, color="green", label="Line of best fit")
+        y_pred = reg.predict(x_poly)
+        candidate = _metrics(y, y_pred, n_params=x_poly.shape[1])
+        candidate.update({"model": reg, "poly_features": poly, "degree": degree})
 
-            # * RESIDUAL ANALYSIS: plots a 2nd graph, not relevant to HS
-            # func_predictions = function(list(x_main))
-            # y_calculated_err = np.abs(np.array([y_main]) - np.array([func_predictions]))
+        if candidate["bic"] < best["bic"]:
+          best = candidate
 
-            if extrapolate_data:
-                # Extract and plot extrapolated data
-                y_extrap = function(list(extrapolate_data))
+      if best["model"] is None:
+        raise ValueError("No valid model found across candidate degrees.")
 
-                # extending the function line
-                x_func_extension = np.linspace(max(x_main), max(extrapolate_data), 100)
-                y_func_extension = function(list(x_func_extension))
-                plt.plot(x_func_extension, y_func_extension, color="green")
+      return best
 
-                plt.scatter(
-                    extrapolate_data, y_extrap, color="red", label="Extrapolated data"
-                )
+    # Accept either raw data or pre-processed output from _read_main_data
+    if isinstance(main_data, list) and main_data and isinstance(main_data[0], str):
+      processed = main_data  # already processed
+    else:
+      processed = self._read_main_data(main_data)
 
-                # Label each extrapolated point with its coordinates
-                for x, y in zip(extrapolate_data, y_extrap):
-                    plt.annotate(
-                        f"({x:.2f}, {y:.2f})",
-                        (x, y),
-                        textcoords="offset points",
-                        xytext=(0, 10),
-                        ha="center",
-                        bbox=dict(
-                            boxstyle="round,pad=0.3",
-                            facecolor="white",
-                            edgecolor="black",
-                            linewidth=0.5,
-                        ),
-                    )  # Adding a white background
+    x, y, err = zip(*processed[3])
+    x = np.asarray(x).reshape(-1, 1)
+    y = np.asarray(y).reshape(-1, 1)
+    err = np.asarray(err).reshape(-1, 1)
 
-        plt.grid(True)
-        plt.legend()
-        plt.show()
+    best = _select_model(x, y, err)
+    coef = best["model"].coef_
+    intercept = best["model"].intercept_
+
+    print("\n=== Polynomial Regression Results ===")
+    print(f'Optimal degree: {best["degree"]}')
+    print("\nPolynomial Expression:")
+    print(_polynomial_str(coef, intercept))
+
+    print("\n=== Goodness-of-Fit Metrics ===")
+    print(f'R²: {best["r2"]:.4f}')
+    print(f'Adjusted R²: {best["adj_r2"]:.4f}')
+    print(f'AIC: {best["aic"]:.2f}')
+    print(f'BIC: {best["bic"]:.2f}')
+
+    print("\n=== Error Metrics ===")
+    print(f'MSE:  {best["mse"]:.4f}')
+    print(f'RMSE: {best["rmse"]:.4f}')
+    print(f'MAE:  {best["mae"]:.4f}')
+
+    print("\n=== Residual Analysis ===")
+    print(f'Mean: {best["residual_stats"]["mean"]:.4f}')
+    print(f'Std:  {best["residual_stats"]["std"]:.4f}')
+    print(f'Min:  {best["residual_stats"]["min"]:.4f}')
+    print(f'Max:  {best["residual_stats"]["max"]:.4f}')
+
+    predict_fn = lambda x_vals: best["model"].predict(
+      best["poly_features"].transform(np.array(x_vals).reshape(-1, 1))
+    ).flatten()
+
+    return predict_fn, best["degree"]
+
+  def polygraph(
+    self,
+    main_data: Union[list[Tuple[float, float, float]], str, list],
+    extrapolate_data: Optional[list[float]] = None,
+    function: Optional[Callable[[list[float]], np.ndarray]] = None,
+  ) -> None:
+    """
+    Plot the polynomial function against known and extrapolated data.
+
+    Args:
+      main_data: Known data as list of (x, y, err) tuples, CSV path, or
+                 pre-processed output from _read_main_data.
+      extrapolate_data: x-coordinates to extrapolate. Defaults to None.
+      function: Prediction function from polyfind(). Defaults to None.
+
+    Raises:
+      RuntimeError: If extrapolate_data is provided without a function.
+    """
+    extrapolate_data = extrapolate_data or []
+
+    if extrapolate_data and function is None:
+      raise RuntimeError(
+        "Internal logic error: extrapolate_data provided but no prediction function given."
+      )
+
+    # Accept pre-processed data to avoid redundant parsing when called from polyplot
+    if isinstance(main_data, list) and main_data and isinstance(main_data[0], str):
+      processed = main_data
+    else:
+      processed = self._read_main_data(main_data)
+
+    title, x_label, y_label = processed[0], processed[1], processed[2]
+    x_main, y_main, err_main = zip(*processed[3])
+
+    plt.figure()
+    plt.title(title)
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
+
+    if all(abs(e) < 1e-10 for e in err_main):
+      plt.scatter(x_main, y_main, color="blue", label="Known Data")
+    else:
+      plt.errorbar(x_main, y_main, yerr=err_main, label="Known Data", fmt="o", capsize=5)
+
+    if function is not None:
+      x_curve = np.linspace(min(x_main), max(x_main), 100)
+      plt.plot(x_curve, function(list(x_curve)), color="green", label="Line of best fit")
+
+      if extrapolate_data:
+        y_extrap = function(list(extrapolate_data))
+        x_ext = np.linspace(max(x_main), max(extrapolate_data), 100)
+        plt.plot(x_ext, function(list(x_ext)), color="green")
+        plt.scatter(extrapolate_data, y_extrap, color="red", label="Extrapolated data")
+
+        for x, y in zip(extrapolate_data, y_extrap):
+          plt.annotate(
+            f"({x:.2f}, {y:.2f})",
+            (x, y),
+            textcoords="offset points",
+            xytext=(0, 10),
+            ha="center",
+            bbox=dict(boxstyle="round,pad=0.3", facecolor="white", edgecolor="black", linewidth=0.5),
+          )
+
+    plt.grid(True)
+    plt.legend()
+    plt.show()
 
 
 if __name__ == "__main__":
-    degrees = [1, 2, 3]
-    data = [
-        (float(x), float(0.5 * x**2 - 2 * x + 1 + uniform(-1000, 1000)), 1.0)
-        for x in range(0, 100)
-    ]
-    polytrend_instance = PolyTrend()
-
-    try:
-        polytrend_instance.polyplot(degrees, data, extrapolate_data=[15, 20])
-    except ValueError as ve:
-        print(f"Error: {ve}")
-
-    print("Example usage completed.")
+  degrees = [1, 2, 3]
+  data = [
+    (float(x), float(0.5 * x**2 - 2 * x + 1 + uniform(-1000, 1000)), 1.0)
+    for x in range(0, 100)
+  ]
+  try:
+    PolyTrend().polyplot(degrees, data, extrapolate_data=[15, 20])
+  except ValueError as e:
+    print(f"Error: {e}")
+  print("Example usage completed.")
