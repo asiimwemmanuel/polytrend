@@ -159,7 +159,7 @@ where _n_ is the number of data points and _k_ is the number of model parameters
 - [Polynomial Regression in Python](https://youtu.be/H8kocPOT5v0?feature=shared)
 - [Polynomial Regression in Python — sklearn](https://youtu.be/nqNdBlA-j4w?feature=shared)
 
-## Future Improvements
+## Possible Improvements
 
 - **Batch plotting**: Fit and plot multiple datasets in a single run.
 - **Data normalization**: Normalize inputs before fitting to improve numerical stability at high degrees.
