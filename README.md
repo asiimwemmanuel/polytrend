@@ -22,14 +22,18 @@
 
 PolyTrend is a Python application for polynomial trend fitting, visualization, and extrapolation. It fits a polynomial to a set of data points using regression, selects the best-fit degree via the Bayesian Information Criterion (BIC), and plots the result alongside any requested extrapolations.
 
-<div style="display:flex; justify-content:center;">
-  <div style="flex:1; text-align:center;">
-    <img src="./assets/images/ui.png" alt="PolyTrend UI screenshot" width="400">
-  </div>
-  <div style="flex:1; text-align:center;">
-    <img src="./assets/images/starter.png" alt="PolyTrend graph screenshot" width="400">
-  </div>
-</div>
+<table>
+  <tr>
+    <td align="center">
+      <img src="./assets/images/ui.png" alt="PolyTrend UI screenshot" width="400"><br>
+      <sub>Application UI</sub>
+    </td>
+    <td align="center">
+      <img src="./assets/images/starter.png" alt="PolyTrend graph screenshot" width="400"><br>
+      <sub>Generated polynomial trend graph</sub>
+    </td>
+  </tr>
+</table>
 
 ## Key Functionalities
 
