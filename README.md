@@ -101,15 +101,13 @@ pt.polyplot(degrees, data, extrapolate_data=[112, 140])
 ```shell
 git clone --depth 1 https://github.com/asiimwemmanuel/polytrend.git
 cd polytrend
-
-poetry env use python3.11
-poetry install
+poetry sync
 ```
 
 #### 4. Run the app
 
 ```shell
-poetry run python main.py
+uv run src/main.py
 ```
 
 > **Linux note**: If GUI issues persist, see [Qt setup for Linux](https://web.stanford.edu/dept/cs_edu/resources/qt/install-linux).
