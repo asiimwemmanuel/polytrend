@@ -30,7 +30,7 @@ class PolyTrendApp(QMainWindow):
     super().__init__()
     self.ui = Ui_PolyTrend()
     self.ui.setupUi(self)
-    self.setWindowTitle("PolyTrend")
+    self.setWindowTitle('PolyTrend')
 
     self.ui.plot.clicked.connect(self.plot_graph)
     self.ui.csv_button.clicked.connect(self.import_csv)
@@ -46,24 +46,26 @@ class PolyTrendApp(QMainWindow):
     err_vals = self.ui.error_box.toPlainText().split()
     degrees = self.ui.degree_box.toPlainText().split()
 
-    enabled = all([
-      len(x_vals) == len(y_vals),
-      len(x_vals) >= 2,
-      len(degrees) >= 1,
-      len(err_vals) in {0, 1, len(y_vals)},
-    ])
+    enabled = all(
+      [
+        len(x_vals) == len(y_vals),
+        len(x_vals) >= 2,
+        len(degrees) >= 1,
+        len(err_vals) in {0, 1, len(y_vals)},
+      ]
+    )
     self.ui.plot.setEnabled(enabled)
 
   def import_csv(self):
     csv_path, _ = QFileDialog.getOpenFileName(
-      self, "Open CSV File", "", "CSV Files (*.csv)"
+      self, 'Open CSV File', '', 'CSV Files (*.csv)'
     )
     if not csv_path:
       return
 
     x_vals, y_vals, err_vals = [], [], []
 
-    with open(csv_path, newline="") as csvfile:
+    with open(csv_path, newline='') as csvfile:
       csvreader = reader(csvfile)
       next(csvreader)  # skip header
       for row in csvreader:
@@ -71,16 +73,16 @@ class PolyTrendApp(QMainWindow):
         y_vals.append(row[1])
         err_vals.append(row[2] if len(row) >= 3 else 0)
 
-    self.ui.x_box.setPlainText("\n".join(map(str, x_vals)))
-    self.ui.y_box.setPlainText("\n".join(map(str, y_vals)))
-    self.ui.error_box.setPlainText("\n".join(map(str, err_vals)))
+    self.ui.x_box.setPlainText('\n'.join(map(str, x_vals)))
+    self.ui.y_box.setPlainText('\n'.join(map(str, y_vals)))
+    self.ui.error_box.setPlainText('\n'.join(map(str, err_vals)))
     self.toggle_find_button_state()
 
   def plot_graph(self):
     def _parse(text) -> list[float]:
       if not text.strip():
         return []
-      return [float(v) for v in split(r"[\s,\n]+", text.strip()) if v]
+      return [float(v) for v in split(r'[\s,\n]+', text.strip()) if v]
 
     x_vals = _parse(self.ui.x_box.toPlainText())
     y_vals = _parse(self.ui.y_box.toPlainText())
@@ -96,8 +98,8 @@ class PolyTrendApp(QMainWindow):
   def closeEvent(self, event):
     base_dir = path.dirname(path.abspath(__file__))
     cache_dirs = [
-      path.join(base_dir, "__pycache__"),
-      path.join(base_dir, "view/__pycache__"),
+      path.join(base_dir, '__pycache__'),
+      path.join(base_dir, 'view/__pycache__'),
     ]
     for folder in cache_dirs:
       try:
@@ -112,7 +114,7 @@ class PolyTrendApp(QMainWindow):
     event.accept()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
   app = QApplication(argv)
   window = PolyTrendApp()
   window.show()

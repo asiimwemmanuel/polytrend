@@ -24,94 +24,94 @@ import csv
 import random
 from pathlib import Path
 
-FIXTURES_DIR = Path(__file__).parent / "fixtures"
+FIXTURES_DIR = Path(__file__).parent / 'fixtures'
 FIXTURES_DIR.mkdir(exist_ok=True)
 
 random.seed(42)  # reproducible noise
 
 
-def write_csv(name: str, rows: list[tuple], header: tuple = ("x", "f(x)")) -> Path:
-    path = FIXTURES_DIR / f"{name}.csv"
-    with path.open("w", newline="") as f:
-        w = csv.writer(f)
-        w.writerow(header)
-        w.writerows(rows)
-    print(f"  wrote {path.name}  ({len(rows)} rows)")
-    return path
+def write_csv(name: str, rows: list[tuple], header: tuple = ('x', 'f(x)')) -> Path:
+  path = FIXTURES_DIR / f'{name}.csv'
+  with path.open('w', newline='') as f:
+    w = csv.writer(f)
+    w.writerow(header)
+    w.writerows(rows)
+  print(f'  wrote {path.name}  ({len(rows)} rows)')
+  return path
 
 
 def noisy(scale: float) -> float:
-    return random.gauss(0, scale)
+  return random.gauss(0, scale)
 
 
 # ── clean polynomial fixtures (oracle values are exact) ─────────────────────
 
 write_csv(
-    "linear_clean",
-    [(x, 2 * x + 1) for x in range(1, 21)],
+  'linear_clean',
+  [(x, 2 * x + 1) for x in range(1, 21)],
 )
 
 write_csv(
-    "quadratic_clean",
-    [(x, x**2 - 3 * x + 2) for x in range(1, 21)],
+  'quadratic_clean',
+  [(x, x**2 - 3 * x + 2) for x in range(1, 21)],
 )
 
 write_csv(
-    "cubic_clean",
-    [(x, x**3 - x**2 + x - 1) for x in range(1, 21)],
+  'cubic_clean',
+  [(x, x**3 - x**2 + x - 1) for x in range(1, 21)],
 )
 
 # ── noisy fixtures (oracle degree is still known; exact values are not) ──────
 
 write_csv(
-    "linear_noisy",
-    [(x, 2 * x + 1 + noisy(5)) for x in range(1, 51)],
+  'linear_noisy',
+  [(x, 2 * x + 1 + noisy(5)) for x in range(1, 51)],
 )
 
 write_csv(
-    "quadratic_noisy",
-    [(x, x**2 - 3 * x + 2 + noisy(10)) for x in range(1, 51)],
+  'quadratic_noisy',
+  [(x, x**2 - 3 * x + 2 + noisy(10)) for x in range(1, 51)],
 )
 
 # ── error-column fixtures ────────────────────────────────────────────────────
 
 write_csv(
-    "uniform_errors",
-    [(x, 2 * x + 1, 1.0) for x in range(1, 21)],
-    header=("x", "f(x)", "err"),
+  'uniform_errors',
+  [(x, 2 * x + 1, 1.0) for x in range(1, 21)],
+  header=('x', 'f(x)', 'err'),
 )
 
 write_csv(
-    "mixed_errors",
-    [(x, x**2 - 3 * x + 2, abs(noisy(2)) + 0.1) for x in range(1, 21)],
-    header=("x", "f(x)", "err"),
+  'mixed_errors',
+  [(x, x**2 - 3 * x + 2, abs(noisy(2)) + 0.1) for x in range(1, 21)],
+  header=('x', 'f(x)', 'err'),
 )
 
 # ── edge / atypical fixtures ─────────────────────────────────────────────────
 
 write_csv(
-    "two_points",
-    [(1, 3), (2, 5)],   # exactly y = 2x + 1
+  'two_points',
+  [(1, 3), (2, 5)],  # exactly y = 2x + 1
 )
 
 write_csv(
-    "constant",
-    [(x, 7.0) for x in range(1, 11)],
+  'constant',
+  [(x, 7.0) for x in range(1, 11)],
 )
 
 write_csv(
-    "large",
-    [(x, x**2 - 3 * x + 2 + noisy(5)) for x in range(1, 201)],
+  'large',
+  [(x, x**2 - 3 * x + 2 + noisy(5)) for x in range(1, 201)],
 )
 
 write_csv(
-    "negative_x",
-    [(x, 2 * x + 1) for x in range(-50, 51) if x != 0],
+  'negative_x',
+  [(x, 2 * x + 1) for x in range(-50, 51) if x != 0],
 )
 
 write_csv(
-    "duplicate_x",
-    [(x % 5 + 1, 2 * (x % 5 + 1) + 1 + noisy(0.5)) for x in range(20)],
+  'duplicate_x',
+  [(x % 5 + 1, 2 * (x % 5 + 1) + 1 + noisy(0.5)) for x in range(20)],
 )
 
-print("Done.")
+print('Done.')

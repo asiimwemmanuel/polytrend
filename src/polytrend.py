@@ -47,7 +47,7 @@ class PolyTrend:
       [graph_title, x_label, y_label, list[Tuple[float, float, float]]]
     """
     if isinstance(main_data, str):
-      with open(main_data, mode="r") as file:
+      with open(main_data, mode='r') as file:
         csv = reader(file)
         headers = next(csv)
         x_label = headers[0].strip()
@@ -58,20 +58,21 @@ class PolyTrend:
       y_vals = [r[1] for r in rows]
       # CSV path does not currently support error column; default to 0
       err_vals = [r[2] if len(r) >= 3 else 0 for r in rows]
-      title = f"Fitted Function via PolyTrend - Data from {main_data}"
+      title = f'Fitted Function via PolyTrend - Data from {main_data}'
 
     elif isinstance(main_data, list):
-      x_label = "x"
-      y_label = "f(x)"
+      x_label = 'x'
+      y_label = 'f(x)'
       x_vals, y_vals, err_vals = zip(*main_data)
-      title = "Fitted Function via PolyTrend"
+      title = 'Fitted Function via PolyTrend'
 
     else:
-      raise ValueError("main_data must be a list of (x, y, err) tuples or a CSV file path")
+      raise ValueError(
+        'main_data must be a list of (x, y, err) tuples or a CSV file path'
+      )
 
     data_points = [
-      (float(x), float(y), float(e))
-      for x, y, e in zip(x_vals, y_vals, err_vals)
+      (float(x), float(y), float(e)) for x, y, e in zip(x_vals, y_vals, err_vals)
     ]
 
     return [title, x_label, y_label, data_points]
@@ -125,26 +126,26 @@ class PolyTrend:
           continue
         rounded = round(coeff, 3)
         power = n_coeffs - i
-        x_term = "x" if power == 1 else f"x^{power}"
+        x_term = 'x' if power == 1 else f'x^{power}'
 
         if not parts:
-          parts.append(f"({rounded}){x_term}")
+          parts.append(f'({rounded}){x_term}')
         else:
-          sign = "+ " if rounded > 0 else "- "
-          parts.append(f"{sign}({abs(rounded)}){x_term}")
+          sign = '+ ' if rounded > 0 else '- '
+          parts.append(f'{sign}({abs(rounded)}){x_term}')
 
       intercept_rounded = round(intercept_val, 3)
       if intercept_rounded != 0:
-        sign = "+ " if intercept_rounded > 0 else "- "
-        parts.append(f"{sign}{abs(intercept_rounded)}")
+        sign = '+ ' if intercept_rounded > 0 else '- '
+        parts.append(f'{sign}{abs(intercept_rounded)}')
 
-      return " ".join(parts)
+      return ' '.join(parts)
 
     def _metrics(y_true: np.ndarray, y_pred: np.ndarray, n_params: int) -> dict:
       """Compute fit quality metrics for a candidate model."""
       n = len(y_true)
       if n == 0:
-        raise ValueError("y_true and y_pred must not be empty")
+        raise ValueError('y_true and y_pred must not be empty')
 
       residuals = y_true - y_pred
       mse = mean_squared_error(y_true, y_pred)
@@ -158,7 +159,7 @@ class PolyTrend:
 
       # mse == 0 is a perfect fit: assign -inf so it always wins the BIC comparison
       if mse == 0:
-        aic = bic = -float("inf")
+        aic = bic = -float('inf')
       elif n > 0:
         aic = n * np.log(mse) + 2 * n_params
         bic = n * np.log(mse) + n_params * np.log(n)
@@ -166,27 +167,25 @@ class PolyTrend:
         aic = bic = np.nan
 
       return {
-        "mse": mse,
-        "rmse": np.sqrt(mse),
-        "mae": mean_absolute_error(y_true, y_pred),
-        "r2": r2,
-        "adj_r2": adj_r2,
-        "aic": aic,
-        "bic": bic,
-        "residual_stats": {
-          "mean": np.mean(residuals),
-          "std": np.std(residuals, ddof=0),
-          "min": np.min(residuals),
-          "max": np.max(residuals),
+        'mse': mse,
+        'rmse': np.sqrt(mse),
+        'mae': mean_absolute_error(y_true, y_pred),
+        'r2': r2,
+        'adj_r2': adj_r2,
+        'aic': aic,
+        'bic': bic,
+        'residual_stats': {
+          'mean': np.mean(residuals),
+          'std': np.std(residuals, ddof=0),
+          'min': np.min(residuals),
+          'max': np.max(residuals),
         },
       }
 
-    def _select_model(
-      x: np.ndarray, y: np.ndarray, errors: np.ndarray
-    ) -> dict:
+    def _select_model(x: np.ndarray, y: np.ndarray, errors: np.ndarray) -> dict:
       """Fit each candidate degree and return metrics for the best (lowest BIC)."""
       weighted = np.any(errors != 0)
-      best: dict = {"bic": float("inf"), "model": None}
+      best: dict = {'bic': float('inf'), 'model': None}
 
       if weighted:
         # Zero-error points represent perfectly known measurements and should
@@ -210,13 +209,13 @@ class PolyTrend:
 
         y_pred = reg.predict(x_poly)
         candidate = _metrics(y, y_pred, n_params=x_poly.shape[1])
-        candidate.update({"model": reg, "poly_features": poly, "degree": degree})
+        candidate.update({'model': reg, 'poly_features': poly, 'degree': degree})
 
-        if candidate["bic"] < best["bic"]:
+        if candidate['bic'] < best['bic']:
           best = candidate
 
-      if best["model"] is None:
-        raise ValueError("No valid model found across candidate degrees.")
+      if best['model'] is None:
+        raise ValueError('No valid model found across candidate degrees.')
 
       return best
 
@@ -232,36 +231,38 @@ class PolyTrend:
     err = np.asarray(err).reshape(-1, 1)
 
     best = _select_model(x, y, err)
-    coef = best["model"].coef_
-    intercept = best["model"].intercept_
+    coef = best['model'].coef_
+    intercept = best['model'].intercept_
 
-    print("\n=== Polynomial Regression Results ===")
+    print('\n=== Polynomial Regression Results ===')
     print(f'Optimal degree: {best["degree"]}')
-    print("\nPolynomial Expression:")
+    print('\nPolynomial Expression:')
     print(_polynomial_str(coef, intercept))
 
-    print("\n=== Goodness-of-Fit Metrics ===")
+    print('\n=== Goodness-of-Fit Metrics ===')
     print(f'R²: {best["r2"]:.4f}')
     print(f'Adjusted R²: {best["adj_r2"]:.4f}')
     print(f'AIC: {best["aic"]:.2f}')
     print(f'BIC: {best["bic"]:.2f}')
 
-    print("\n=== Error Metrics ===")
+    print('\n=== Error Metrics ===')
     print(f'MSE:  {best["mse"]:.4f}')
     print(f'RMSE: {best["rmse"]:.4f}')
     print(f'MAE:  {best["mae"]:.4f}')
 
-    print("\n=== Residual Analysis ===")
+    print('\n=== Residual Analysis ===')
     print(f'Mean: {best["residual_stats"]["mean"]:.4f}')
     print(f'Std:  {best["residual_stats"]["std"]:.4f}')
     print(f'Min:  {best["residual_stats"]["min"]:.4f}')
     print(f'Max:  {best["residual_stats"]["max"]:.4f}')
 
-    predict_fn = lambda x_vals: best["model"].predict(
-      best["poly_features"].transform(np.array(x_vals).reshape(-1, 1))
-    ).flatten()
+    predict_fn = lambda x_vals: (
+      best['model']
+      .predict(best['poly_features'].transform(np.array(x_vals).reshape(-1, 1)))
+      .flatten()
+    )
 
-    return predict_fn, best["degree"]
+    return predict_fn, best['degree']
 
   def polygraph(
     self,
@@ -285,7 +286,7 @@ class PolyTrend:
 
     if extrapolate_data and function is None:
       raise RuntimeError(
-        "Internal logic error: extrapolate_data provided but no prediction function given."
+        'Internal logic error: extrapolate_data provided but no prediction function given.'
       )
 
     # Accept pre-processed data to avoid redundant parsing when called from polyplot
@@ -303,28 +304,37 @@ class PolyTrend:
     plt.ylabel(y_label)
 
     if all(abs(e) < 1e-10 for e in err_main):
-      plt.scatter(x_main, y_main, color="blue", label="Known Data")
+      plt.scatter(x_main, y_main, color='blue', label='Known Data')
     else:
-      plt.errorbar(x_main, y_main, yerr=err_main, label="Known Data", fmt="o", capsize=5)
+      plt.errorbar(
+        x_main, y_main, yerr=err_main, label='Known Data', fmt='o', capsize=5
+      )
 
     if function is not None:
       x_curve = np.linspace(min(x_main), max(x_main), 100)
-      plt.plot(x_curve, function(list(x_curve)), color="green", label="Line of best fit")
+      plt.plot(
+        x_curve, function(list(x_curve)), color='green', label='Line of best fit'
+      )
 
       if extrapolate_data:
         y_extrap = function(list(extrapolate_data))
         x_ext = np.linspace(max(x_main), max(extrapolate_data), 100)
-        plt.plot(x_ext, function(list(x_ext)), color="green")
-        plt.scatter(extrapolate_data, y_extrap, color="red", label="Extrapolated data")
+        plt.plot(x_ext, function(list(x_ext)), color='green')
+        plt.scatter(extrapolate_data, y_extrap, color='red', label='Extrapolated data')
 
         for x, y in zip(extrapolate_data, y_extrap):
           plt.annotate(
-            f"({x:.2f}, {y:.2f})",
+            f'({x:.2f}, {y:.2f})',
             (x, y),
-            textcoords="offset points",
+            textcoords='offset points',
             xytext=(0, 10),
-            ha="center",
-            bbox=dict(boxstyle="round,pad=0.3", facecolor="white", edgecolor="black", linewidth=0.5),
+            ha='center',
+            bbox=dict(
+              boxstyle='round,pad=0.3',
+              facecolor='white',
+              edgecolor='black',
+              linewidth=0.5,
+            ),
           )
 
     plt.grid(True)
@@ -332,7 +342,7 @@ class PolyTrend:
     plt.show()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
   degrees = [1, 2, 3]
   data = [
     (float(x), float(0.5 * x**2 - 2 * x + 1 + uniform(-1000, 1000)), 1.0)
@@ -341,5 +351,5 @@ if __name__ == "__main__":
   try:
     PolyTrend().polyplot(degrees, data, extrapolate_data=[15, 20])
   except ValueError as e:
-    print(f"Error: {e}")
-  print("Example usage completed.")
+    print(f'Error: {e}')
+  print('Example usage completed.')
