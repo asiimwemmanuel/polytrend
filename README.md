@@ -101,7 +101,7 @@ pt.polyplot(degrees, data, extrapolate_data=[112, 140])
 ```shell
 git clone --depth 1 https://github.com/asiimwemmanuel/polytrend.git
 cd polytrend
-poetry sync
+uv sync
 ```
 
 #### 4. Run the app
@@ -114,14 +114,14 @@ uv run src/main.py
 
 ## Testing
 
-The test suite lives in `tests/` and requires only `pytest`. No GUI or display is needed — matplotlib calls are mocked throughout.
+The test suite lives in `tests/` and requires only `pytest`. No GUI or display is needed and matplotlib calls are mocked throughout.
 
 ```shell
 # generate fixture CSVs (only needed once, or after changing fixture parameters)
-python tests/generate_fixtures.py
+uv run tests/generate_fixtures.py
 
 # run the full suite
-poetry run pytest tests/ -v
+uv run pytest tests/ -v
 ```
 
 The fixtures are deterministic (fixed random seed) and checked into the repo. If you change `generate_fixtures.py`, re-run it and commit the updated CSVs alongside.
@@ -130,7 +130,7 @@ For the methodology behind what is tested and why, see [docs/testing.md](./docs/
 
 ## Theory
 
-> See [theory.md](./docs/theory.md) for more in-depth musings
+> See [theory.md](./docs/theory.md) for more indulgent yappery
 
 ### Polynomial Regression
 
@@ -150,7 +150,7 @@ When error values are provided, PolyTrend switches to Ridge regression with inve
 
 ### Model Selection
 
-Evaluating multiple polynomial degrees with MSE alone consistently favours the highest degree — a consequence of overfitting. PolyTrend uses the Bayesian Information Criterion (BIC) instead:
+Evaluating multiple polynomial degrees with MSE alone consistently favours the highest degree, which a consequence of overfitting. PolyTrend uses the Bayesian Information Criterion (BIC) instead:
 
 ```math
 \text{BIC} = n \cdot \ln(\text{MSE}) + k \cdot \ln(n)
@@ -158,7 +158,7 @@ Evaluating multiple polynomial degrees with MSE alone consistently favours the h
 
 where _n_ is the number of data points and _k_ is the number of model parameters. The first term rewards accuracy; the second penalizes complexity. The degree with the lowest BIC is selected. A perfect fit (MSE = 0) is treated as the global minimum.
 
-> See also: [BIC — Wikipedia](https://en.wikipedia.org/wiki/Bayesian_information_criterion), [Polynomial Regression — Wikipedia](https://en.wikipedia.org/wiki/Polynomial_regression)
+> See also: [BIC [Wikipedia]](https://en.wikipedia.org/wiki/Bayesian_information_criterion), [Polynomial Regression [Wikipedia]](https://en.wikipedia.org/wiki/Polynomial_regression)
 
 ## Additional Resources
 
@@ -171,7 +171,7 @@ where _n_ is the number of data points and _k_ is the number of model parameters
 ### Videos
 
 - [Polynomial Regression in Python](https://youtu.be/H8kocPOT5v0?feature=shared)
-- [Polynomial Regression in Python — sklearn](https://youtu.be/nqNdBlA-j4w?feature=shared)
+- [Polynomial Regression in Python - sklearn](https://youtu.be/nqNdBlA-j4w?feature=shared)
 
 ## Possible Improvements
 
