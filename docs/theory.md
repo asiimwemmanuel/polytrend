@@ -68,7 +68,8 @@ In this formulation, $m$ denotes the chosen maximum power, each $\beta_i$ signif
 
 The approximation is determined by solving for $\vec{\beta}$ in the matrix equation:
 
-$$\begin{bmatrix}
+```math
+\begin{bmatrix}
     1 & x_0 & x_0^2 & \dots & x_0^m \\
     1 & x_1 & x_1^2 & \dots & x_1^m \\
     1 & x_2 & x_2^2 & \dots & x_2^m \\
@@ -98,7 +99,8 @@ $$\begin{bmatrix}
     y_2 \\
     \vdots \\
     y_n
-\end{bmatrix}$$
+\end{bmatrix}
+```
 
 The matrix equation $\mathbf{X} \vec{\beta} + \vec{\varepsilon} = \vec{y}$ is solved using the [Normal Equation](http://mlwiki.org/index.php/Normal_Equation):
 
